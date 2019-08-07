@@ -7,7 +7,9 @@
 import * as ast from './visitor';
 import * as ts from 'typescript';
 import * as util from './util';
-
+/**
+ * typescript ast 转换为 magnus ast
+ */
 export class CoreVisitor implements ast.Visitor {
     name: string = `CoreVisitor`;
     resolvedModules: Map<string, ts.ResolvedModuleFull> = new Map();
@@ -250,9 +252,111 @@ export class CoreVisitor implements ast.Visitor {
             return this.visitNumericLiteral(new ast.NumericLiteral(), context)
         } else if (ts.isIdentifier(context)) {
             return this.visitIdentifier(new ast.Identifier(), context)
+        } else if (ts.isObjectLiteralExpression(context)) {
+            return this.visitObjectLiteralExpression(new ast.ObjectLiteralExpression(), context)
+        } else if (ts.isBinaryExpression(context)) {
+            return this.visitBinaryExpression(new ast.BinaryExpression(), context)
         } else {
             console.log(context)
         }
+        return node;
+    }
+    visitBinaryExpression(node: ast.BinaryExpression, context: ts.BinaryExpression) {
+        node.kind = context.kind;
+        node.left = this.visitExpression(undefined, context.left)
+        node.operatorToken = context.operatorToken
+        node.right = this.visitExpression(undefined, context.right)
+        return node;
+    }
+    visitObjectLiteralExpression(node: ast.ObjectLiteralExpression, context: ts.ObjectLiteralExpression) {
+        node.kind = context.kind;
+        node.properties = context.properties.map(property => this.visitObjectLiteralElementLike(undefined, property))
+        return node;
+    }
+    visitPropertyAssignment(node: ast.PropertyAssignment, context: ts.PropertyAssignment) {
+        node.kind = context.kind;
+        node.name = this.visitPropertyName(undefined, context.name);
+        if (context.questionToken) node.questionToken = context.questionToken;
+        node.initializer = this.visitExpression(undefined, context.initializer);
+        return node;
+    }
+    visitShorthandPropertyAssignment(node: ast.ShorthandPropertyAssignment, context: ts.ShorthandPropertyAssignment) {
+        node.kind = context.kind;
+        node.name = this.visitIdentifier(new ast.Identifier(), context.name);
+        if (context.questionToken) node.questionToken = context.questionToken;
+        node.exclamationToken = context.exclamationToken;
+        node.equalsToken = context.equalsToken
+        if (context.objectAssignmentInitializer) node.objectAssignmentInitializer = this.visitExpression(undefined, context.objectAssignmentInitializer);
+        return node;
+    }
+    visitSpreadAssignment(node: ast.SpreadAssignment, context: ts.SpreadAssignment) {
+        node.kind = context.kind;
+        if (context.expression) node.expression = this.visitExpression(undefined, context.expression);
+        return node;
+    }
+    visitMethodDeclaration(node: ast.MethodDeclaration, context: ts.MethodDeclaration) {
+        node.kind = context.kind;
+        node.name = this.visitPropertyName(undefined, context.name);
+        if (context.body) node.body = this.visitFunctionBody(new ast.FunctionBody(), context.body);
+        node._functionLikeDeclarationBrand = context._functionLikeDeclarationBrand;
+        if (context.asteriskToken) node.asteriskToken = context.asteriskToken;
+        if (context.questionToken) node.questionToken = context.questionToken;
+        if (context.exclamationToken) node.exclamationToken = context.exclamationToken;
+
+        if (context.typeParameters) node.typeParameters = context.typeParameters.map(par => this.visitTypeParameterDeclaration(new ast.TypeParameterDeclaration(), par));
+        node.parameters = context.parameters.map(par => this.visitParameterDeclaration(new ast.ParameterDeclaration(), par))
+        if (context.type) node.type = this.visitTypeNode(undefined, context.type)
+        return node;
+    }
+    visitGetAccessorDeclaration(node: ast.GetAccessorDeclaration, context: ts.GetAccessorDeclaration) {
+        node.kind = context.kind;
+        node.name = this.visitPropertyName(undefined, context.name);
+        if (context.body) node.body = this.visitFunctionBody(new ast.FunctionBody(), context.body);
+
+        if (context.typeParameters) node.typeParameters = context.typeParameters.map(par => this.visitTypeParameterDeclaration(new ast.TypeParameterDeclaration(), par));
+        node.parameters = context.parameters.map(par => this.visitParameterDeclaration(new ast.ParameterDeclaration(), par))
+        if (context.type) node.type = this.visitTypeNode(undefined, context.type)
+        return node;
+    }
+    visitSetAccessorDeclaration(node: ast.SetAccessorDeclaration, context: ts.SetAccessorDeclaration) {
+        node.kind = context.kind;
+        node.name = this.visitPropertyName(undefined, context.name);
+        if (context.body) node.body = this.visitFunctionBody(new ast.FunctionBody(), context.body);
+        if (context.typeParameters) node.typeParameters = context.typeParameters.map(par => this.visitTypeParameterDeclaration(new ast.TypeParameterDeclaration(), par));
+        node.parameters = context.parameters.map(par => this.visitParameterDeclaration(new ast.ParameterDeclaration(), par))
+        if (context.type) node.type = this.visitTypeNode(undefined, context.type)
+        return node;
+    }
+    visitObjectLiteralElementLike(node: any, context: ts.ObjectLiteralElementLike) {
+        // PropertyAssignment | ShorthandPropertyAssignment | SpreadAssignment | MethodDeclaration | AccessorDeclaration
+        if (ts.isPropertyAssignment(context)) {
+            return this.visitPropertyAssignment(new ast.PropertyAssignment(), context)
+        }
+        else if (ts.isShorthandPropertyAssignment(context)) {
+            return this.visitShorthandPropertyAssignment(new ast.ShorthandPropertyAssignment(), context)
+        }
+        else if (ts.isSpreadAssignment(context)) {
+            return this.visitSpreadAssignment(new ast.SpreadAssignment(), context)
+        }
+        else if (ts.isMethodDeclaration(context)) {
+            return this.visitMethodDeclaration(new ast.MethodDeclaration(), context)
+        }
+        else if (ts.isGetAccessorDeclaration(context)) {
+            return this.visitGetAccessorDeclaration(new ast.GetAccessorDeclaration(), context)
+        }
+        else if (ts.isSetAccessorDeclaration(context)) {
+            return this.visitSetAccessorDeclaration(new ast.SetAccessorDeclaration(), context)
+        }
+        return node;
+    }
+    visitJSDocReturnTag(node: ast.JSDocReturnTag, context: ts.JSDocReturnTag) {
+        node.kind = context.kind;
+        if (context.typeExpression) node.typeExpression = this.visitJSDocTypeExpression(new ast.JSDocTypeExpression(), context.typeExpression)
+        return node;
+    }
+    visitJSDocTypeExpression(node: ast.JSDocTypeExpression, context: ts.JSDocTypeExpression) {
+        node.kind = context.kind;
+        node.type = this.visitTypeNode(undefined, context.type);
         return node;
     }
     visitVariableStatement(node: ast.VariableStatement, context: ts.VariableStatement) {

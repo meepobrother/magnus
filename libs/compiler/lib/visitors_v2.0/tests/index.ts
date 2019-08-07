@@ -10,4 +10,11 @@ const b = 2;
 export { b }
 export * from './1';
 export { ScriptKind } from 'typescript';
-export default a;
+export { b as c };
+
+export default {
+    a,
+    c: a,
+    b: 2,
+    e: 1+1
+}

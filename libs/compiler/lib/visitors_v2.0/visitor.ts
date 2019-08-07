@@ -18,6 +18,12 @@ export abstract class Node<T extends ts.Node = ts.Node> {
     abstract visit(visitor: Visitor, context: any): any;
 }
 
+export class JSDocReturnTag extends Node<ts.JSDocReturnTag>{
+    kind: ts.SyntaxKind.JSDocReturnTag;
+    typeExpression?: JSDocTypeExpression;
+    visit(visitor: Visitor, context: any) { }
+}
+
 export class TypeChecker {
     node: ts.TypeChecker;
     visit(visitor: Visitor, context: any) {
@@ -235,6 +241,12 @@ export class Decorator extends Node<ts.Decorator> {
     }
 }
 export class ShorthandPropertyAssignment extends Node<ts.ShorthandPropertyAssignment>{
+    kind: ts.SyntaxKind.ShorthandPropertyAssignment;
+    name: Identifier;
+    questionToken?: ts.QuestionToken;
+    exclamationToken?: ts.ExclamationToken;
+    equalsToken?: ts.Token<ts.SyntaxKind.EqualsToken>;
+    objectAssignmentInitializer?: Expression;
     visit(visitor: Visitor, context: any) {
         if (visitor.visitShorthandPropertyAssignment) {
             return visitor.visitShorthandPropertyAssignment(this, context)
@@ -244,6 +256,7 @@ export class ShorthandPropertyAssignment extends Node<ts.ShorthandPropertyAssign
     }
 }
 export class SpreadAssignment extends Node<ts.SpreadAssignment>{
+    expression: Expression;
     visit(visitor: Visitor, context: any) {
         if (visitor.visitSpreadAssignment) {
             return visitor.visitSpreadAssignment(this, context)
@@ -252,15 +265,9 @@ export class SpreadAssignment extends Node<ts.SpreadAssignment>{
         }
     }
 }
-export class ObjectLiteralElementLike extends Node<ts.ObjectLiteralElementLike>{
-    visit(visitor: Visitor, context: any) {
-        if (visitor.visitObjectLiteralElementLike) {
-            return visitor.visitObjectLiteralElementLike(this, context)
-        } else {
-            throw new Error(`${visitor.name} 没有 visitObjectLiteralElementLike 方法`)
-        }
-    }
-}
+export type AccessorDeclaration = GetAccessorDeclaration | SetAccessorDeclaration;
+export type ObjectLiteralElementLike = PropertyAssignment | ShorthandPropertyAssignment | SpreadAssignment | MethodDeclaration | AccessorDeclaration;
+
 export class PropertyAssignment extends Node<ts.PropertyAssignment>{
     initializer: Expression;
     name: PropertyName;
@@ -400,6 +407,10 @@ export class MethodDeclaration extends Node<ts.MethodDeclaration>{
     parameters: ParameterDeclaration[] = [];
     typeParameters: TypeParameterDeclaration[] = [];
     questionToken: ts.QuestionToken;
+
+    _functionLikeDeclarationBrand: any;
+    asteriskToken: ts.AsteriskToken;
+    exclamationToken: ts.ExclamationToken;
     visit(visitor: Visitor, context: any) {
         if (visitor.visitMethodDeclaration) {
             return visitor.visitMethodDeclaration(this, context)
@@ -1850,7 +1861,6 @@ export interface Visitor<C = any, O = any> {
     visitNamedImportBindings?(node: NamedImportBindings, context: C): O;
     visitShorthandPropertyAssignment?(node: ShorthandPropertyAssignment, context: C): O;
     visitSpreadAssignment?(node: SpreadAssignment, context: C): O;
-    visitObjectLiteralElementLike?(node: ObjectLiteralElementLike, context: C): O;
     visitPropertyAssignment?(node: PropertyAssignment, context: C): O;
     visitSetAccessorDeclaration?(node: SetAccessorDeclaration, context: C): O;
     visitGetAccessorDeclaration?(node: GetAccessorDeclaration, context: C): O;
@@ -3312,10 +3322,10 @@ export class TsVisitor implements Visitor {
     }
     visitObjectLiteralExpression(node: ObjectLiteralExpression, context: ts.ObjectLiteralExpression) {
         node.node = context;
-        node.properties = context.properties.map(pro => this.visitObjectLiteralElementLike(new ObjectLiteralElementLike(), pro))
+        node.properties = context.properties.map(pro => this.visitObjectLiteralElementLike(undefined, pro))
         return node;
     }
-    visitObjectLiteralElementLike(node: ObjectLiteralElementLike, context: ts.ObjectLiteralElementLike) {
+    visitObjectLiteralElementLike(node: any, context: ts.ObjectLiteralElementLike) {
         node.node = context;
         node.docs = this.createJsDocs((context as any).jsDoc);
         if (ts.isPropertyAssignment(context)) {
