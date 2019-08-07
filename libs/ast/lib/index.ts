@@ -9,7 +9,7 @@ export abstract class Node<T extends ts.Node = ts.Node> {
     flags: ts.NodeFlags;
     parent: Node;
     decorators: Decorator[] = [];
-    modifiers: Modifier[] = [];
+    modifiers: ts.Modifier[] = [];
     node: T;
     /**
      * 其他
@@ -125,7 +125,14 @@ export type Statement = ClassDeclaration |
     ExportAssignment | EmptyStatement | ConditionalExpression |
     RegularExpressionLiteral | TaggedTemplateExpression |
     TryStatement | ImportEqualsDeclaration | OtherStatement
-
+export class ClassLikeDeclarationBase extends Node<ts.ClassLikeDeclarationBase>{
+    kind: ts.SyntaxKind.ClassDeclaration | ts.SyntaxKind.ClassExpression;
+    name?: Identifier;
+    typeParameters?: TypeParameterDeclaration[];
+    heritageClauses?: HeritageClause[];
+    members: ClassElement[];
+    visit(visitor: Visitor, context: any) { }
+}
 export class ClassDeclaration extends Node<ts.ClassDeclaration> {
     members: (ClassElement | PropertyDeclaration | ConstructorDeclaration | MethodDeclaration | SemicolonClassElement | GetAccessorDeclaration | SetAccessorDeclaration | Decorator)[] = [];
     name: Identifier;
@@ -137,6 +144,9 @@ export class ClassDeclaration extends Node<ts.ClassDeclaration> {
         } else {
             throw new Error(`${visitor.name} 没有 visitClassDeclaration 方法`)
         }
+    }
+    get isExport() {
+        return !!(this.modifiers && this.modifiers.find(modifier => modifier.kind === ts.SyntaxKind.ExportKeyword))
     }
     getDecorator<T>(name: string): (visitor: Visitor) => T | undefined | null {
         return (visitor: Visitor): T | undefined | null => {
@@ -666,6 +676,9 @@ export class VariableStatement extends Node<ts.VariableStatement>{
             throw new Error(`${visitor.name} 没有 visitVariableStatement 方法`)
         }
     }
+    get isExport() {
+        return !!(this.modifiers && this.modifiers.find(modifier => modifier.kind === ts.SyntaxKind.ExportKeyword))
+    }
 }
 export class FunctionDeclaration extends Node<ts.FunctionDeclaration>{
     body: FunctionBody;
@@ -680,6 +693,9 @@ export class FunctionDeclaration extends Node<ts.FunctionDeclaration>{
             throw new Error(`${visitor.name} 没有 visitFunctionDeclaration 方法`)
         }
     }
+    get isExport() {
+        return !!(this.modifiers && this.modifiers.find(modifier => modifier.kind === ts.SyntaxKind.ExportKeyword))
+    }
 }
 export class InterfaceDeclaration extends Node<ts.InterfaceDeclaration>{
     members: TypeElement[] = [];
@@ -692,6 +708,9 @@ export class InterfaceDeclaration extends Node<ts.InterfaceDeclaration>{
         } else {
             throw new Error(`${visitor.name} 没有 visitInterfaceDeclaration 方法`)
         }
+    }
+    get isExport() {
+        return !!(this.modifiers && this.modifiers.find(modifier => modifier.kind === ts.SyntaxKind.ExportKeyword))
     }
 }
 export class HeritageClause extends Node<ts.HeritageClause>{
@@ -716,6 +735,9 @@ export class EnumDeclaration extends Node<ts.EnumDeclaration>{
             throw new Error(`${visitor.name} 没有 visitEnumDeclaration 方法`)
         }
     }
+    get isExport() {
+        return !!(this.modifiers && this.modifiers.find(modifier => modifier.kind === ts.SyntaxKind.ExportKeyword))
+    }
 }
 export class TypeAliasDeclaration extends Node<ts.TypeAliasDeclaration>{
     name: Identifier;
@@ -728,6 +750,9 @@ export class TypeAliasDeclaration extends Node<ts.TypeAliasDeclaration>{
             throw new Error(`${visitor.name} 没有 visitTypeAliasDeclaration 方法`)
         }
     }
+    get isExport() {
+        return !!(this.modifiers && this.modifiers.find(modifier => modifier.kind === ts.SyntaxKind.ExportKeyword))
+    }
 }
 export class UnionTypeNode extends Node<ts.UnionTypeNode> {
     types: TypeNode[] = [];
@@ -737,6 +762,9 @@ export class UnionTypeNode extends Node<ts.UnionTypeNode> {
         } else {
             throw new Error(`${visitor.name} 没有 visitUnionTypeNode 方法`)
         }
+    }
+    get isExport() {
+        return !!(this.modifiers && this.modifiers.find(modifier => modifier.kind === ts.SyntaxKind.ExportKeyword))
     }
 }
 export class TypeQueryNode extends Node<ts.TypeQueryNode>{
@@ -969,7 +997,7 @@ export class EqualsGreaterThanToken extends Node<ts.ConciseBody>{
     }
 }
 export class BooleanLiteral extends Node<ts.BooleanLiteral>{
-    value: boolean;
+    kind: ts.SyntaxKind.TrueKeyword | ts.SyntaxKind.FalseKeyword;
     visit(visitor: Visitor, context: any) {
         if (visitor.visitBooleanLiteral) {
             return visitor.visitBooleanLiteral(this, context)
@@ -979,6 +1007,7 @@ export class BooleanLiteral extends Node<ts.BooleanLiteral>{
     }
 }
 export class UnaryExpression extends Node<ts.UnaryExpression>{
+    _unaryExpressionBrand: any;
     visit(visitor: Visitor, context: any) {
         if (visitor.visitUnaryExpression) {
             return visitor.visitUnaryExpression(this, context)
@@ -1039,6 +1068,9 @@ export class PropertyAccessExpression extends Node<ts.PropertyAccessExpression>{
     }
 }
 export class PrefixUnaryExpression extends Node<ts.PrefixUnaryExpression>{
+    kind: ts.SyntaxKind.PrefixUnaryExpression;
+    operator: ts.PrefixUnaryOperator;
+    operand: UnaryExpression;
     visit(visitor: Visitor, context: any) {
         if (visitor.visitPrefixUnaryExpression) {
             return visitor.visitPrefixUnaryExpression(this, context)
@@ -1060,8 +1092,8 @@ export class NullLiteral extends Node<ts.PrefixUnaryExpression>{
 
 export class NoSubstitutionTemplateLiteral extends Node<ts.NoSubstitutionTemplateLiteral>{
     text: string;
-    isUnterminated: boolean;
-    hasExtendedUnicodeEscape: boolean;
+    isUnterminated?: boolean;
+    hasExtendedUnicodeEscape?: boolean;
     visit(visitor: Visitor, context: any) {
         if (visitor.visitNoSubstitutionTemplateLiteral) {
             return visitor.visitNoSubstitutionTemplateLiteral(this, context)
@@ -1243,6 +1275,7 @@ export class ImportSpecifier extends Node<ts.ImportSpecifier>{
     }
 }
 export class LeftHandSideExpression extends Node<ts.LeftHandSideExpression> {
+    _leftHandSideExpressionBrand: any;
     visit(visitor: Visitor, context: any) {
         if (visitor.visitLeftHandSideExpression) {
             return visitor.visitLeftHandSideExpression(this, context)
@@ -1694,16 +1727,16 @@ export class BinaryExpression extends Node<ts.BinaryExpression>{
         }
     }
 }
-export class AssignmentExpression<TOperator extends ts.AssignmentOperatorToken> extends BinaryExpression {
+export class AssignmentExpression<TOperator extends ts.AssignmentOperatorToken, Left extends LeftHandSideExpression> extends BinaryExpression {
     left: LeftHandSideExpression;
     operatorToken: TOperator;
     visit(visitor: Visitor, context: any) { }
 }
-export class ObjectDestructuringAssignment extends AssignmentExpression<ts.EqualsToken> {
+export class ObjectDestructuringAssignment extends Node<ts.ObjectDestructuringAssignment> {
     left: ObjectLiteralExpression;
     visit(visitor: Visitor, context: any) { }
 }
-export class ArrayDestructuringAssignment extends AssignmentExpression<ts.EqualsToken> {
+export class ArrayDestructuringAssignment extends Node<ts.ArrayDestructuringAssignment> {
     left: ArrayLiteralExpression;
     visit(visitor: Visitor, context: any) { }
 }
@@ -1795,7 +1828,9 @@ export class IntersectionTypeNode extends Node<ts.IntersectionTypeNode>{
         }
     }
 }
+
 export class ThisTypeNode extends Node<ts.ThisTypeNode>{
+    kind: ts.SyntaxKind.ThisType;
     visit(visitor: Visitor, context: any) {
         if (visitor.visitThisTypeNode) {
             return visitor.visitThisTypeNode(this, context)

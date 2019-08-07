@@ -29,16 +29,69 @@ export class CoreVisitor implements ast.Visitor {
         else if (ts.isTypeAliasDeclaration(context)) return this.visitTypeAliasDeclaration(new ast.TypeAliasDeclaration(), context)
         else if (ts.isEnumDeclaration(context)) return this.visitEnumDeclaration(new ast.EnumDeclaration(), context)
         else if (ts.isClassDeclaration(context)) return this.visitClassDeclaration(new ast.ClassDeclaration(), context)
+        else if (ts.isReturnStatement(context)) return this.visitReturnStatement(new ast.ReturnStatement(), context)
         else console.log(context)
         return undefined as any;
     }
+    visitReturnStatement(node: ast.ReturnStatement, context: ts.ReturnStatement) {
+        return node;
+    }
     visitClassDeclaration(node: ast.ClassDeclaration, context: ts.ClassDeclaration) {
+        node.kind = context.kind;
+        if (context.name) node.name = this.visitIdentifier(new ast.Identifier(), context.name)
+        node.members = context.members.map(member => this.visitClassElement(new ast.ClassElement(), member))
+        if (context.modifiers) node.modifiers = context.modifiers.map(dir => dir);
+        return node;
+    }
+    visitPropertyDeclaration(node: ast.PropertyDeclaration, context: ts.PropertyDeclaration) {
+        return node;
+    }
+    visitSemicolonClassElement(node: ast.SemicolonClassElement, context: ts.SemicolonClassElement) {
+        return node;
+    }
+    visitConstructorDeclaration(node: ast.ConstructorDeclaration, context: ts.ConstructorDeclaration) {
+        return node;
+    }
+    visitDecorator(node: ast.Decorator, context: ts.Decorator) {
+        return node;
+    }
+    visitClassElement(node: any, context: ts.ClassElement) {
+        if (ts.isPropertyDeclaration(context)) {
+            return this.visitPropertyDeclaration(new ast.PropertyDeclaration(), context)
+        } else if (ts.isMethodDeclaration(context)) {
+            return this.visitMethodDeclaration(new ast.MethodDeclaration(), context)
+        } else if (ts.isSemicolonClassElement(context)) {
+            return this.visitSemicolonClassElement(new ast.SemicolonClassElement(), context)
+        } else if (ts.isConstructorDeclaration(context)) {
+            return this.visitConstructorDeclaration(new ast.ConstructorDeclaration(), context)
+        } else if (ts.isGetAccessorDeclaration(context)) {
+            return this.visitGetAccessorDeclaration(new ast.GetAccessorDeclaration(), context)
+        } else if (ts.isSetAccessorDeclaration(context)) {
+            return this.visitSetAccessorDeclaration(new ast.SetAccessorDeclaration(), context)
+        } else {
+            console.log(`visitClassElement Error! ${context.kind}`)
+        }
         return node;
     }
     visitEnumDeclaration(node: ast.EnumDeclaration, context: ts.EnumDeclaration) {
+        node.kind = context.kind;
+        node.name = this.visitIdentifier(new ast.Identifier(), context.name);
+        node.members = context.members.map(member => this.visitEnumMember(new ast.EnumMember(), member))
+        if (context.modifiers) node.modifiers = context.modifiers.map(dir => dir);
+        return node;
+    }
+    visitEnumMember(node: ast.EnumMember, context: ts.EnumMember) {
+        node.kind = context.kind;
+        node.name = this.visitPropertyName(undefined, context.name);
+        if (context.initializer) node.initializer = this.visitExpression(undefined, context.initializer);
+        if (context.modifiers) node.modifiers = context.modifiers.map(dir => dir);
         return node;
     }
     visitTypeAliasDeclaration(node: ast.TypeAliasDeclaration, context: ts.TypeAliasDeclaration) {
+        node.name = this.visitIdentifier(new ast.Identifier(), context.name);
+        node.type = this.visitTypeNode(undefined, context.type);
+        if (context.typeParameters) node.typeParameters = context.typeParameters.map(type => this.visitTypeParameterDeclaration(new ast.TypeParameterDeclaration(), type))
+        if (context.modifiers) node.modifiers = context.modifiers.map(dir => dir);
         return node;
     }
     visitInterfaceDeclaration(node: ast.InterfaceDeclaration, context: ts.InterfaceDeclaration) {
@@ -47,6 +100,7 @@ export class CoreVisitor implements ast.Visitor {
         if (context.typeParameters) node.typeParameters = context.typeParameters.map(type => this.visitTypeParameterDeclaration(new ast.TypeParameterDeclaration(), type))
         if (context.heritageClauses) node.heritageClauses = context.heritageClauses.map(heritage => this.visitHeritageClause(new ast.HeritageClause(), heritage));
         node.members = context.members.map(member => this.visitTypeElement(undefined, member))
+        if (context.modifiers) node.modifiers = context.modifiers.map(dir => dir);
         return node;
     }
     visitTypeParameterDeclaration(node: ast.TypeParameterDeclaration, context: ts.TypeParameterDeclaration) {
@@ -362,6 +416,7 @@ export class CoreVisitor implements ast.Visitor {
     visitVariableStatement(node: ast.VariableStatement, context: ts.VariableStatement) {
         node.kind = context.kind;
         node.declarationList = this.visitVariableDeclarationList(new ast.VariableDeclarationList(), context.declarationList)
+        if (context.modifiers) node.modifiers = context.modifiers.map(dir => dir);
         return node;
     }
     visitVariableDeclarationList(node: ast.VariableDeclarationList, context: ts.VariableDeclarationList) {
@@ -513,30 +568,94 @@ export class CoreVisitor implements ast.Visitor {
         return node;
     }
     visitLiteralTypeNode(node: ast.LiteralTypeNode, context: ts.LiteralTypeNode) {
+        if (util.isBooleanLiteral(context.literal)) {
+            node.literal = this.visitBooleanLiteral(new ast.BooleanLiteral(), context.literal)
+        }
+        // NumericLiteral | BigIntLiteral | RegularExpressionLiteral | NoSubstitutionTemplateLiteral;
+        else if (util.isNoSubstitutionTemplateLiteral(context.literal)) {
+            node.literal = this.visitNoSubstitutionTemplateLiteral(new ast.NoSubstitutionTemplateLiteral(), context.literal)
+        }
+        else if (util.isRegularExpressionLiteral(context.literal)) {
+            node.literal = this.visitRegularExpressionLiteral(new ast.RegularExpressionLiteral(), context.literal)
+        }
+        else if (util.isNumericLiteral(context.literal)) {
+            node.literal = this.visitNumericLiteral(new ast.NumericLiteral(), context.literal)
+        }
+        else if (util.isBigIntLiteral(context.literal)) {
+            node.literal = this.visitBigIntLiteral(new ast.BigIntLiteral(), context.literal)
+        }
+        else if (ts.isPrefixUnaryExpression(context.literal)) {
+            node.literal = this.visitPrefixUnaryExpression(new ast.PrefixUnaryExpression(), context.literal)
+        }
+        return node;
+    }
+    visitPrefixUnaryExpression(node: ast.PrefixUnaryExpression, context: ts.PrefixUnaryExpression) {
+        node.kind = context.kind;
+        node.operator = context.operator;
+        node.operand = this.visitUnaryExpression(new ast.UnaryExpression(), context.operand);
+        return node;
+    }
+    visitUnaryExpression(node: ast.UnaryExpression, context: ts.UnaryExpression) {
+        return node;
+    }
+    visitNoSubstitutionTemplateLiteral(node: ast.NoSubstitutionTemplateLiteral, context: ts.NoSubstitutionTemplateLiteral) {
+        node.text = context.text;
+        node.isUnterminated = context.isUnterminated;
+        node.hasExtendedUnicodeEscape = context.hasExtendedUnicodeEscape;
+        node.kind = context.kind;
+        return node;
+    }
+    visitRegularExpressionLiteral(node: ast.RegularExpressionLiteral, context: ts.RegularExpressionLiteral) {
+        node.text = context.text;
+        node.isUnterminated = context.isUnterminated;
+        node.hasExtendedUnicodeEscape = context.hasExtendedUnicodeEscape;
+        node.kind = context.kind;
+        return node;
+    }
+    visitBigIntLiteral(node: ast.BigIntLiteral, context: ts.BigIntLiteral) {
+        node.kind = context.kind;
+        return node;
+    }
+    visitBooleanLiteral(node: ast.BooleanLiteral, context: ts.BooleanLiteral) {
+        node.kind = context.kind;
         return node;
     }
     visitIndexedAccessTypeNode(node: ast.IndexedAccessTypeNode, context: ts.IndexedAccessTypeNode) {
+        node.objectType = this.visitTypeNode(undefined, context.objectType);
+        node.indexType = this.visitTypeNode(undefined, context.indexType);
         return node;
     }
     visitThisTypeNode(node: ast.ThisTypeNode, context: ts.ThisTypeNode) {
+        node.kind = context.kind;
         return node;
     }
     visitTypePredicateNode(node: ast.TypePredicateNode, context: ts.TypePredicateNode) {
         return node;
     }
     visitKeywordTypeNode(node: ast.KeywordTypeNode, context: ts.KeywordTypeNode) {
+        node.kind = context.kind;
         return node;
     }
     visitFunctionTypeNode(node: ast.FunctionTypeNode, context: ts.FunctionTypeNode) {
         return node;
     }
     visitTupleTypeNode(node: ast.TupleTypeNode, context: ts.TupleTypeNode) {
+        node.kind = context.kind;
+        node.elementTypes = context.elementTypes.map(ele => this.visitTypeNode(undefined, ele))
         return node;
     }
     visitUnionTypeNode(node: ast.UnionTypeNode, context: ts.UnionTypeNode) {
+        node.kind = context.kind;
+        node.types = context.types.map(type => this.visitTypeNode(undefined, type))
         return node;
     }
     visitExpressionWithTypeArguments(node: ast.ExpressionWithTypeArguments, context: ts.ExpressionWithTypeArguments) {
+        node.expression = this.visitLeftHandSideExpression(new ast.LeftHandSideExpression(), context.expression);
+        if (context.typeArguments) node.typeArguments = context.typeArguments.map(type => this.visitTypeNode(undefined, type))
+        return node;
+    }
+    visitLeftHandSideExpression(node: ast.LeftHandSideExpression, context: ts.LeftHandSideExpression) {
+        node._leftHandSideExpressionBrand = context._leftHandSideExpressionBrand;
         return node;
     }
     visitTypeReferenceNode(node: ast.TypeReferenceNode, context: ts.TypeReferenceNode) {
