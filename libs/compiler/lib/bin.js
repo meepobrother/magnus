@@ -28,10 +28,19 @@ async function start() {
                 const res = Buffer.concat(array).toString('utf8');
                 const obj = JSON.parse(res);
                 const { name, fileName, content, type, debug, host } = obj;
-                if (host === config.host) {
+                let canWrite = false;
+                if (config.hosts) {
+                    if (config.hosts.includes(host)) {
+                        canWrite = true;
+                    }
+                }
+                else {
+                    canWrite = true;
+                }
+                if (canWrite) {
                     /**
-                     * 开发模式相同 相互同步文件
-                     */
+                         * 开发模式相同 相互同步文件
+                         */
                     if (Array.isArray(config.reciveName)) {
                         const names = [
                             ...config.reciveName,

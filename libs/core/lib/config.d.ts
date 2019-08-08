@@ -71,4 +71,8 @@ export interface MagnusConfig {
      * 环境变量
      */
     portEnv: string;
+    /**
+     * hosts
+     */
+    hosts: string[];
 }
