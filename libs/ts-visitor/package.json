@@ -1,6 +1,6 @@
 {
 	"name": "@nger/ts-visitor",
-	"version": "3.0.7",
+	"version": "3.0.8",
 	"description": "> TODO: description",
 	"author": "imeepos <1037483576@qq.com>",
 	"homepage": "https://github.com/notadd/magnus/tree/master/libs/ts-visitor#readme",
@@ -13,7 +13,9 @@
 		"lib": "lib",
 		"test": "__tests__"
 	},
-	"files": [ "lib" ],
+	"files": [
+		"lib"
+	],
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/meepobrother/magnus.git"
