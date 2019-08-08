@@ -55,7 +55,8 @@ export async function bootstrap(config: MagnusConfig) {
                     type: 'assets',
                     debug: config.debug,
                     fileName: `magnus.server.graphql`,
-                    content: content
+                    content: content,
+                    host: config.host
                 })));
             }
             else {
@@ -67,7 +68,8 @@ export async function bootstrap(config: MagnusConfig) {
                         type: 'assets',
                         debug: config.debug,
                         fileName: `magnus.graphql`,
-                        content: content
+                        content: content,
+                        host: config.host
                     })));
                 }
             }
@@ -95,7 +97,8 @@ export async function bootstrap(config: MagnusConfig) {
                         type: 'assets',
                         debug: config.debug,
                         fileName: `magnus.proto`,
-                        content: protoStr
+                        content: protoStr,
+                        host: config.host
                     })));
                 }
             }
@@ -132,7 +135,8 @@ import { Observable } from 'rxjs';
                         debug: config.debug,
                         type: 'output',
                         fileName: `magnus.server.ts`,
-                        content
+                        content,
+                        host: config.host
                     })));
                 } else {
                     writeFileSync(join(dist, `magnus.ts`), content);
@@ -141,7 +145,8 @@ import { Observable } from 'rxjs';
                         debug: config.debug,
                         type: 'output',
                         fileName: `magnus.ts`,
-                        content
+                        content,
+                        host: config.host
                     })));
                 }
             }
@@ -167,7 +172,8 @@ export const ${camelCase(config.name)}Options: any = {
                     type: 'output',
                     debug: config.debug,
                     fileName: `${config.name}.ts`,
-                    content: index
+                    content: index,
+                    host: config.host
                 })));
             }
             if (isServer) {
@@ -186,7 +192,8 @@ export const ${camelCase(config.name)}Options: any = {
                 name: config.name,
                 fileName: `ip.txt`,
                 type: 'assets',
-                content: `${config.host}`
+                content: `${config.host}`,
+                host: config.host
             })));
         }
     }
@@ -221,7 +228,8 @@ export function sendLocalFile(path: string, name: string, config: MagnusConfig) 
             type: name.endsWith('.ts') ? 'output' : 'assets',
             fileName: name,
             debug: config.debug,
-            content: readFileSync(join(path, name)).toString('utf8')
+            content: readFileSync(join(path, name)).toString('utf8'),
+            host: config.host
         })));
     }
 }
@@ -236,6 +244,7 @@ export function sendFile(config: MagnusConfig) {
         name: config.name,
         fileName: `ip.txt`,
         type: 'assets',
-        content: `${config.host}`
+        content: `${config.host}`,
+        host: config.host
     })));
 }

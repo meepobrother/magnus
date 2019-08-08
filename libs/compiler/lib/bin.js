@@ -27,16 +27,31 @@ async function start() {
                     return;
                 const res = Buffer.concat(array).toString('utf8');
                 const obj = JSON.parse(res);
-                const { name, fileName, content, type, debug } = obj;
-                /**
-                 * 开发模式相同 相互同步文件
-                 */
-                if (Array.isArray(config.reciveName)) {
-                    const names = [
-                        ...config.reciveName,
-                        config.name
-                    ];
-                    if (names.includes(name)) {
+                const { name, fileName, content, type, debug, host } = obj;
+                if (host === config.host) {
+                    /**
+                     * 开发模式相同 相互同步文件
+                     */
+                    if (Array.isArray(config.reciveName)) {
+                        const names = [
+                            ...config.reciveName,
+                            config.name
+                        ];
+                        if (names.includes(name)) {
+                            const dist = path_1.join(config.root, config.output);
+                            const assets = path_1.join(config.root, config.assets);
+                            fs_extra_1.ensureDirSync(path_1.join(dist, name));
+                            fs_extra_1.ensureDirSync(path_1.join(assets, name));
+                            if (type === 'assets') {
+                                fs_1.writeFileSync(path_1.join(assets, name, fileName), content);
+                            }
+                            else {
+                                fs_1.writeFileSync(path_1.join(dist, name, fileName), content);
+                            }
+                            console.log(`收到模块${name}的文件${fileName}`);
+                        }
+                    }
+                    else {
                         const dist = path_1.join(config.root, config.output);
                         const assets = path_1.join(config.root, config.assets);
                         fs_extra_1.ensureDirSync(path_1.join(dist, name));
@@ -49,19 +64,6 @@ async function start() {
                         }
                         console.log(`收到模块${name}的文件${fileName}`);
                     }
-                }
-                else {
-                    const dist = path_1.join(config.root, config.output);
-                    const assets = path_1.join(config.root, config.assets);
-                    fs_extra_1.ensureDirSync(path_1.join(dist, name));
-                    fs_extra_1.ensureDirSync(path_1.join(assets, name));
-                    if (type === 'assets') {
-                        fs_1.writeFileSync(path_1.join(assets, name, fileName), content);
-                    }
-                    else {
-                        fs_1.writeFileSync(path_1.join(dist, name, fileName), content);
-                    }
-                    console.log(`收到模块${name}的文件${fileName}`);
                 }
             }));
         });

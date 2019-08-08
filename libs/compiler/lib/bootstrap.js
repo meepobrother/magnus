@@ -57,7 +57,8 @@ async function bootstrap(config) {
                     type: 'assets',
                     debug: config.debug,
                     fileName: `magnus.server.graphql`,
-                    content: content
+                    content: content,
+                    host: config.host
                 })));
             }
             else {
@@ -69,7 +70,8 @@ async function bootstrap(config) {
                         type: 'assets',
                         debug: config.debug,
                         fileName: `magnus.graphql`,
-                        content: content
+                        content: content,
+                        host: config.host
                     })));
                 }
             }
@@ -98,7 +100,8 @@ async function bootstrap(config) {
                         type: 'assets',
                         debug: config.debug,
                         fileName: `magnus.proto`,
-                        content: protoStr
+                        content: protoStr,
+                        host: config.host
                     })));
                 }
             }
@@ -134,7 +137,8 @@ import { Observable } from 'rxjs';
                         debug: config.debug,
                         type: 'output',
                         fileName: `magnus.server.ts`,
-                        content
+                        content,
+                        host: config.host
                     })));
                 }
                 else {
@@ -144,7 +148,8 @@ import { Observable } from 'rxjs';
                         debug: config.debug,
                         type: 'output',
                         fileName: `magnus.ts`,
-                        content
+                        content,
+                        host: config.host
                     })));
                 }
             }
@@ -170,7 +175,8 @@ export const ${lodash_1.camelCase(config.name)}Options: any = {
                     type: 'output',
                     debug: config.debug,
                     fileName: `${config.name}.ts`,
-                    content: index
+                    content: index,
+                    host: config.host
                 })));
             }
             if (isServer) {
@@ -190,7 +196,8 @@ export const ${lodash_1.camelCase(config.name)}Options: any = {
                 name: config.name,
                 fileName: `ip.txt`,
                 type: 'assets',
-                content: `${config.host}`
+                content: `${config.host}`,
+                host: config.host
             })));
         }
     }
@@ -226,7 +233,8 @@ function sendLocalFile(path, name, config) {
             type: name.endsWith('.ts') ? 'output' : 'assets',
             fileName: name,
             debug: config.debug,
-            content: fs_extra_1.readFileSync(path_1.join(path, name)).toString('utf8')
+            content: fs_extra_1.readFileSync(path_1.join(path, name)).toString('utf8'),
+            host: config.host
         })));
     }
 }
@@ -241,7 +249,8 @@ function sendFile(config) {
         name: config.name,
         fileName: `ip.txt`,
         type: 'assets',
-        content: `${config.host}`
+        content: `${config.host}`,
+        host: config.host
     })));
 }
 exports.sendFile = sendFile;
