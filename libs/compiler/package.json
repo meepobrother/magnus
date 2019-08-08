@@ -1,6 +1,6 @@
 {
 	"name": "@notadd/magnus",
-	"version": "3.0.7",
+	"version": "3.0.9",
 	"description": "> TODO: description",
 	"author": "imeepos <1037483576@qq.com>",
 	"homepage": "https://github.com/notadd/magnus/tree/master/libs/compiler#readme",
@@ -32,7 +32,7 @@
 	"gitHead": "3cdb10e40f409d0acd323e2b31297e40e747a8db",
 	"dependencies": {
 		"@nodeutils/defaults-deep": "^1.1.0",
-		"@notadd/magnus-core": "^3.0.7",
+		"@notadd/magnus-core": "^3.0.9",
 		"@notadd/magnus-graphql": "^3.0.7",
 		"@notadd/magnus-grpc": "^3.0.7",
 		"chokidar": "^3.0.2",
