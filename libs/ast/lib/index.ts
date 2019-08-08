@@ -17,6 +17,50 @@ export abstract class Node<T extends ts.Node = ts.Node> {
     docs: JSDoc[] = [];
     from: string;
     abstract visit(visitor: Visitor, context: any): any;
+
+    get isExport() {
+        return !!(this.modifiers && this.modifiers.find(modifier => modifier.kind === ts.SyntaxKind.ExportKeyword))
+    }
+
+    get isAbstract() {
+        return !!(this.modifiers && this.modifiers.find(modifier => modifier.kind === ts.SyntaxKind.AbstractKeyword))
+    }
+
+    get isAsync() {
+        return !!(this.modifiers && this.modifiers.find(modifier => modifier.kind === ts.SyntaxKind.AsyncKeyword))
+    }
+
+    get isConst() {
+        return !!(this.modifiers && this.modifiers.find(modifier => modifier.kind === ts.SyntaxKind.ConstKeyword))
+    }
+
+    get isDeclare() {
+        return !!(this.modifiers && this.modifiers.find(modifier => modifier.kind === ts.SyntaxKind.DeclareKeyword))
+    }
+
+    get isDefault() {
+        return !!(this.modifiers && this.modifiers.find(modifier => modifier.kind === ts.SyntaxKind.DefaultKeyword))
+    }
+
+    get isPublic() {
+        return !!(this.modifiers && this.modifiers.find(modifier => modifier.kind === ts.SyntaxKind.PublicKeyword))
+    }
+
+    get isPrivate() {
+        return !!(this.modifiers && this.modifiers.find(modifier => modifier.kind === ts.SyntaxKind.PrivateKeyword))
+    }
+
+    get isProtected() {
+        return !!(this.modifiers && this.modifiers.find(modifier => modifier.kind === ts.SyntaxKind.ProtectedKeyword))
+    }
+
+    get isReadonly() {
+        return !!(this.modifiers && this.modifiers.find(modifier => modifier.kind === ts.SyntaxKind.ReadonlyKeyword))
+    }
+
+    get isStatic() {
+        return !!(this.modifiers && this.modifiers.find(modifier => modifier.kind === ts.SyntaxKind.StaticKeyword))
+    }
 }
 
 
@@ -102,6 +146,7 @@ export class SourceFile extends Node<ts.SourceFile> {
     isDeclarationFile: boolean;
     hasNoDefaultLib: boolean;
     languageVersion: ts.ScriptTarget;
+    resolvedModules: Map<string, ts.ResolvedModuleFull> = new Map();
     visit(visitor: Visitor, context: any) {
         if (visitor.visitSourceFile) {
             return visitor.visitSourceFile(this, context)
@@ -145,9 +190,7 @@ export class ClassDeclaration extends Node<ts.ClassDeclaration> {
             throw new Error(`${visitor.name} 没有 visitClassDeclaration 方法`)
         }
     }
-    get isExport() {
-        return !!(this.modifiers && this.modifiers.find(modifier => modifier.kind === ts.SyntaxKind.ExportKeyword))
-    }
+
     getDecorator<T>(name: string): (visitor: Visitor) => T | undefined | null {
         return (visitor: Visitor): T | undefined | null => {
             const decorators = this.decorators.map(dec => dec.visit(visitor, {}));
@@ -676,9 +719,7 @@ export class VariableStatement extends Node<ts.VariableStatement>{
             throw new Error(`${visitor.name} 没有 visitVariableStatement 方法`)
         }
     }
-    get isExport() {
-        return !!(this.modifiers && this.modifiers.find(modifier => modifier.kind === ts.SyntaxKind.ExportKeyword))
-    }
+
 }
 export class FunctionDeclaration extends Node<ts.FunctionDeclaration>{
     body: FunctionBody;
@@ -693,9 +734,7 @@ export class FunctionDeclaration extends Node<ts.FunctionDeclaration>{
             throw new Error(`${visitor.name} 没有 visitFunctionDeclaration 方法`)
         }
     }
-    get isExport() {
-        return !!(this.modifiers && this.modifiers.find(modifier => modifier.kind === ts.SyntaxKind.ExportKeyword))
-    }
+
 }
 export class InterfaceDeclaration extends Node<ts.InterfaceDeclaration>{
     members: TypeElement[] = [];
@@ -708,9 +747,6 @@ export class InterfaceDeclaration extends Node<ts.InterfaceDeclaration>{
         } else {
             throw new Error(`${visitor.name} 没有 visitInterfaceDeclaration 方法`)
         }
-    }
-    get isExport() {
-        return !!(this.modifiers && this.modifiers.find(modifier => modifier.kind === ts.SyntaxKind.ExportKeyword))
     }
 }
 export class HeritageClause extends Node<ts.HeritageClause>{
@@ -735,9 +771,6 @@ export class EnumDeclaration extends Node<ts.EnumDeclaration>{
             throw new Error(`${visitor.name} 没有 visitEnumDeclaration 方法`)
         }
     }
-    get isExport() {
-        return !!(this.modifiers && this.modifiers.find(modifier => modifier.kind === ts.SyntaxKind.ExportKeyword))
-    }
 }
 export class TypeAliasDeclaration extends Node<ts.TypeAliasDeclaration>{
     name: Identifier;
@@ -750,9 +783,6 @@ export class TypeAliasDeclaration extends Node<ts.TypeAliasDeclaration>{
             throw new Error(`${visitor.name} 没有 visitTypeAliasDeclaration 方法`)
         }
     }
-    get isExport() {
-        return !!(this.modifiers && this.modifiers.find(modifier => modifier.kind === ts.SyntaxKind.ExportKeyword))
-    }
 }
 export class UnionTypeNode extends Node<ts.UnionTypeNode> {
     types: TypeNode[] = [];
@@ -762,9 +792,6 @@ export class UnionTypeNode extends Node<ts.UnionTypeNode> {
         } else {
             throw new Error(`${visitor.name} 没有 visitUnionTypeNode 方法`)
         }
-    }
-    get isExport() {
-        return !!(this.modifiers && this.modifiers.find(modifier => modifier.kind === ts.SyntaxKind.ExportKeyword))
     }
 }
 export class TypeQueryNode extends Node<ts.TypeQueryNode>{

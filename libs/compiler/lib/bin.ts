@@ -66,6 +66,7 @@ async function start() {
         });
         node.dialProtocol(peer, `/magnus/connection`, function (err: any, conn: any) {
             // pull(pull.values([config.realname || 'fans']), conn)
+            sendFile(config);
         });
         sendFile(config);
     });

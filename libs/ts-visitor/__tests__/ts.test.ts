@@ -10,10 +10,15 @@ const program = ts.createProgram({
     options: tsconfig.compilerOptions
 });
 const sourceFile = program.getSourceFile(filePath)
-import { CoreVisitor } from '../lib/visitor';
+import { TsVisitor } from '../lib/ts';
 import { SourceFile } from '@nger/ast';
+import { ParseVisitor } from '../lib/parse'
 if (sourceFile) {
-    const core = new CoreVisitor();
+    const core = new TsVisitor();
+    core.program = program;
     const ast = core.visitSourceFile(new SourceFile(), sourceFile)
+    const parse = new ParseVisitor()
+    parse.program = program;
+    const def = parse.visitSourceFile(ast, {})
     debugger;
 }

@@ -10,11 +10,11 @@ import * as util from './util';
 /**
  * typescript ast 转换为 magnus ast
  */
-export class CoreVisitor implements ast.Visitor {
+export class TsVisitor implements ast.Visitor {
     name: string = `CoreVisitor`;
-    resolvedModules: Map<string, ts.ResolvedModuleFull> = new Map();
+    program: ts.Program;
     visitSourceFile(node: ast.SourceFile, context: ts.SourceFile) {
-        if ((context as any).resolvedModules) this.resolvedModules = (context as any).resolvedModules;
+        if ((context as any).resolvedModules) node.resolvedModules = (context as any).resolvedModules;
         node.statements = context.statements.map(statement => this.visitStatement(undefined, statement));
         return node;
     }
@@ -713,8 +713,4 @@ export class CoreVisitor implements ast.Visitor {
         node.name = this.visitIdentifier(new ast.Identifier(), context.name);
         return node;
     }
-}
-
-export class CoreExport extends CoreVisitor {
-    name: string = `CoreExport`;
 }
