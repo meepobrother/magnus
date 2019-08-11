@@ -224,6 +224,7 @@ export declare class ParameterDeclaration extends Node<ts.ParameterDeclaration> 
     index: number;
     visit(visitor: Visitor, context: any): any;
     getDecorator<T>(name: string): (visitor: Visitor) => T | undefined | null;
+    getDecorators(): (visitor: Visitor) => string;
 }
 export declare class TupleTypeNode extends Node<ts.TupleTypeNode> {
     elementTypes: TypeNode[];

@@ -514,14 +514,13 @@ export class TsToGraphqlVisitor implements ast.Visitor {
         if (description) res.description = description;
         context.isInput = true;
         const args = node.parameters.filter(par => {
-            const isParent = par.getDecorator('Parent')(expressionVisitor);
-            const isSelection = par.getDecorator('Selection')(expressionVisitor);
-            const isRelation = par.getDecorator('Relation')(expressionVisitor);
-            const isContext = par.getDecorator('Context')(expressionVisitor);
-            if (isContext !== null) return false;
-            if (isParent !== null) return false;
-            if (isRelation !== null) return false;
-            if (isSelection !== null) return false;
+            const decorator = par.getDecorators()(expressionVisitor);
+            if (decorator) {
+                if (decorator === 'Args') {
+                    return true;
+                }
+                return false;
+            }
             return true;
         });
         res.arguments = args.map(par => this.visitParameterDeclaration(par, context));
@@ -675,14 +674,13 @@ export class TsToGraphqlVisitor implements ast.Visitor {
         if (description) res.description = description;
         context.isInput = true;
         const args = node.parameters.filter(par => {
-            const isParent = par.getDecorator('Parent')(expressionVisitor);
-            const isSelection = par.getDecorator('Selection')(expressionVisitor);
-            const isRelation = par.getDecorator('Relation')(expressionVisitor);
-            const isContext = par.getDecorator('Context')(expressionVisitor);
-            if (isContext !== null) return false;
-            if (isParent !== null) return false;
-            if (isRelation !== null) return false;
-            if (isSelection !== null) return false;
+            const decorator = par.getDecorators()(expressionVisitor);
+            if (decorator) {
+                if (decorator === 'Args') {
+                    return true;
+                }
+                return false;
+            }
             return true;
         });
         res.arguments = args.map(par => this.visitParameterDeclaration(par, context));
@@ -1010,24 +1008,9 @@ export class TsToGraphqlVisitor implements ast.Visitor {
         if (description) res.description = description;
         // name过后初始化
         const type = this.visitTypeNode(node.type, context);
-        const selection = node.getDecorator('Selection')(expressionVisitor);
-        const parent = node.getDecorator('Parent')(expressionVisitor);
-        const relation = node.getDecorator('Relation')(expressionVisitor);
-        const _context = node.getDecorator('Context')(expressionVisitor);
-        if (_context !== null) {
-            res.decorator = `Context`;
-        }
-        if (selection !== null) {
-            res.decorator = `Selection`;
-        }
-        if (relation !== null) {
-            res.decorator = `Relation`;
-        }
-        if (parent !== null) {
-            res.decorator = `Parent`;
-        }
+        const decorator = node.getDecorators()(expressionVisitor)
+        if (decorator) res.decorator = decorator;
         res.index = node.index;
-        // const type = this.visitTypeNode(node.type, context);
         if (node.questionToken || !!node.initializer) {
             res.type = type
         } else {

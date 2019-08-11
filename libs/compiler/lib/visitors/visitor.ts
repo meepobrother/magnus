@@ -584,6 +584,13 @@ export class ParameterDeclaration extends Node<ts.ParameterDeclaration> {
             return null;
         }
     }
+    getDecorators(): (visitor: Visitor) => string {
+        return (visitor: Visitor) => {
+            const decorators = this.decorators.map(dec => dec.visit(visitor, {}));
+            const ress = decorators.map(dec => dec.name);
+            if (ress.length >= 1) return ress[0];
+        }
+    }
 }
 export class TupleTypeNode extends Node<ts.TupleTypeNode> {
     elementTypes: TypeNode[];

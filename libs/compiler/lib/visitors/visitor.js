@@ -571,6 +571,14 @@ class ParameterDeclaration extends Node {
             return null;
         };
     }
+    getDecorators() {
+        return (visitor) => {
+            const decorators = this.decorators.map(dec => dec.visit(visitor, {}));
+            const ress = decorators.map(dec => dec.name);
+            if (ress.length >= 1)
+                return ress[0];
+        };
+    }
 }
 exports.ParameterDeclaration = ParameterDeclaration;
 class TupleTypeNode extends Node {
