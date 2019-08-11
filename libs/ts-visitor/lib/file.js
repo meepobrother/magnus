@@ -13,10 +13,48 @@ class File {
         this.program = program;
         this.ast = this.tsVisitor.visitSourceFile(new ast.SourceFile(), node);
     }
-    getInterface(name) { }
-    getClass(name) { }
-    getFunction(name) { }
-    getTypeAlias(name) { }
+    getName(name) {
+        this.ast.statements.find((it) => {
+            if (it instanceof ast.VariableDeclaration) {
+            }
+        });
+    }
+    /**
+     * variable
+     */
+    getVariable(name) {
+        return this.ast.statements.find(it => it instanceof ast.VariableDeclaration);
+    }
+    /**
+     * enum
+     */
+    getEnum(name) {
+        return this.ast.statements.find(it => it instanceof ast.EnumDeclaration);
+    }
+    /**
+     * interface
+     */
+    getInterface(name) {
+        return this.ast.statements.find(it => it instanceof ast.InterfaceDeclaration);
+    }
+    /**
+     * class
+     */
+    getClass(name) {
+        return this.ast.statements.find(it => it instanceof ast.ClassDeclaration);
+    }
+    /**
+     * function
+     */
+    getFunction(name) {
+        return this.ast.statements.find(it => it instanceof ast.FunctionDeclaration);
+    }
+    /**
+     * type
+     */
+    getTypeAlias(name) {
+        return this.ast.statements.find(it => it instanceof ast.TypeAliasDeclaration);
+    }
 }
 exports.File = File;
 //# sourceMappingURL=file.js.map

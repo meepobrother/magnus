@@ -22,7 +22,6 @@ export interface ModuleOptions {
 }
 export const Module = (options?: ModuleOptions) => AnyDecorator;
 export const NgModule = Module;
-
 /**
  * proto相关
  */
@@ -93,6 +92,10 @@ export const Selection = () => AnyDecorator;
 /**
  * 选择
  */
+export const Context = () => AnyDecorator;
+/**
+ * 关系
+ */
 export const Relation = () => AnyDecorator;
 
 export const Field = () => AnyDecorator;
@@ -119,3 +122,16 @@ export interface PermissionOptions {
     namespace?: string;
 }
 export const Permission = (options: PermissionOptions) => AnyDecorator;
+
+/**
+ * type sub dom obj act
+ * 类型 资源 域 子系统 操作
+ * p, admin, domain1, data1, read 权限
+ * p, admin, domain1, data1, write 权限
+ * p, admin, domain2, data2, read 权限
+ * p, admin, domain2, data2, write 权限
+ * g, alice, admin, domain1
+ * g, bob, admin, domain2
+ */
+export const DefDomain = () => AnyDecorator;
+export const DefObject = () => AnyDecorator;

@@ -89,6 +89,10 @@ export declare const Selection: () => (...args: any[]) => void;
 /**
  * 选择
  */
+export declare const Context: () => (...args: any[]) => void;
+/**
+ * 关系
+ */
 export declare const Relation: () => (...args: any[]) => void;
 export declare const Field: () => (...args: any[]) => void;
 /**
@@ -113,3 +117,15 @@ export interface PermissionOptions {
     namespace?: string;
 }
 export declare const Permission: (options: PermissionOptions) => (...args: any[]) => void;
+/**
+ * type sub dom obj act
+ * 类型 资源 域 子系统 操作
+ * p, admin, domain1, data1, read 权限
+ * p, admin, domain1, data1, write 权限
+ * p, admin, domain2, data2, read 权限
+ * p, admin, domain2, data2, write 权限
+ * g, alice, admin, domain1
+ * g, bob, admin, domain2
+ */
+export declare const DefDomain: () => (...args: any[]) => void;
+export declare const DefObject: () => (...args: any[]) => void;

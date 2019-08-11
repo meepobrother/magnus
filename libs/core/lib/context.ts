@@ -88,7 +88,7 @@ export function createResolver(handlerDef: HandlerDefMap, injectDef: InjectMap, 
                         result = await source[fieldName](...parameters)
                     }
                     else if (typeSource === 'undefined') {
-                        result = item(args, field2.selectionSet)
+                        result = item && item(args, field2.selectionSet)
                     } else {
                         result = source;
                     }

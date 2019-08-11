@@ -517,6 +517,8 @@ export class TsToGraphqlVisitor implements ast.Visitor {
             const isParent = par.getDecorator('Parent')(expressionVisitor);
             const isSelection = par.getDecorator('Selection')(expressionVisitor);
             const isRelation = par.getDecorator('Relation')(expressionVisitor);
+            const isContext = par.getDecorator('Context')(expressionVisitor);
+            if (isContext !== null) return false;
             if (isParent !== null) return false;
             if (isRelation !== null) return false;
             if (isSelection !== null) return false;
@@ -676,6 +678,8 @@ export class TsToGraphqlVisitor implements ast.Visitor {
             const isParent = par.getDecorator('Parent')(expressionVisitor);
             const isSelection = par.getDecorator('Selection')(expressionVisitor);
             const isRelation = par.getDecorator('Relation')(expressionVisitor);
+            const isContext = par.getDecorator('Context')(expressionVisitor);
+            if (isContext !== null) return false;
             if (isParent !== null) return false;
             if (isRelation !== null) return false;
             if (isSelection !== null) return false;
@@ -1009,7 +1013,10 @@ export class TsToGraphqlVisitor implements ast.Visitor {
         const selection = node.getDecorator('Selection')(expressionVisitor);
         const parent = node.getDecorator('Parent')(expressionVisitor);
         const relation = node.getDecorator('Relation')(expressionVisitor);
-
+        const _context = node.getDecorator('Context')(expressionVisitor);
+        if (_context !== null) {
+            res.decorator = `Context`;
+        }
         if (selection !== null) {
             res.decorator = `Selection`;
         }

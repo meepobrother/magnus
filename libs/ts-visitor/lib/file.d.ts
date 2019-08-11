@@ -8,8 +8,29 @@ export declare class File {
     parseVisitor: ParseVisitor;
     program: Program;
     constructor(program: Program, node: SourceFile);
-    getInterface(name: string): void;
-    getClass(name: string): void;
-    getFunction(name: string): void;
-    getTypeAlias(name: string): void;
+    getName(name: string): void;
+    /**
+     * variable
+     */
+    getVariable(name: string): ast.VariableDeclaration | undefined;
+    /**
+     * enum
+     */
+    getEnum(name: string): ast.EnumDeclaration;
+    /**
+     * interface
+     */
+    getInterface(name: string): ast.InterfaceDeclaration;
+    /**
+     * class
+     */
+    getClass(name: string): ast.ClassDeclaration;
+    /**
+     * function
+     */
+    getFunction(name: string): ast.FunctionDeclaration;
+    /**
+     * type
+     */
+    getTypeAlias(name: string): ast.TypeAliasDeclaration;
 }

@@ -50,7 +50,23 @@ exports.Selection = () => util_1.AnyDecorator;
 /**
  * 选择
  */
+exports.Context = () => util_1.AnyDecorator;
+/**
+ * 关系
+ */
 exports.Relation = () => util_1.AnyDecorator;
 exports.Field = () => util_1.AnyDecorator;
 exports.Permission = (options) => util_1.AnyDecorator;
+/**
+ * type sub dom obj act
+ * 类型 资源 域 子系统 操作
+ * p, admin, domain1, data1, read 权限
+ * p, admin, domain1, data1, write 权限
+ * p, admin, domain2, data2, read 权限
+ * p, admin, domain2, data2, write 权限
+ * g, alice, admin, domain1
+ * g, bob, admin, domain2
+ */
+exports.DefDomain = () => util_1.AnyDecorator;
+exports.DefObject = () => util_1.AnyDecorator;
 //# sourceMappingURL=decorator.js.map

@@ -538,6 +538,9 @@ class TsToGraphqlVisitor {
             const isParent = par.getDecorator('Parent')(expression_1.expressionVisitor);
             const isSelection = par.getDecorator('Selection')(expression_1.expressionVisitor);
             const isRelation = par.getDecorator('Relation')(expression_1.expressionVisitor);
+            const isContext = par.getDecorator('Context')(expression_1.expressionVisitor);
+            if (isContext !== null)
+                return false;
             if (isParent !== null)
                 return false;
             if (isRelation !== null)
@@ -726,6 +729,9 @@ class TsToGraphqlVisitor {
             const isParent = par.getDecorator('Parent')(expression_1.expressionVisitor);
             const isSelection = par.getDecorator('Selection')(expression_1.expressionVisitor);
             const isRelation = par.getDecorator('Relation')(expression_1.expressionVisitor);
+            const isContext = par.getDecorator('Context')(expression_1.expressionVisitor);
+            if (isContext !== null)
+                return false;
             if (isParent !== null)
                 return false;
             if (isRelation !== null)
@@ -1085,6 +1091,10 @@ class TsToGraphqlVisitor {
         const selection = node.getDecorator('Selection')(expression_1.expressionVisitor);
         const parent = node.getDecorator('Parent')(expression_1.expressionVisitor);
         const relation = node.getDecorator('Relation')(expression_1.expressionVisitor);
+        const _context = node.getDecorator('Context')(expression_1.expressionVisitor);
+        if (_context !== null) {
+            res.decorator = `Context`;
+        }
         if (selection !== null) {
             res.decorator = `Selection`;
         }
