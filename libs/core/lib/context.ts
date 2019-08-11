@@ -81,6 +81,9 @@ export function createResolver(handlerDef: HandlerDefMap, injectDef: InjectMap, 
                             else if (decorator === 'Relation') {
                                 parameters[index] = entityDef;
                             }
+                            else if (decorator === 'Context') {
+                                parameters[index] = context;
+                            }
                             else {
                                 parameters[index] = args[name];
                             }
