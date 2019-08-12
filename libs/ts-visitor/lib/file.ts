@@ -1,59 +1,86 @@
-import { Program, SourceFile } from 'typescript';
-import { TsVisitor } from './ts';
-import * as ast from '@nger/ast';
-import { ParseVisitor } from './parse';
+import { Program, SourceFile } from "typescript";
+import { TsVisitor } from "./ts";
+import * as ast from "@nger/ast";
+import { ParseVisitor } from "./parse";
+type NodeWithName =
+  | ast.VariableDeclaration
+  | ast.EnumDeclaration
+  | ast.InterfaceDeclaration
+  | ast.ClassDeclaration
+  | ast.FunctionDeclaration
+  | ast.TypeAliasDeclaration
+  | ast.ModuleDeclaration;
 export class File {
-    ast: ast.SourceFile;
-    tsVisitor: TsVisitor = new TsVisitor();
-    parseVisitor: ParseVisitor = new ParseVisitor();
-    program: Program;
-    constructor(program: Program, node: SourceFile) {
-        this.tsVisitor.program = program;
-        this.parseVisitor.program = program;
-        this.program = program;
-        this.ast = this.tsVisitor.visitSourceFile(new ast.SourceFile(), node)
+  ast: ast.SourceFile;
+  tsVisitor: TsVisitor = new TsVisitor();
+  parseVisitor: ParseVisitor = new ParseVisitor();
+  program: Program;
+  exports: any;
+  exportDefault: any;
+  exportEquals: any;
+  constructor(program: Program, node: SourceFile) {
+    this.tsVisitor.program = program;
+    this.parseVisitor.program = program;
+    this.program = program;
+    this.ast = this.tsVisitor.visitSourceFile(new ast.SourceFile(), node);
+    this.ast.visit(this.parseVisitor, {});
+    this.exports = this.parseVisitor.exports;
+    this.exportDefault = this.parseVisitor.exportDefault;
+    this.exportEquals = this.parseVisitor.exportEquals;
+  }
+  getExport(name: string) {
+    if (this.exports) {
+      debugger;
     }
-    getName(name: string) {
-        this.ast.statements.find((it) => {
-            if (it instanceof ast.VariableDeclaration) {
-                
-            }
-        })
+    if (this.exportDefault) {
+      debugger;
     }
-    /**
-     * variable
-     */
-    getVariable(name: string): ast.VariableDeclaration | undefined {
-        return this.ast.statements.find(it => it instanceof ast.VariableDeclaration) as ast.VariableDeclaration;
+    if (this.exportEquals) {
+      if (this.exportEquals instanceof ast.Identifier) {
+        const exportEqualsName = this.exportEquals.text;
+        const modules = this.getName(exportEqualsName);
+        let result: any[] = [];
+        modules.map(it => {
+          if (it instanceof ast.ModuleDeclaration) {
+            if (it.body)
+              result =
+                result.length > 0 ? result : this.getModuleBody(name, it.body);
+          } else {
+            debugger;
+          }
+        });
+        if (result.length === 1) {
+          return result[0];
+        }
+      }
     }
-    /**
-     * enum
-     */
-    getEnum(name: string): ast.EnumDeclaration {
-        return this.ast.statements.find(it => it instanceof ast.EnumDeclaration) as ast.EnumDeclaration;
+  }
+  getModuleBody(name: string, module: ast.ModuleBody): any {
+    if (module instanceof ast.ModuleBlock) {
+      return this.getName(name, module.statements);
+    } else if (module instanceof ast.NamespaceDeclaration) {
+      return this.getModuleBody(name, module.body);
     }
-    /**
-     * interface
-     */
-    getInterface(name: string): ast.InterfaceDeclaration {
-        return this.ast.statements.find(it => it instanceof ast.InterfaceDeclaration) as ast.InterfaceDeclaration;
-    }
-    /**
-     * class
-     */
-    getClass(name: string): ast.ClassDeclaration {
-        return this.ast.statements.find(it => it instanceof ast.ClassDeclaration) as ast.ClassDeclaration;
-    }
-    /**
-     * function
-     */
-    getFunction(name: string): ast.FunctionDeclaration {
-        return this.ast.statements.find(it => it instanceof ast.FunctionDeclaration) as ast.FunctionDeclaration;
-    }
-    /**
-     * type
-     */
-    getTypeAlias(name: string): ast.TypeAliasDeclaration {
-        return this.ast.statements.find(it => it instanceof ast.TypeAliasDeclaration) as ast.TypeAliasDeclaration;
-    }
+  }
+  getName(name: string, statements?: ast.Statement[]): NodeWithName[] {
+    const __statements = statements || this.ast.statements;
+    return __statements.filter(it => {
+      if (it instanceof ast.VariableDeclaration) {
+        return it.name.visit(this.parseVisitor, ``) === name;
+      } else if (it instanceof ast.EnumDeclaration) {
+        return it.name.visit(this.parseVisitor, ``) === name;
+      } else if (it instanceof ast.InterfaceDeclaration) {
+        return it.name.visit(this.parseVisitor, ``) === name;
+      } else if (it instanceof ast.ClassDeclaration) {
+        return it.name.visit(this.parseVisitor, ``) === name;
+      } else if (it instanceof ast.FunctionDeclaration) {
+        return it.name.visit(this.parseVisitor, ``) === name;
+      } else if (it instanceof ast.TypeAliasDeclaration) {
+        return it.name.visit(this.parseVisitor, ``) === name;
+      } else if (it instanceof ast.ModuleDeclaration) {
+        return it.name.visit(this.parseVisitor, ``) === name;
+      }
+      return false;
+    }) as NodeWithName[];
+  }
 }
