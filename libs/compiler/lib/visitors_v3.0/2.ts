@@ -1,3 +1,3 @@
- class Basic2 {
-    title: string;
+class Basic2 {
+  private title: string;
 }

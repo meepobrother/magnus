@@ -12,7 +12,6 @@ import * as util from './util';
  */
 export class TsVisitor implements ast.Visitor {
     name: string = `CoreVisitor`;
-    program: ts.Program;
     visitSourceFile(node: ast.SourceFile, context: ts.SourceFile) {
         if ((context as any).resolvedModules) node.resolvedModules = (context as any).resolvedModules;
         node.statements = context.statements.map(statement => this.visitStatement(undefined, statement));

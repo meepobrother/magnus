@@ -19,7 +19,6 @@ export class File {
   exportDefault: any;
   exportEquals: any;
   constructor(program: Program, node: SourceFile) {
-    this.tsVisitor.program = program;
     this.parseVisitor.program = program;
     this.program = program;
     this.ast = this.tsVisitor.visitSourceFile(new ast.SourceFile(), node);
