@@ -1,1 +1,3 @@
-export class Basic2 {}
+ class Basic2 {
+    title: string;
+}

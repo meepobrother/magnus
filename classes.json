@@ -1,17 +1,5 @@
 [
     {
-        "name": "Basic2",
-        "documentation": "",
-        "type": "typeof Basic2",
-        "constructors": [
-            {
-                "parameters": [],
-                "returnType": "Basic2",
-                "documentation": ""
-            }
-        ]
-    },
-    {
         "name": "Basic1",
         "documentation": "",
         "type": "typeof Basic1",
@@ -19,6 +7,18 @@
             {
                 "parameters": [],
                 "returnType": "Basic1",
+                "documentation": ""
+            }
+        ]
+    },
+    {
+        "name": "Basic2",
+        "documentation": "",
+        "type": "typeof Basic2",
+        "constructors": [
+            {
+                "parameters": [],
+                "returnType": "Basic2",
                 "documentation": ""
             }
         ]
