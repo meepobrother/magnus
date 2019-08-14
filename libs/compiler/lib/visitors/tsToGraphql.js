@@ -393,50 +393,24 @@ class TsToGraphqlVisitor {
             // 搜集字段
             this.isEntity = true;
             const name = node.name.visit(expression_1.expressionVisitor, ``);
-            this.entities[name] = node.members.filter((member) => {
-                const manyToOne = member.getDecorator(`ManyToOne`)(expression_1.expressionVisitor);
-                const oneToMany = member.getDecorator(`OneToMany`)(expression_1.expressionVisitor);
-                const oneToOne = member.getDecorator(`OneToOne`)(expression_1.expressionVisitor);
-                const manyToMany = member.getDecorator(`ManyToMany`)(expression_1.expressionVisitor);
-                const resolveProperty = member.getDecorator(`ResolveProperty`)(expression_1.expressionVisitor);
-                if (manyToOne !== null || oneToMany !== null || oneToOne !== null || manyToMany !== null || resolveProperty !== null) {
-                    return true;
-                }
-                return false;
-            }).map((member) => {
+            this.entities[name] = node.members.map((member) => {
                 const name = member.name.visit(expression_1.expressionVisitor, ``);
                 const manyToOne = member.getDecorator(`ManyToOne`)(expression_1.expressionVisitor);
                 const oneToMany = member.getDecorator(`OneToMany`)(expression_1.expressionVisitor);
                 const oneToOne = member.getDecorator(`OneToOne`)(expression_1.expressionVisitor);
                 const manyToMany = member.getDecorator(`ManyToMany`)(expression_1.expressionVisitor);
-                const resolveProperty = member.getDecorator(`ResolveProperty`)(expression_1.expressionVisitor);
+                const decorators = member.getDecorators()(expression_1.expressionVisitor);
                 const type = member.type.visit(expression_1.expressionVisitor, ``);
                 let entity = ``;
-                if (typeof type === 'string') {
+                if (typeof type === "string") {
                     entity = type;
                 }
                 else {
                     entity = type.elementType;
                 }
-                let relation = ``;
-                if (manyToOne !== null) {
-                    relation = `ManyToOne`;
-                }
-                else if (oneToMany !== null) {
-                    relation = `OneToMany`;
-                }
-                else if (oneToOne !== null) {
-                    relation = `OneToOne`;
-                }
-                else if (manyToMany !== null) {
-                    relation = `ManyToMany`;
-                }
-                else if (resolveProperty !== null) {
-                    relation = `ResolveProperty`;
-                }
                 return {
                     name,
-                    relation,
+                    decorators,
                     entity
                 };
             });
@@ -537,7 +511,7 @@ class TsToGraphqlVisitor {
         const args = node.parameters.filter(par => {
             const decorator = par.getDecorators()(expression_1.expressionVisitor);
             if (decorator) {
-                if (decorator === 'Args') {
+                if (decorator.includes('Args')) {
                     return true;
                 }
                 return false;
@@ -723,7 +697,7 @@ class TsToGraphqlVisitor {
         const args = node.parameters.filter(par => {
             const decorator = par.getDecorators()(expression_1.expressionVisitor);
             if (decorator) {
-                if (decorator === 'Args') {
+                if (decorator.includes('Args')) {
                     return true;
                 }
                 return false;

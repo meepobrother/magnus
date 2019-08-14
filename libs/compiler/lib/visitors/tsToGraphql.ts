@@ -348,7 +348,7 @@ export class TsToGraphqlVisitor implements ast.Visitor {
     permission: PermissionOptions[] = [];
     // entity
     isEntity: boolean = false;
-    entities: { [key: string]: { name: string, relation: string, entity: string }[] } = {};
+    entities: { [key: string]: { name: string, decorators: string[], entity: string }[] } = {};
     handler: Handler;
     constructor() {
         this.handler = new Handler(this);
@@ -385,47 +385,29 @@ export class TsToGraphqlVisitor implements ast.Visitor {
             // 搜集字段
             this.isEntity = true;
             const name = node.name.visit(expressionVisitor, ``);
-            this.entities[name] = node.members.filter((member: any) => {
-                const manyToOne = member.getDecorator(`ManyToOne`)(expressionVisitor);
-                const oneToMany = member.getDecorator(`OneToMany`)(expressionVisitor);
-                const oneToOne = member.getDecorator(`OneToOne`)(expressionVisitor);
-                const manyToMany = member.getDecorator(`ManyToMany`)(expressionVisitor);
-                const resolveProperty = member.getDecorator(`ResolveProperty`)(expressionVisitor);
-                if (manyToOne !== null || oneToMany !== null || oneToOne !== null || manyToMany !== null || resolveProperty !== null) {
-                    return true;
-                }
-                return false;
-            }).map((member: any) => {
+            this.entities[name] = node.members.map((member: any) => {
                 const name = (member as ast.PropertyDeclaration).name.visit(expressionVisitor, ``)
                 const manyToOne = member.getDecorator(`ManyToOne`)(expressionVisitor);
                 const oneToMany = member.getDecorator(`OneToMany`)(expressionVisitor);
                 const oneToOne = member.getDecorator(`OneToOne`)(expressionVisitor);
                 const manyToMany = member.getDecorator(`ManyToMany`)(expressionVisitor);
-                const resolveProperty = member.getDecorator(`ResolveProperty`)(expressionVisitor);
-                const type = member.type.visit(expressionVisitor, ``);
+                const decorators = (member as ast.PropertyDeclaration).getDecorators()(expressionVisitor);
+
+                const type = member.type.visit(
+                  expressionVisitor,
+                  ``
+                );
                 let entity = ``;
-                if (typeof type === 'string') {
-                    entity = type;
+                if (typeof type === "string") {
+                  entity = type;
                 } else {
-                    entity = type.elementType;
-                }
-                let relation = ``;
-                if (manyToOne !== null) {
-                    relation = `ManyToOne`;
-                } else if (oneToMany !== null) {
-                    relation = `OneToMany`;
-                } else if (oneToOne !== null) {
-                    relation = `OneToOne`;
-                } else if (manyToMany !== null) {
-                    relation = `ManyToMany`;
-                } else if (resolveProperty !== null) {
-                    relation = `ResolveProperty`;
+                  entity = type.elementType;
                 }
                 return {
-                    name,
-                    relation,
-                    entity
-                }
+                  name,
+                  decorators,
+                  entity
+                };
             });
         }
         if (context.isInput) {
@@ -516,7 +498,7 @@ export class TsToGraphqlVisitor implements ast.Visitor {
         const args = node.parameters.filter(par => {
             const decorator = par.getDecorators()(expressionVisitor);
             if (decorator) {
-                if (decorator === 'Args') {
+                if (decorator.includes('Args')) {
                     return true;
                 }
                 return false;
@@ -676,7 +658,7 @@ export class TsToGraphqlVisitor implements ast.Visitor {
         const args = node.parameters.filter(par => {
             const decorator = par.getDecorators()(expressionVisitor);
             if (decorator) {
-                if (decorator === 'Args') {
+                if (decorator.includes('Args')) {
                     return true;
                 }
                 return false;

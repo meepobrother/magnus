@@ -253,18 +253,8 @@ export class AstToGraphqlVisitor implements ast.Visitor {
     const scalar = node.getDecorator<ScalarOptions>(`Scalar`)(
       expressionVisitor
     );
-    const directive = node.getDecorator<DirectiveOptions>(`Directive`)(
-      expressionVisitor
-    );
-    const injectable = node.getDecorator<InjectableOptions>(`Injectable`)(
-      expressionVisitor
-    );
-    const module = node.getDecorator<ModuleOptions>(`Module`)(
-      expressionVisitor
-    );
     const resolver = node.getDecorator<string>(`Resolver`)(expressionVisitor);
     const entity = node.getDecorator(`Entity`)(expressionVisitor);
-
     if (scalar !== null) {
       const scalarDef = new ast.ScalarTypeDefinitionAst();
       const context = new MagnusContext();

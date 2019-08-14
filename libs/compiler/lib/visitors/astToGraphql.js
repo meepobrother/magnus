@@ -210,9 +210,6 @@ class AstToGraphqlVisitor {
     }
     collectCls(node, context) {
         const scalar = node.getDecorator(`Scalar`)(expression_1.expressionVisitor);
-        const directive = node.getDecorator(`Directive`)(expression_1.expressionVisitor);
-        const injectable = node.getDecorator(`Injectable`)(expression_1.expressionVisitor);
-        const module = node.getDecorator(`Module`)(expression_1.expressionVisitor);
         const resolver = node.getDecorator(`Resolver`)(expression_1.expressionVisitor);
         const entity = node.getDecorator(`Entity`)(expression_1.expressionVisitor);
         if (scalar !== null) {

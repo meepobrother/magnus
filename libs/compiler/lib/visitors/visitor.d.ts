@@ -1,5 +1,5 @@
-import * as ts from 'typescript';
-import * as util from './util';
+import * as ts from "typescript";
+import * as util from "./util";
 export declare abstract class Node<T extends ts.Node = ts.Node> {
     decorators: Decorator[];
     parent: Node;
@@ -75,6 +75,7 @@ export declare class PropertyDeclaration extends ClassElement<ts.PropertyDeclara
     exclamationToken: ExclamationToken;
     initializer: Expression;
     visit(visitor: Visitor, context: any): any;
+    getDecorators(): (visitor: Visitor) => string[];
     getDecorator<T>(name: string): (visitor: Visitor) => T | undefined | null;
 }
 export declare class Identifier extends Node<ts.Identifier> {
@@ -208,7 +209,7 @@ export declare class AsteriskToken extends Node<ts.AsteriskToken> {
     visit(visitor: Visitor, context: any): any;
 }
 export declare class Modifier extends Node<ts.Modifier> {
-    name: 'static' | 'readonly' | 'declare' | 'protected' | 'private' | 'export' | 'default' | 'const' | 'async' | 'abstract' | 'public';
+    name: "static" | "readonly" | "declare" | "protected" | "private" | "export" | "default" | "const" | "async" | "abstract" | "public";
     visit(visitor: Visitor, context: any): any;
 }
 export declare class FunctionBody extends Node<ts.FunctionBody> {
@@ -224,7 +225,7 @@ export declare class ParameterDeclaration extends Node<ts.ParameterDeclaration> 
     index: number;
     visit(visitor: Visitor, context: any): any;
     getDecorator<T>(name: string): (visitor: Visitor) => T | undefined | null;
-    getDecorators(): (visitor: Visitor) => string;
+    getDecorators(): (visitor: Visitor) => string[];
 }
 export declare class TupleTypeNode extends Node<ts.TupleTypeNode> {
     elementTypes: TypeNode[];
@@ -256,7 +257,7 @@ export declare class InterfaceDeclaration extends Node<ts.InterfaceDeclaration> 
     visit(visitor: Visitor, context: any): any;
 }
 export declare class HeritageClause extends Node<ts.HeritageClause> {
-    token: 'extends' | 'implements';
+    token: "extends" | "implements";
     types: ExpressionWithTypeArguments[];
     visit(visitor: Visitor, context: any): any;
 }
@@ -990,7 +991,7 @@ export declare class TsVisitor implements Visitor {
      * @param {ts.Modifier} context
      */
     visitModifier(node: Modifier, context: ts.Modifier): Modifier;
-    visitExpression(node: Expression, context: ts.Expression): ConditionalExpression | RegularExpressionLiteral | TaggedTemplateExpression | NoSubstitutionTemplateLiteral | NullLiteral | NewExpression | BinaryExpression | Expression | CallExpression | ObjectLiteralExpression | StringLiteral | NumericLiteral | ArrayLiteralExpression | AsExpression | AwaitExpression | ArrowFunction | BooleanLiteral | PropertyAccessExpression | Identifier | PrefixUnaryExpression | ElementAccessExpression | ParenthesizedExpression | ThisExpression | TemplateExpression | SpreadElement;
+    visitExpression(node: Expression, context: ts.Expression): ConditionalExpression | RegularExpressionLiteral | TaggedTemplateExpression | Identifier | StringLiteral | NumericLiteral | Expression | CallExpression | ObjectLiteralExpression | ArrayLiteralExpression | AsExpression | AwaitExpression | ArrowFunction | BooleanLiteral | ElementAccessExpression | ParenthesizedExpression | ThisExpression | PropertyAccessExpression | PrefixUnaryExpression | NullLiteral | NoSubstitutionTemplateLiteral | TemplateExpression | NewExpression | SpreadElement | BinaryExpression;
     visitSpreadElement(node: SpreadElement, context: any): SpreadElement;
     visitNoSubstitutionTemplateLiteral(node: NoSubstitutionTemplateLiteral, context: ts.NoSubstitutionTemplateLiteral): NoSubstitutionTemplateLiteral;
     visitNullLiteral(node: NullLiteral, context: any): NullLiteral;
@@ -1050,7 +1051,7 @@ export declare class TsVisitor implements Visitor {
     /**
      * type node end
      */
-    visitEntityName(node: EntityName, context: ts.EntityName): QualifiedName | Identifier;
+    visitEntityName(node: EntityName, context: ts.EntityName): Identifier | QualifiedName;
     visitQualifiedName(node: QualifiedName, context: ts.QualifiedName): QualifiedName;
     visitPropertyName(node: any, context: ts.PropertyName): PropertyName;
     visitComputedPropertyName(node: ComputedPropertyName, context: ts.ComputedPropertyName): ComputedPropertyName;
@@ -1065,7 +1066,7 @@ export declare class TsVisitor implements Visitor {
     visitPropertyAccessExpression(node: PropertyAccessExpression, context: ts.PropertyAccessExpression): PropertyAccessExpression;
     visitCallExpression(node: CallExpression, context: ts.CallExpression): CallExpression;
     visitObjectLiteralExpression(node: ObjectLiteralExpression, context: ts.ObjectLiteralExpression): ObjectLiteralExpression;
-    visitObjectLiteralElementLike(node: ObjectLiteralElementLike, context: ts.ObjectLiteralElementLike): ShorthandPropertyAssignment | PropertyAssignment | MethodDeclaration | GetAccessorDeclaration | SetAccessorDeclaration | SpreadAssignment | ObjectLiteralElementLike;
+    visitObjectLiteralElementLike(node: ObjectLiteralElementLike, context: ts.ObjectLiteralElementLike): MethodDeclaration | GetAccessorDeclaration | SetAccessorDeclaration | ShorthandPropertyAssignment | SpreadAssignment | ObjectLiteralElementLike | PropertyAssignment;
     visitShorthandPropertyAssignment(node: ShorthandPropertyAssignment, context: ts.ShorthandPropertyAssignment): ShorthandPropertyAssignment;
     visitSpreadAssignment(node: SpreadAssignment, context: ts.SpreadAssignment): SpreadAssignment;
     visitPropertyAssignment(node: PropertyAssignment, context: ts.PropertyAssignment): PropertyAssignment;
