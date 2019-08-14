@@ -41,7 +41,7 @@ export declare class GraphqlToTs implements ast.Visitor {
         operation: string;
         schema: ObjectTypeDefinitionAst;
     }): any;
-    getSchema(operation: string): ast.ScalarTypeExtensionAst<any, any> | ast.ObjectTypeExtensionAst<any, any> | ast.InterfaceTypeExtensionAst<any, any> | ast.UnionTypeExtensionAst<any, any> | ast.EnumTypeExtensionAst<any, any> | ast.InputObjectTypeExtensionAst<any, any> | ast.ScalarTypeDefinitionAst<any, any> | ast.ObjectTypeDefinitionAst<any, any> | ast.InterfaceTypeDefinitionAst<any, any> | ast.InputObjectTypeDefinitionAst<any, any> | ast.OperationDefinitionAst<any, any> | ast.FragmentDefinitionAst<any, any> | ast.SchemaExtensionAst<any, any> | ast.SchemaDefinitionAst<any, any> | ast.UnionTypeDefinitionAst<any, any> | ast.EnumTypeDefinitionAst<any, any> | ast.DirectiveDefinitionAst<any, any> | undefined;
+    getSchema(operation: string): ast.ScalarTypeExtensionAst<any, any> | ast.ObjectTypeExtensionAst<any, any> | ast.InterfaceTypeExtensionAst<any, any> | ast.UnionTypeExtensionAst<any, any> | ast.EnumTypeExtensionAst<any, any> | ast.InputObjectTypeExtensionAst<any, any> | ast.OperationDefinitionAst<any, any> | ast.FragmentDefinitionAst<any, any> | ast.SchemaDefinitionAst<any, any> | ast.ScalarTypeDefinitionAst<any, any> | ast.ObjectTypeDefinitionAst<any, any> | ast.InterfaceTypeDefinitionAst<any, any> | ast.UnionTypeDefinitionAst<any, any> | ast.EnumTypeDefinitionAst<any, any> | ast.InputObjectTypeDefinitionAst<any, any> | ast.DirectiveDefinitionAst<any, any> | ast.SchemaExtensionAst<any, any> | undefined;
     private __getType;
     visitOperationDefinitionAst(node: OperationDefinitionAst, context: string): string;
 }

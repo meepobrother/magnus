@@ -479,6 +479,12 @@ export class MethodDeclaration extends Node<ts.MethodDeclaration> {
       throw new Error(`${visitor.name} 没有 visitMethodDeclaration 方法`);
     }
   }
+  getDecorators(): (visitor: Visitor) => string[] {
+    return (visitor: Visitor) => {
+      const decorators = this.decorators.map(dec => dec.visit(visitor, {}));
+      return decorators.map(dec => dec.name);
+    };
+  }
   getDecorator<T>(name: string): (visitor: Visitor) => T | undefined | null {
     return (visitor: Visitor): T | undefined | null => {
       const decorators = this.decorators.map(dec => dec.visit(visitor, {}));

@@ -397,6 +397,12 @@ class MethodDeclaration extends Node {
             throw new Error(`${visitor.name} 没有 visitMethodDeclaration 方法`);
         }
     }
+    getDecorators() {
+        return (visitor) => {
+            const decorators = this.decorators.map(dec => dec.visit(visitor, {}));
+            return decorators.map(dec => dec.name);
+        };
+    }
     getDecorator(name) {
         return (visitor) => {
             const decorators = this.decorators.map(dec => dec.visit(visitor, {}));
