@@ -372,13 +372,7 @@ export class TsToGraphqlVisitor implements ast.Visitor {
         context.parent = context.parent || top;
         const scalar = node.getDecorator(`Scalar`)(expressionVisitor);
         const directive = node.getDecorator<DirectiveOptions>(`Directive`)(expressionVisitor);
-        const injectable = node.getDecorator(`Injectable`)(expressionVisitor);
-        const module = node.getDecorator(`Module`)(expressionVisitor);
-        /**
-         * 添加resolver中的ResolveProperty，并添加到制定的interface中
-         */
         const resolver = node.getDecorator(`Resolver`)(expressionVisitor);
-        // 搜集Entity
         const entity = node.getDecorator(`Entity`)(expressionVisitor);
         this.isEntity = false;
         if (entity !== null) {
@@ -657,7 +651,7 @@ export class TsToGraphqlVisitor implements ast.Visitor {
         context.isInput = true;
         const args = node.parameters.filter(par => {
             const decorator = par.getDecorators()(expressionVisitor);
-            if (decorator) {
+            if (decorator && decorator.length>0) {
                 if (decorator.includes('Args')) {
                     return true;
                 }

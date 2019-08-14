@@ -36,49 +36,6 @@ scalar Timestamp
 
 scalar Date
 
-"域"
-type Domain {
-  id: Int
-  "域标题"
-  title: String
-  "域编号"
-  code: String
-  "域状态"
-  status: Int
-  "创建人"
-  createUser: Int
-  "创建时间"
-  createDate: Int
-  "部门"
-  departments: [Department]
-  getDepartments: [Department]
-}
-
-"部门表"
-type Department {
-  "部门编号"
-  id: Int
-  "部门名称"
-  title: String
-  "部门状态"
-  status: Int
-  "是否显示"
-  shown: Boolean
-  "上级部门"
-  parent: Department
-  "创建时间"
-  createDate: Int
-  "下级部门"
-  children: [Department]
-  getChildren: [Department]
-  "一个部门可以有多个岗位"
-  stations: [Station]
-  getStations: [Station]
-  "域"
-  domain: Domain
-  domainId: Int
-}
-
 type RoleGroup {
   id: Int
   "角色组名"
@@ -91,36 +48,6 @@ type RoleGroup {
   "用到此角色组的岗位"
   stations: [Station]
   getStations: [Station]
-}
-
-"岗位表"
-type Station {
-  "岗位序号"
-  id: Int
-  "岗位标题"
-  title: String
-  "岗位描述"
-  desc: String
-  "岗位标识码"
-  code: String
-  "岗位责任"
-  responsibilities: String
-  "岗位要求"
-  requirements: String
-  "岗位状态"
-  status: Int
-  "创建用户"
-  createUser: User
-  "创建日期"
-  createDate: String
-  "每个岗位有一个部门"
-  department: Department
-  "某个岗位可以被什么角色使用"
-  canUseRoles: [Role]
-  users: [User]
-  getUsers: [User]
-  "一个岗位有一个role group"
-  roleGroup: RoleGroup
 }
 
 "角色表"
@@ -1188,18 +1115,111 @@ type User {
   toDoItems: [ToDoItem]
   "发布者"
   mineToDoItems: [ToDoItem]
-  getToDoItems(where: ToDoItemInputWhere, order: ToDoItemInputOrder, limit: PageLimitInput): [ToDoItem]
+  getToDoItems(
+    where: ToDoItemInputWhere
+    order: ToDoItemInputOrder
+    limit: PageLimitInput
+  ): [ToDoItem]
   "用户岗位"
   stations: [Station]
-  getStations(where: StationInputWhere, order: StationInputOrder, limit: PageLimitInput): [Station]
+  getStations(
+    where: StationInputWhere
+    order: StationInputOrder
+    limit: PageLimitInput
+  ): [Station]
   "用户的登录记录"
   loginLogs: [UserLoginLog]
-  getUserLoginLogs(where: UserLoginLogInputWhere, order: UserLoginLogInputOrder, limit: PageLimitInput): [UserLoginLog]
+  getUserLoginLogs(
+    where: UserLoginLogInputWhere
+    order: UserLoginLogInputOrder
+    limit: PageLimitInput
+  ): [UserLoginLog]
   "用户的安全分扣分记录"
   safetyScoreLogs: [SafetyScoreLog]
-  getSafetyScoreLogs(where: SafetyScoreLogInputWhere, order: SafetyScoreLogInputOrder, limit: PageLimitInput): [SafetyScoreLog]
+  getSafetyScoreLogs(
+    where: SafetyScoreLogInputWhere
+    order: SafetyScoreLogInputOrder
+    limit: PageLimitInput
+  ): [SafetyScoreLog]
   createStations: [Station]
-  getCreateStations(where: StationInputWhere, order: StationInputOrder, limit: PageLimitInput): [Station]
+  getCreateStations(
+    where: StationInputWhere
+    order: StationInputOrder
+    limit: PageLimitInput
+  ): [Station]
+}
+
+"岗位表"
+type Station {
+  "岗位序号"
+  id: Int
+  "岗位标题"
+  title: String
+  "岗位描述"
+  desc: String
+  "岗位标识码"
+  code: String
+  "岗位责任"
+  responsibilities: String
+  "岗位要求"
+  requirements: String
+  "岗位状态"
+  status: Int
+  "创建用户"
+  createUser: User
+  "创建日期"
+  createDate: String
+  "每个岗位有一个部门"
+  department: Department
+  "某个岗位可以被什么角色使用"
+  canUseRoles: [Role]
+  users: [User]
+  getUsers: [User]
+  "一个岗位有一个role group"
+  roleGroup: RoleGroup
+}
+
+"域"
+type Domain {
+  id: Int
+  "域标题"
+  title: String
+  "域编号"
+  code: String
+  "域状态"
+  status: Int
+  "创建人"
+  createUser: Int
+  "创建时间"
+  createDate: Int
+  "部门"
+  departments: [Department]
+  getDepartments: [Department]
+}
+
+"部门表"
+type Department {
+  "部门编号"
+  id: Int
+  "部门名称"
+  title: String
+  "部门状态"
+  status: Int
+  "是否显示"
+  shown: Boolean
+  "上级部门"
+  parent: Department
+  "创建时间"
+  createDate: Int
+  "下级部门"
+  children: [Department]
+  getChildren: [Department]
+  "一个部门可以有多个岗位"
+  stations: [Station]
+  getStations: [Station]
+  "域"
+  domain: Domain
+  domainId: Int
 }
 
 "用户表"
@@ -2428,65 +2448,29 @@ input SafetyScoreRuleInputOrder {
 
 type Query {
   "通过指定条件获取一条数据"
-  getUser(
-    "条件"
-    entity: UserInputWhere!
-  ): User
+  getUser("条件" entity: UserInputWhere!): User
   "通过指定条件获取一条数据"
-  getSystem(
-    "条件"
-    entity: SystemInputWhere!
-  ): System
+  getSystem("条件" entity: SystemInputWhere!): System
   "通过指定条件获取一条数据"
-  getSystemEvent(
-    "条件"
-    entity: SystemEventInputWhere!
-  ): SystemEvent
+  getSystemEvent("条件" entity: SystemEventInputWhere!): SystemEvent
   "通过指定条件获取一条数据"
-  getSystemRight(
-    "条件"
-    entity: SystemRightInputWhere!
-  ): SystemRight
+  getSystemRight("条件" entity: SystemRightInputWhere!): SystemRight
   "通过指定条件获取一条数据"
-  getDepartment(
-    "条件"
-    entity: DepartmentInputWhere!
-  ): Department
+  getDepartment("条件" entity: DepartmentInputWhere!): Department
   "通过指定条件获取一条数据"
-  getRole(
-    "条件"
-    entity: RoleInputWhere!
-  ): Role
+  getRole("条件" entity: RoleInputWhere!): Role
   "通过指定条件获取一条数据"
-  getStation(
-    "条件"
-    entity: StationInputWhere!
-  ): Station
+  getStation("条件" entity: StationInputWhere!): Station
   "通过指定条件获取一条数据"
-  getToDoItem(
-    "条件"
-    entity: ToDoItemInputWhere!
-  ): ToDoItem
+  getToDoItem("条件" entity: ToDoItemInputWhere!): ToDoItem
   "通过指定条件获取一条数据"
-  getRoleGroup(
-    "条件"
-    entity: RoleGroupInputWhere!
-  ): RoleGroup
+  getRoleGroup("条件" entity: RoleGroupInputWhere!): RoleGroup
   "通过指定条件获取一条数据"
-  getUserLoginLog(
-    "条件"
-    entity: UserLoginLogInputWhere!
-  ): UserLoginLog
+  getUserLoginLog("条件" entity: UserLoginLogInputWhere!): UserLoginLog
   "通过指定条件获取一条数据"
-  getSafetyScoreLog(
-    "条件"
-    entity: SafetyScoreLogInputWhere!
-  ): SafetyScoreLog
+  getSafetyScoreLog("条件" entity: SafetyScoreLogInputWhere!): SafetyScoreLog
   "通过指定条件获取一条数据"
-  getSafetyScoreRule(
-    "条件"
-    entity: SafetyScoreRuleInputWhere!
-  ): SafetyScoreRule
+  getSafetyScoreRule("条件" entity: SafetyScoreRuleInputWhere!): SafetyScoreRule
   "通过制定条件获取一组数据"
   findUser(
     "条件"
@@ -2572,118 +2556,52 @@ type Query {
     limit: PageLimitInput
   ): [SafetyScoreRule]
   "删除"
-  deleteUser(
-    "根据id删除"
-    id: Int!
-  ): Boolean
+  deleteUser("根据id删除" id: Int!): Boolean
   "删除"
-  deleteSystem(
-    "根据id删除"
-    id: Int!
-  ): Boolean
+  deleteSystem("根据id删除" id: Int!): Boolean
   "删除"
-  deleteSystemEvent(
-    "根据id删除"
-    id: Int!
-  ): Boolean
+  deleteSystemEvent("根据id删除" id: Int!): Boolean
   "删除"
-  deleteSystemRight(
-    "根据id删除"
-    id: Int!
-  ): Boolean
+  deleteSystemRight("根据id删除" id: Int!): Boolean
   "删除"
-  deleteDepartment(
-    "根据id删除"
-    id: Int!
-  ): Boolean
+  deleteDepartment("根据id删除" id: Int!): Boolean
   "删除"
-  deleteRole(
-    "根据id删除"
-    id: Int!
-  ): Boolean
+  deleteRole("根据id删除" id: Int!): Boolean
   "删除"
-  deleteStation(
-    "根据id删除"
-    id: Int!
-  ): Boolean
+  deleteStation("根据id删除" id: Int!): Boolean
   "删除"
-  deleteToDoItem(
-    "根据id删除"
-    id: Int!
-  ): Boolean
+  deleteToDoItem("根据id删除" id: Int!): Boolean
   "删除"
-  deleteRoleGroup(
-    "根据id删除"
-    id: Int!
-  ): Boolean
+  deleteRoleGroup("根据id删除" id: Int!): Boolean
   "删除"
-  deleteUserLoginLog(
-    "根据id删除"
-    id: Int!
-  ): Boolean
+  deleteUserLoginLog("根据id删除" id: Int!): Boolean
   "删除"
-  deleteSafetyScoreLog(
-    "根据id删除"
-    id: Int!
-  ): Boolean
+  deleteSafetyScoreLog("根据id删除" id: Int!): Boolean
   "删除"
-  deleteSafetyScoreRule(
-    "根据id删除"
-    id: Int!
-  ): Boolean
+  deleteSafetyScoreRule("根据id删除" id: Int!): Boolean
 }
 
 type Mutation {
   "没有就插入，有就更新"
-  saveUser(
-    "要保存的数据"
-    entity: UserInput!
-  ): User
+  saveUser("要保存的数据" entity: UserInput!): User
   "没有就插入，有就更新"
-  saveSystem(
-    "要保存的数据"
-    entity: SystemInput!
-  ): System
+  saveSystem("要保存的数据" entity: SystemInput!): System
   "没有就插入，有就更新"
-  saveSystemEvent(
-    "要保存的数据"
-    entity: SystemEventInput!
-  ): SystemEvent
+  saveSystemEvent("要保存的数据" entity: SystemEventInput!): SystemEvent
   "没有就插入，有就更新"
-  saveSystemRight(
-    "要保存的数据"
-    entity: SystemRightInput!
-  ): SystemRight
+  saveSystemRight("要保存的数据" entity: SystemRightInput!): SystemRight
   "没有就插入，有就更新"
-  saveDepartment(
-    "要保存的数据"
-    entity: DepartmentInput!
-  ): Department
+  saveDepartment("要保存的数据" entity: DepartmentInput!): Department
   "没有就插入，有就更新"
-  saveRole(
-    "要保存的数据"
-    entity: RoleInput!
-  ): Role
+  saveRole("要保存的数据" entity: RoleInput!): Role
   "没有就插入，有就更新"
-  saveStation(
-    "要保存的数据"
-    entity: StationInput!
-  ): Station
+  saveStation("要保存的数据" entity: StationInput!): Station
   "没有就插入，有就更新"
-  saveToDoItem(
-    "要保存的数据"
-    entity: ToDoItemInput!
-  ): ToDoItem
+  saveToDoItem("要保存的数据" entity: ToDoItemInput!): ToDoItem
   "没有就插入，有就更新"
-  saveRoleGroup(
-    "要保存的数据"
-    entity: RoleGroupInput!
-  ): RoleGroup
+  saveRoleGroup("要保存的数据" entity: RoleGroupInput!): RoleGroup
   "没有就插入，有就更新"
-  saveUserLoginLog(
-    "要保存的数据"
-    entity: UserLoginLogInput!
-  ): UserLoginLog
+  saveUserLoginLog("要保存的数据" entity: UserLoginLogInput!): UserLoginLog
   "没有就插入，有就更新"
   saveSafetyScoreLog(
     "要保存的数据"
@@ -2695,55 +2613,25 @@ type Mutation {
     entity: SafetyScoreRuleInput!
   ): SafetyScoreRule
   "插入数据"
-  insertUser(
-    "要插入的数据"
-    entity: UserInput!
-  ): User
+  insertUser("要插入的数据" entity: UserInput!): User
   "插入数据"
-  insertSystem(
-    "要插入的数据"
-    entity: SystemInput!
-  ): System
+  insertSystem("要插入的数据" entity: SystemInput!): System
   "插入数据"
-  insertSystemEvent(
-    "要插入的数据"
-    entity: SystemEventInput!
-  ): SystemEvent
+  insertSystemEvent("要插入的数据" entity: SystemEventInput!): SystemEvent
   "插入数据"
-  insertSystemRight(
-    "要插入的数据"
-    entity: SystemRightInput!
-  ): SystemRight
+  insertSystemRight("要插入的数据" entity: SystemRightInput!): SystemRight
   "插入数据"
-  insertDepartment(
-    "要插入的数据"
-    entity: DepartmentInput!
-  ): Department
+  insertDepartment("要插入的数据" entity: DepartmentInput!): Department
   "插入数据"
-  insertRole(
-    "要插入的数据"
-    entity: RoleInput!
-  ): Role
+  insertRole("要插入的数据" entity: RoleInput!): Role
   "插入数据"
-  insertStation(
-    "要插入的数据"
-    entity: StationInput!
-  ): Station
+  insertStation("要插入的数据" entity: StationInput!): Station
   "插入数据"
-  insertToDoItem(
-    "要插入的数据"
-    entity: ToDoItemInput!
-  ): ToDoItem
+  insertToDoItem("要插入的数据" entity: ToDoItemInput!): ToDoItem
   "插入数据"
-  insertRoleGroup(
-    "要插入的数据"
-    entity: RoleGroupInput!
-  ): RoleGroup
+  insertRoleGroup("要插入的数据" entity: RoleGroupInput!): RoleGroup
   "插入数据"
-  insertUserLoginLog(
-    "要插入的数据"
-    entity: UserLoginLogInput!
-  ): UserLoginLog
+  insertUserLoginLog("要插入的数据" entity: UserLoginLogInput!): UserLoginLog
   "插入数据"
   insertSafetyScoreLog(
     "要插入的数据"

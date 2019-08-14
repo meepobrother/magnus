@@ -380,13 +380,7 @@ class TsToGraphqlVisitor {
         context.parent = context.parent || top;
         const scalar = node.getDecorator(`Scalar`)(expression_1.expressionVisitor);
         const directive = node.getDecorator(`Directive`)(expression_1.expressionVisitor);
-        const injectable = node.getDecorator(`Injectable`)(expression_1.expressionVisitor);
-        const module = node.getDecorator(`Module`)(expression_1.expressionVisitor);
-        /**
-         * 添加resolver中的ResolveProperty，并添加到制定的interface中
-         */
         const resolver = node.getDecorator(`Resolver`)(expression_1.expressionVisitor);
-        // 搜集Entity
         const entity = node.getDecorator(`Entity`)(expression_1.expressionVisitor);
         this.isEntity = false;
         if (entity !== null) {
@@ -696,7 +690,7 @@ class TsToGraphqlVisitor {
         context.isInput = true;
         const args = node.parameters.filter(par => {
             const decorator = par.getDecorators()(expression_1.expressionVisitor);
-            if (decorator) {
+            if (decorator && decorator.length > 0) {
                 if (decorator.includes('Args')) {
                     return true;
                 }

@@ -1,312 +1,1026 @@
 {
-  "User": [
+  "CasbinRule": [
     {
-      "name": "createUser",
-      "relation": "ManyToOne",
-      "entity": "User"
+      "name": "id",
+      "decorators": [
+        "PrimaryGeneratedColumn"
+      ],
+      "entity": "number"
     },
     {
-      "name": "createUsers",
-      "relation": "OneToMany",
-      "entity": "User"
+      "name": "ptype",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "string"
     },
     {
-      "name": "toDoItems",
-      "relation": "OneToMany",
-      "entity": "ToDoItem"
+      "name": "v0",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "string"
     },
     {
-      "name": "mineToDoItems",
-      "relation": "OneToMany",
-      "entity": "ToDoItem"
+      "name": "v1",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "string"
     },
     {
-      "name": "getToDoItems",
-      "relation": "ResolveProperty",
+      "name": "v2",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "string"
+    },
+    {
+      "name": "v3",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "string"
+    },
+    {
+      "name": "v4",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "string"
+    },
+    {
+      "name": "v5",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "string"
+    }
+  ],
+  "Department": [
+    {
+      "name": "id",
+      "decorators": [
+        "PrimaryGeneratedColumn"
+      ],
+      "entity": "number"
+    },
+    {
+      "name": "title",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "string"
+    },
+    {
+      "name": "status",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "number"
+    },
+    {
+      "name": "shown",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "boolean"
+    },
+    {
+      "name": "parent",
+      "decorators": [
+        "ManyToOne"
+      ],
+      "entity": "Department"
+    },
+    {
+      "name": "createDate",
+      "decorators": [
+        "CreateDateColumn"
+      ],
+      "entity": "number"
+    },
+    {
+      "name": "children",
+      "decorators": [
+        "OneToMany"
+      ],
+      "entity": "Department"
+    },
+    {
+      "name": "getChildren",
+      "decorators": [
+        "ResolveProperty"
+      ],
       "entity": "Promise"
     },
     {
       "name": "stations",
-      "relation": "ManyToMany",
+      "decorators": [
+        "OneToMany"
+      ],
       "entity": "Station"
     },
     {
       "name": "getStations",
-      "relation": "ResolveProperty",
+      "decorators": [
+        "ResolveProperty"
+      ],
+      "entity": "Promise"
+    },
+    {
+      "name": "domain",
+      "decorators": [
+        "ManyToOne",
+        "JoinTable"
+      ],
+      "entity": "Domain"
+    },
+    {
+      "name": "domainId",
+      "decorators": [],
+      "entity": "number"
+    }
+  ],
+  "Station": [
+    {
+      "name": "id",
+      "decorators": [
+        "PrimaryGeneratedColumn"
+      ],
+      "entity": "number"
+    },
+    {
+      "name": "title",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "string"
+    },
+    {
+      "name": "desc",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "string"
+    },
+    {
+      "name": "code",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "string"
+    },
+    {
+      "name": "responsibilities",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "string"
+    },
+    {
+      "name": "requirements",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "string"
+    },
+    {
+      "name": "status",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "number"
+    },
+    {
+      "name": "createUser",
+      "decorators": [
+        "ManyToOne"
+      ],
+      "entity": "User"
+    },
+    {
+      "name": "createDate",
+      "decorators": [
+        "CreateDateColumn"
+      ],
+      "entity": "string"
+    },
+    {
+      "name": "department",
+      "decorators": [
+        "ManyToOne"
+      ],
+      "entity": "Department"
+    },
+    {
+      "name": "canUseRoles",
+      "decorators": [
+        "ManyToMany",
+        "JoinTable"
+      ],
+      "entity": "Role"
+    },
+    {
+      "name": "users",
+      "decorators": [
+        "ManyToMany",
+        "JoinTable"
+      ],
+      "entity": "User"
+    },
+    {
+      "name": "getUsers",
+      "decorators": [
+        "ResolveProperty"
+      ],
+      "entity": "Promise"
+    },
+    {
+      "name": "roleGroup",
+      "decorators": [
+        "ManyToOne"
+      ],
+      "entity": "RoleGroup"
+    }
+  ],
+  "User": [
+    {
+      "name": "id",
+      "decorators": [
+        "PrimaryGeneratedColumn"
+      ],
+      "entity": "number"
+    },
+    {
+      "name": "username",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "string"
+    },
+    {
+      "name": "email",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "string"
+    },
+    {
+      "name": "avatar",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "string"
+    },
+    {
+      "name": "mobile",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "string"
+    },
+    {
+      "name": "password",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "string"
+    },
+    {
+      "name": "status",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "number"
+    },
+    {
+      "name": "randomCode",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "string"
+    },
+    {
+      "name": "isRestPassword",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "boolean"
+    },
+    {
+      "name": "passwordDate",
+      "decorators": [
+        "CreateDateColumn"
+      ],
+      "entity": "number"
+    },
+    {
+      "name": "createDate",
+      "decorators": [
+        "CreateDateColumn"
+      ],
+      "entity": "number"
+    },
+    {
+      "name": "createUser",
+      "decorators": [
+        "ManyToOne",
+        "JoinTable"
+      ],
+      "entity": "User"
+    },
+    {
+      "name": "createUserId",
+      "decorators": [],
+      "entity": "number"
+    },
+    {
+      "name": "createUsers",
+      "decorators": [
+        "OneToMany"
+      ],
+      "entity": "User"
+    },
+    {
+      "name": "safetyScore",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "number"
+    },
+    {
+      "name": "toDoItems",
+      "decorators": [
+        "OneToMany"
+      ],
+      "entity": "ToDoItem"
+    },
+    {
+      "name": "mineToDoItems",
+      "decorators": [
+        "OneToMany"
+      ],
+      "entity": "ToDoItem"
+    },
+    {
+      "name": "getToDoItems",
+      "decorators": [
+        "ResolveProperty"
+      ],
+      "entity": "Promise"
+    },
+    {
+      "name": "stations",
+      "decorators": [
+        "ManyToMany"
+      ],
+      "entity": "Station"
+    },
+    {
+      "name": "getStations",
+      "decorators": [
+        "ResolveProperty"
+      ],
       "entity": "Promise"
     },
     {
       "name": "loginLogs",
-      "relation": "OneToMany",
+      "decorators": [
+        "OneToMany"
+      ],
       "entity": "UserLoginLog"
     },
     {
       "name": "getUserLoginLogs",
-      "relation": "ResolveProperty",
+      "decorators": [
+        "ResolveProperty"
+      ],
       "entity": "Promise"
     },
     {
       "name": "safetyScoreLogs",
-      "relation": "OneToMany",
+      "decorators": [
+        "OneToMany"
+      ],
       "entity": "SafetyScoreLog"
     },
     {
       "name": "getSafetyScoreLogs",
-      "relation": "ResolveProperty",
+      "decorators": [
+        "ResolveProperty"
+      ],
       "entity": "Promise"
     },
     {
       "name": "createStations",
-      "relation": "OneToMany",
+      "decorators": [
+        "OneToMany"
+      ],
       "entity": "Station"
     },
     {
       "name": "getCreateStations",
-      "relation": "ResolveProperty",
+      "decorators": [
+        "ResolveProperty"
+      ],
       "entity": "Promise"
     }
   ],
   "ToDoItem": [
     {
+      "name": "id",
+      "decorators": [
+        "PrimaryGeneratedColumn"
+      ],
+      "entity": "number"
+    },
+    {
+      "name": "title",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "string"
+    },
+    {
+      "name": "desc",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "string"
+    },
+    {
+      "name": "createDate",
+      "decorators": [
+        "CreateDateColumn"
+      ],
+      "entity": "string"
+    },
+    {
       "name": "fromSystem",
-      "relation": "ManyToOne",
+      "decorators": [
+        "ManyToOne",
+        "JoinTable"
+      ],
       "entity": "System"
     },
     {
+      "name": "fromSystemId",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "number"
+    },
+    {
       "name": "fromEvent",
-      "relation": "ManyToOne",
+      "decorators": [
+        "ManyToOne",
+        "JoinTable"
+      ],
       "entity": "SystemEvent"
     },
     {
+      "name": "fromEventId",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "number"
+    },
+    {
       "name": "fromUser",
-      "relation": "ManyToOne",
+      "decorators": [
+        "ManyToOne",
+        "JoinTable"
+      ],
       "entity": "User"
     },
     {
+      "name": "fromUserId",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "number"
+    },
+    {
       "name": "toUser",
-      "relation": "ManyToOne",
+      "decorators": [
+        "ManyToOne",
+        "JoinTable"
+      ],
       "entity": "User"
+    },
+    {
+      "name": "toUserId",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "number"
     }
   ],
   "System": [
     {
+      "name": "id",
+      "decorators": [
+        "PrimaryGeneratedColumn"
+      ],
+      "entity": "number"
+    },
+    {
+      "name": "title",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "string"
+    },
+    {
+      "name": "image",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "string"
+    },
+    {
+      "name": "link",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "string"
+    },
+    {
+      "name": "code",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "string"
+    },
+    {
       "name": "rights",
-      "relation": "OneToMany",
+      "decorators": [
+        "OneToMany"
+      ],
       "entity": "SystemRight"
     },
     {
       "name": "getSystemRights",
-      "relation": "ResolveProperty",
+      "decorators": [
+        "ResolveProperty"
+      ],
       "entity": "Promise"
     },
     {
       "name": "events",
-      "relation": "OneToMany",
+      "decorators": [
+        "OneToMany"
+      ],
       "entity": "SystemEvent"
     },
     {
       "name": "getSystemEvents",
-      "relation": "ResolveProperty",
+      "decorators": [
+        "ResolveProperty"
+      ],
       "entity": "Promise"
     },
     {
       "name": "toDoItems",
-      "relation": "OneToMany",
+      "decorators": [
+        "OneToMany"
+      ],
       "entity": "ToDoItem"
     },
     {
       "name": "getToDoItems",
-      "relation": "ResolveProperty",
+      "decorators": [
+        "ResolveProperty"
+      ],
       "entity": "Promise"
+    },
+    {
+      "name": "createDate",
+      "decorators": [
+        "CreateDateColumn"
+      ],
+      "entity": "number"
     }
   ],
   "SystemRight": [
     {
+      "name": "id",
+      "decorators": [
+        "PrimaryGeneratedColumn"
+      ],
+      "entity": "number"
+    },
+    {
+      "name": "type",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "string"
+    },
+    {
+      "name": "title",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "string"
+    },
+    {
+      "name": "namespace",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "string"
+    },
+    {
+      "name": "code",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "string"
+    },
+    {
+      "name": "link",
+      "decorators": [],
+      "entity": "string"
+    },
+    {
       "name": "fromSystem",
-      "relation": "ManyToOne",
+      "decorators": [
+        "ManyToOne",
+        "JoinTable"
+      ],
       "entity": "System"
     },
     {
       "name": "toRoles",
-      "relation": "ManyToOne",
+      "decorators": [
+        "ManyToOne"
+      ],
       "entity": "Role"
     }
   ],
   "Role": [
     {
+      "name": "id",
+      "decorators": [
+        "PrimaryGeneratedColumn"
+      ],
+      "entity": "number"
+    },
+    {
+      "name": "code",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "string"
+    },
+    {
+      "name": "title",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "string"
+    },
+    {
+      "name": "desc",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "string"
+    },
+    {
       "name": "rights",
-      "relation": "OneToMany",
+      "decorators": [
+        "OneToMany"
+      ],
       "entity": "SystemRight"
     },
     {
       "name": "getSystemRights",
-      "relation": "ResolveProperty",
+      "decorators": [
+        "ResolveProperty"
+      ],
       "entity": "Promise"
     },
     {
       "name": "canUseStations",
-      "relation": "ManyToMany",
+      "decorators": [
+        "ManyToMany"
+      ],
       "entity": "Station"
+    },
+    {
+      "name": "createDate",
+      "decorators": [
+        "CreateDateColumn"
+      ],
+      "entity": "number"
+    },
+    {
+      "name": "updateDate",
+      "decorators": [
+        "UpdateDateColumn"
+      ],
+      "entity": "number"
     },
     {
       "name": "group",
-      "relation": "ManyToOne",
+      "decorators": [
+        "ManyToOne"
+      ],
       "entity": "RoleGroup"
-    }
-  ],
-  "Station": [
-    {
-      "name": "createUser",
-      "relation": "ManyToOne",
-      "entity": "User"
-    },
-    {
-      "name": "department",
-      "relation": "ManyToOne",
-      "entity": "Department"
-    },
-    {
-      "name": "canUseRoles",
-      "relation": "ManyToMany",
-      "entity": "Role"
-    },
-    {
-      "name": "users",
-      "relation": "ManyToMany",
-      "entity": "User"
-    },
-    {
-      "name": "getUsers",
-      "relation": "ResolveProperty",
-      "entity": "Promise"
-    },
-    {
-      "name": "roleGroup",
-      "relation": "ManyToOne",
-      "entity": "RoleGroup"
-    }
-  ],
-  "Department": [
-    {
-      "name": "parent",
-      "relation": "ManyToOne",
-      "entity": "Department"
-    },
-    {
-      "name": "children",
-      "relation": "OneToMany",
-      "entity": "Department"
-    },
-    {
-      "name": "getChildren",
-      "relation": "ResolveProperty",
-      "entity": "Promise"
-    },
-    {
-      "name": "stations",
-      "relation": "OneToMany",
-      "entity": "Station"
-    },
-    {
-      "name": "getStations",
-      "relation": "ResolveProperty",
-      "entity": "Promise"
-    },
-    {
-      "name": "domain",
-      "relation": "ManyToOne",
-      "entity": "Domain"
-    }
-  ],
-  "Domain": [
-    {
-      "name": "departments",
-      "relation": "OneToMany",
-      "entity": "Department"
-    },
-    {
-      "name": "getDepartments",
-      "relation": "ResolveProperty",
-      "entity": "Promise"
     }
   ],
   "RoleGroup": [
     {
+      "name": "id",
+      "decorators": [
+        "PrimaryGeneratedColumn"
+      ],
+      "entity": "number"
+    },
+    {
+      "name": "title",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "string"
+    },
+    {
+      "name": "desc",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "string"
+    },
+    {
       "name": "roles",
-      "relation": "OneToMany",
+      "decorators": [
+        "OneToMany"
+      ],
       "entity": "Role"
     },
     {
       "name": "getRoles",
-      "relation": "ResolveProperty",
+      "decorators": [
+        "ResolveProperty"
+      ],
       "entity": "Promise"
     },
     {
       "name": "stations",
-      "relation": "OneToMany",
+      "decorators": [
+        "OneToMany"
+      ],
       "entity": "Station"
     },
     {
       "name": "getStations",
-      "relation": "ResolveProperty",
+      "decorators": [
+        "ResolveProperty"
+      ],
       "entity": "Promise"
     }
   ],
   "SystemEvent": [
     {
+      "name": "id",
+      "decorators": [
+        "PrimaryGeneratedColumn"
+      ],
+      "entity": "number"
+    },
+    {
+      "name": "title",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "string"
+    },
+    {
       "name": "fromSystem",
-      "relation": "ManyToOne",
+      "decorators": [
+        "ManyToOne"
+      ],
       "entity": "System"
     },
     {
       "name": "toDoItems",
-      "relation": "OneToMany",
+      "decorators": [
+        "OneToMany"
+      ],
       "entity": "ToDoItem"
     },
     {
       "name": "getToDoItems",
-      "relation": "ResolveProperty",
+      "decorators": [
+        "ResolveProperty"
+      ],
       "entity": "Promise"
     }
   ],
   "UserLoginLog": [
     {
+      "name": "id",
+      "decorators": [
+        "PrimaryGeneratedColumn"
+      ],
+      "entity": "number"
+    },
+    {
       "name": "user",
-      "relation": "ManyToOne",
+      "decorators": [
+        "ManyToOne"
+      ],
       "entity": "User"
     },
     {
+      "name": "ip",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "string"
+    },
+    {
+      "name": "deviceId",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "string"
+    },
+    {
+      "name": "createDate",
+      "decorators": [
+        "CreateDateColumn"
+      ],
+      "entity": "number"
+    },
+    {
       "name": "scoreLog",
-      "relation": "OneToOne",
+      "decorators": [
+        "OneToOne"
+      ],
       "entity": "SafetyScoreLog"
     }
   ],
   "SafetyScoreLog": [
     {
+      "name": "id",
+      "decorators": [
+        "PrimaryGeneratedColumn"
+      ],
+      "entity": "number"
+    },
+    {
+      "name": "score",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "number"
+    },
+    {
       "name": "loginLog",
-      "relation": "OneToOne",
+      "decorators": [
+        "OneToOne"
+      ],
       "entity": "UserLoginLog"
     },
     {
       "name": "rule",
-      "relation": "ManyToOne",
+      "decorators": [
+        "ManyToOne"
+      ],
       "entity": "SafetyScoreRule"
     },
     {
       "name": "user",
-      "relation": "ManyToOne",
+      "decorators": [
+        "ManyToOne"
+      ],
       "entity": "User"
+    },
+    {
+      "name": "createDate",
+      "decorators": [
+        "CreateDateColumn"
+      ],
+      "entity": "number"
     }
   ],
   "SafetyScoreRule": [
     {
+      "name": "id",
+      "decorators": [
+        "PrimaryGeneratedColumn"
+      ],
+      "entity": "number"
+    },
+    {
+      "name": "title",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "string"
+    },
+    {
+      "name": "code",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "string"
+    },
+    {
+      "name": "score",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "number"
+    },
+    {
+      "name": "isReplace",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "boolean"
+    },
+    {
       "name": "logs",
-      "relation": "OneToMany",
+      "decorators": [
+        "OneToMany"
+      ],
       "entity": "SafetyScoreLog"
     },
     {
       "name": "getSafetyScoreLogs",
-      "relation": "ResolveProperty",
+      "decorators": [
+        "ResolveProperty"
+      ],
+      "entity": "Promise"
+    },
+    {
+      "name": "createDate",
+      "decorators": [
+        "CreateDateColumn"
+      ],
+      "entity": "number"
+    }
+  ],
+  "Domain": [
+    {
+      "name": "id",
+      "decorators": [
+        "PrimaryGeneratedColumn"
+      ],
+      "entity": "number"
+    },
+    {
+      "name": "title",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "string"
+    },
+    {
+      "name": "code",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "string"
+    },
+    {
+      "name": "status",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "number"
+    },
+    {
+      "name": "createUser",
+      "decorators": [
+        "Column"
+      ],
+      "entity": "number"
+    },
+    {
+      "name": "createDate",
+      "decorators": [
+        "CreateDateColumn"
+      ],
+      "entity": "number"
+    },
+    {
+      "name": "departments",
+      "decorators": [
+        "OneToMany"
+      ],
+      "entity": "Department"
+    },
+    {
+      "name": "getDepartments",
+      "decorators": [
+        "ResolveProperty"
+      ],
       "entity": "Promise"
     }
   ]
