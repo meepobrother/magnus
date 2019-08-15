@@ -135,3 +135,6 @@ export const Permission = (options: PermissionOptions) => AnyDecorator;
  */
 export const DefDomain = () => AnyDecorator;
 export const DefObject = () => AnyDecorator;
+
+export const Entity = () => AnyDecorator;
+
