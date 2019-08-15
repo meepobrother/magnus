@@ -90,6 +90,10 @@ export class ApiObjectTypeVisitor implements ast.Visitor {
   visitListTypeAst(node: ast.ListTypeAst, context: any): any {
     return node.type.visit(this, context);
   }
+
+  visitNonNullTypeAst(node: ast.NonNullTypeAst, context: any): any {
+    return node.type.visit(this, context);
+  }
 }
 export class ApiVisitor implements ast.Visitor {
   name: string = "ApiVisitor";

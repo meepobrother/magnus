@@ -25,6 +25,7 @@ export declare class ApiObjectTypeVisitor implements ast.Visitor {
     visitObjectTypeDefinitionAst(node: ast.ObjectTypeDefinitionAst, context: ImportCore): any;
     visitFieldDefinitionAst(node: ast.FieldDefinitionAst, context: any): any;
     visitListTypeAst(node: ast.ListTypeAst, context: any): any;
+    visitNonNullTypeAst(node: ast.NonNullTypeAst, context: any): any;
 }
 export declare class ApiVisitor implements ast.Visitor {
     name: string;

@@ -89,6 +89,9 @@ class ApiObjectTypeVisitor {
     visitListTypeAst(node, context) {
         return node.type.visit(this, context);
     }
+    visitNonNullTypeAst(node, context) {
+        return node.type.visit(this, context);
+    }
 }
 exports.ApiObjectTypeVisitor = ApiObjectTypeVisitor;
 class ApiVisitor {
