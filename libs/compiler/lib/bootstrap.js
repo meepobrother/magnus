@@ -18,7 +18,6 @@ const globby = require("globby");
 const graphqlToTs_1 = require("./visitors/graphqlToTs");
 const lodash_1 = require("lodash");
 const api_1 = require("./visitors/api");
-const graphql_tools_1 = require("graphql-tools");
 async function bootstrap(config) {
     config.output = config.output || "output";
     config.assets = config.assets || "assets";
@@ -129,10 +128,8 @@ async function bootstrap(config) {
                 fs_extra_1.writeFileSync(path_1.join(assets, `magnus.metadata.json`), metadataContent);
                 const serverContent = JSON.stringify(res, null, 2);
                 fs_extra_1.writeFileSync(path_1.join(assets, `magnus.server.json`), serverContent);
-                const schema = graphql_tools_1.makeExecutableSchema({
-                    typeDefs: res
-                });
-                const schemaContent = JSON.stringify(schema, null, 2);
+                const schema = graphql_1.buildASTSchema(res);
+                const schemaContent = JSON.stringify(graphql_1.introspectionFromSchema(schema), null, 2);
                 await config.broadcast(Buffer.from(JSON.stringify({
                     name: config.name,
                     type: "assets",
@@ -145,10 +142,8 @@ async function bootstrap(config) {
             else {
                 const content = JSON.stringify(res, null, 2);
                 fs_extra_1.writeFileSync(path_1.join(assets, `magnus.json`), content);
-                const schema = graphql_tools_1.makeExecutableSchema({
-                    typeDefs: res
-                });
-                const schemaContent = JSON.stringify(schema, null, 2);
+                const schema = graphql_1.buildASTSchema(res);
+                const schemaContent = JSON.stringify(graphql_1.introspectionFromSchema(schema), null, 2);
                 await config.broadcast(Buffer.from(JSON.stringify({
                     name: config.name,
                     type: "assets",
