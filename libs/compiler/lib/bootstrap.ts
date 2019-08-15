@@ -20,6 +20,7 @@ import { watch } from "chokidar";
 import globby = require("globby");
 import { GraphqlToTs } from "./visitors/graphqlToTs";
 import { camelCase } from "lodash";
+import { ApiVisitor } from "./visitors/api";
 export async function bootstrap(config: MagnusConfig) {
   config.output = config.output || "output";
   config.assets = config.assets || "assets";
@@ -67,7 +68,10 @@ export async function bootstrap(config: MagnusConfig) {
       manager,
       collectionContext
     );
+    // 这里生成客户端使用的对应的graphql
+    const apiVisitor = new ApiVisitor();
     if (documentAst.definitions.length > 17) {
+      documentAst.visit(apiVisitor, {});
       const res = toJson(documentAst);
       if (isServer) {
         const content = print(res);

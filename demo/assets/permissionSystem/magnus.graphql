@@ -53,6 +53,12 @@ input SaveSystemInput {
   rights: [SystemRightDataInput]
 }
 
+"保存系统权限"
+type SaveSystemResult {
+  code: Int!
+  message: String!
+}
+
 "保存或者编辑系统权限的返回信息"
 type AddSystemRightResult {
   code: Int!
@@ -65,12 +71,6 @@ input AddSystemRightInput {
   roleId: Int!
   rightId: Int!
   status: Int!
-}
-
-"保存系统权限"
-type SaveSystemResult {
-  code: Int!
-  message: String!
 }
 
 "取系统权限"
@@ -91,7 +91,7 @@ type GetPermissionResult {
 
 type PermissionService {
   checkInstall(entity: SaveSystemInput!): Empty
-  addOrRemoveSystemRight(entity: AddSystemRightInput!): AddSystemRightResult
   SaveSystem(entity: SaveSystemInput!): SaveSystemResult
+  addOrRemoveSystemRight(entity: AddSystemRightInput!): AddSystemRightResult
   getPermission: GetPermissionResult
 }

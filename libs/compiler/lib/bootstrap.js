@@ -17,6 +17,7 @@ const chokidar_1 = require("chokidar");
 const globby = require("globby");
 const graphqlToTs_1 = require("./visitors/graphqlToTs");
 const lodash_1 = require("lodash");
+const api_1 = require("./visitors/api");
 async function bootstrap(config) {
     config.output = config.output || "output";
     config.assets = config.assets || "assets";
@@ -56,7 +57,10 @@ async function bootstrap(config) {
             .filter(item => !!item);
         const astToGraphqlVisitor = new astToGraphql_1.AstToGraphqlVisitor();
         const documentAst = astToGraphqlVisitor.visitContextManager(manager, collectionContext);
+        // 这里生成客户端使用的对应的graphql
+        const apiVisitor = new api_1.ApiVisitor();
         if (documentAst.definitions.length > 17) {
+            documentAst.visit(apiVisitor, {});
             const res = magnus_graphql_1.toJson(documentAst);
             if (isServer) {
                 const content = graphql_1.print(res);

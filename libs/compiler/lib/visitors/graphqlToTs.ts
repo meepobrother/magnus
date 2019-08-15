@@ -6,7 +6,6 @@ import {
   EnumTypeDefinitionAst,
   EnumValueDefinitionAst,
   OperationDefinitionAst,
-  ToString,
   ClientVisitor,
   DocumentAst,
   SelectionSetAst,

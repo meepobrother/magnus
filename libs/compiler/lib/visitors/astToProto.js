@@ -113,9 +113,6 @@ class AstToProtoVisitor {
             return this.createType(node.type, context);
         }
         else {
-            if (node.name.value === "SystemRightDataInput") {
-                debugger;
-            }
             return node.visit(this, ``);
         }
     }

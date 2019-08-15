@@ -75,11 +75,4 @@ export interface MagnusConfig {
      * hosts
      */
     hosts: string[];
-    /**
-     * 权限
-     */
-    permission: {
-        inputs: string[];
-        outputs: string;
-    };
 }

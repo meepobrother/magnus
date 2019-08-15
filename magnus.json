@@ -1,18 +1,16 @@
 {
-	"inputs": [ "demo/src/lib/**/*.ts", "demo/src/lib/**/*.json" ],
-	"output": "demo/magnus",
-    "assets": "demo/assets",
-    "port": 4200,
-	"name": "demo",
-	"client": [ "demo/src/**/*.graphql" ],
-	"hasGrpc": true,
-	"runner": {
-		"name": "runner",
-		"path": "../runner.ts"
-	},
-	"types": "demo/magnus/demo/magnus.server",
-	"def": "demo/assets/demo/magnus.server.graphql",
-	"permission": {
-		"inputs": []
-	}
+  "inputs": ["demo/src/lib/**/*.ts", "demo/src/lib/**/*.json"],
+  "output": "demo/magnus",
+  "assets": "demo/assets",
+  "port": 4200,
+  "name": "demo",
+  "client": ["demo/src/**/*.graphql"],
+  "hasGrpc": true,
+  "runner": {
+    "name": "runner",
+    "path": "../runner.ts"
+  },
+  "types": "demo/magnus/demo/magnus.server",
+  "def": "demo/assets/demo/magnus.server.graphql",
+  "reciveName": []
 }

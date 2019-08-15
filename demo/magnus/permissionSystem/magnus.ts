@@ -31,6 +31,11 @@ export interface SaveSystemInput {
 	code: string;
 	rights?: SystemRightDataInput[];
 }
+/*保存系统权限*/
+export interface SaveSystemResult {
+	code: number;
+	message: string;
+}
 /*保存或者编辑系统权限的返回信息*/
 export interface AddSystemRightResult {
 	code: number;
@@ -40,11 +45,6 @@ export interface AddSystemRightInput {
 /*角色id*/	roleId: number;
 	rightId: number;
 	status: number;
-}
-/*保存系统权限*/
-export interface SaveSystemResult {
-	code: number;
-	message: string;
 }
 /*取系统权限*/
 export interface GetActionPermissionData {
@@ -62,7 +62,7 @@ export interface GetPermissionResult {
 }
 export interface PermissionService {
 	checkInstall(entity: SaveSystemInput): Observable<Empty>;
-	addOrRemoveSystemRight(entity: AddSystemRightInput): Observable<AddSystemRightResult>;
 	SaveSystem(entity: SaveSystemInput): Observable<SaveSystemResult>;
+	addOrRemoveSystemRight(entity: AddSystemRightInput): Observable<AddSystemRightResult>;
 	getPermission(): Observable<GetPermissionResult>;
 }

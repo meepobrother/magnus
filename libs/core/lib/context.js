@@ -5,7 +5,6 @@ const magnus_graphql_1 = require("@notadd/magnus-graphql");
 const lodash_1 = require("lodash");
 const magnus_graphql_2 = require("@notadd/magnus-graphql");
 const graphql_tools_1 = require("graphql-tools");
-;
 function createFactoryByMap(map, injectDef, entityDef, entities) {
     const factory = {};
     Object.keys(map).map(operationName => {
@@ -50,23 +49,26 @@ function createResolver(handlerDef, injectDef, entityDef, entities) {
                     const field2 = node.visit(client, args);
                     const typeSource = typeof source;
                     const selfhandlerDef = handlerDef[key].find(it => it[3] === fieldName);
-                    if (selfhandlerDef && typeSource === 'object') {
+                    if (selfhandlerDef && typeSource === "object") {
                         const params = selfhandlerDef[4];
                         const parameters = new Array(params.length);
                         const selection = field2.selectionSet;
                         params.map(par => {
                             const { name, type, index, decorator } = par;
-                            if (decorator === 'Selection') {
+                            if (decorator.includes("Selection")) {
                                 parameters[index] = selection;
                             }
-                            else if (decorator === 'Parent') {
+                            else if (decorator.includes("Parent")) {
                                 parameters[index] = source;
                             }
-                            else if (decorator === 'Relation') {
+                            else if (decorator.includes("Relation")) {
                                 parameters[index] = entityDef;
                             }
-                            else if (decorator === 'Context') {
+                            else if (decorator.includes("Context")) {
                                 parameters[index] = context;
+                            }
+                            else if (decorator.length === 0) {
+                                parameters[index] = args[name];
                             }
                             else {
                                 parameters[index] = args[name];
@@ -74,7 +76,7 @@ function createResolver(handlerDef, injectDef, entityDef, entities) {
                         });
                         result = await source[fieldName](...parameters);
                     }
-                    else if (typeSource === 'undefined') {
+                    else if (typeSource === "undefined") {
                         result = item && item(args, field2.selectionSet);
                     }
                     else {
@@ -91,8 +93,10 @@ exports.createResolver = createResolver;
 function createGraphql(item, operation, selection) {
     let str = ``;
     if (item[4].length > 0) {
-        const parameters = item[4].map(it => `${it.name}: $${it.name}`).join(', ');
-        str = `${operation} ${item[0]}(${item[4].map(it => `$${it.name}: ${it.type}`).join(', ')}) { ${item[0]}(${parameters}) ${selection} }`;
+        const parameters = item[4].map(it => `${it.name}: $${it.name}`).join(", ");
+        str = `${operation} ${item[0]}(${item[4]
+            .map(it => `$${it.name}: ${it.type}`)
+            .join(", ")}) { ${item[0]}(${parameters}) ${selection} }`;
     }
     else {
         str = `${operation} { ${item[0]} ${selection}}`;
@@ -119,7 +123,7 @@ function createRunner(map, context, injectDef, entityDef, entities) {
             operationName
         }).then(res => {
             if (res.errors) {
-                throw new Error(`${res.errors.join('\n')}`);
+                throw new Error(`${res.errors.join("\n")}`);
             }
             return res.data;
         });

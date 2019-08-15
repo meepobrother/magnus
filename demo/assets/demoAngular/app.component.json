@@ -1,0 +1,35 @@
+{
+  "title": "user",
+  "url": "/user",
+  "icon": "",
+  "widgets": [
+    {
+      "code": "edit1",
+      "fields": {
+        "username": "default",
+        "password": "readonly"
+      },
+      "actions": {
+        "saveButton": true
+      }
+    },
+    {
+      "code": "list1",
+      "fields": {
+        "username": "default",
+        "password": "readonly"
+      },
+      "actions": {
+        "saveButton": true
+      }
+    },
+    {
+      "code": "list2",
+      "fields": {
+        "username": "default",
+        "password": "readonly"
+      },
+      "actions": {}
+    }
+  ]
+}
