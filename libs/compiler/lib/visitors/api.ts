@@ -96,7 +96,10 @@ export class ApiVisitor implements ast.Visitor {
   objectType: ApiObjectTypeVisitor = new ApiObjectTypeVisitor();
   visitDocumentAst(node: ast.DocumentAst, context: any) {
     this.objectType.doc = node;
-    node.definitions.map(def => def.visit(this, context));
+    const defs = node.definitions
+      .map(def => def.visit(this, context))
+      .filter(it => !!it);
+    debugger;
     return context;
   }
   visitScalarTypeDefinitionAst(
@@ -109,24 +112,29 @@ export class ApiVisitor implements ast.Visitor {
   ) {
     const nodeName = node.name.value;
     if (nodeName === "Query") {
-      debugger;
-      context.query = context.query || {
+      const query = context.query || {
         type: "query",
         list: []
       };
-      node.fields.map(field => field.visit(this, context.query));
+      node.fields.map(field => field.visit(this, query));
+      context.query = query;
+      return context;
     } else if (nodeName === "Mutation") {
-      context.mutation = context.mutation || {
-        type: "query",
+      const mutation = context.mutation || {
+        type: "mutation",
         list: []
       };
-      node.fields.map(field => field.visit(this, context.mutation));
+      node.fields.map(field => field.visit(this, mutation));
+      context.mutation = mutation;
+      return context;
     } else if (nodeName === "Subscription") {
-      context.subscription = context.subscription || {
-        type: "query",
+      const subscription = context.subscription || {
+        type: "subscription",
         list: []
       };
-      node.fields.map(field => field.visit(this, context.subscription));
+      node.fields.map(field => field.visit(this, subscription));
+      context.subscription = subscription;
+      return context;
     } else {
     }
   }
@@ -155,6 +163,7 @@ export class ApiVisitor implements ast.Visitor {
       graphql += `}\n`;
       context.list.push(graphql);
     }
+    return context;
   }
   visitInputValueDefinitionAst(
     node: ast.InputValueDefinitionAst,
