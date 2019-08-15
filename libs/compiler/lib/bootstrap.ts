@@ -83,6 +83,7 @@ export async function bootstrap(config: MagnusConfig) {
       if (apiVisitor.subscription) {
         apiVisitor.subscription.list.map((li: string) => (api += `${li}\n`));
       }
+      const res = toJson(documentAst);
       if (api.length > 0) {
         if (isServer) {
           writeFileSync(join(assets, `magnus.server-api.graphql`), api);
@@ -94,6 +95,24 @@ export async function bootstrap(config: MagnusConfig) {
                 debug: config.debug,
                 fileName: `magnus.server-api.graphql`,
                 content: api,
+                host: config.host
+              })
+            )
+          );
+          const schema = makeExecutableSchema({ typeDefs: res });
+          const schemaContent = JSON.stringify(
+            introspectionFromSchema(schema),
+            null,
+            2
+          );
+          await config.broadcast(
+            Buffer.from(
+              JSON.stringify({
+                name: config.name,
+                type: "assets",
+                debug: config.debug,
+                fileName: `magnus.server-schema.json`,
+                content: schemaContent,
                 host: config.host
               })
             )
@@ -112,9 +131,28 @@ export async function bootstrap(config: MagnusConfig) {
               })
             )
           );
+
+          const schema = makeExecutableSchema({ typeDefs: res });
+          const schemaContent = JSON.stringify(
+            introspectionFromSchema(schema),
+            null,
+            2
+          );
+          await config.broadcast(
+            Buffer.from(
+              JSON.stringify({
+                name: config.name,
+                type: "assets",
+                debug: config.debug,
+                fileName: `magnus.client-schema.json`,
+                content: schemaContent,
+                host: config.host
+              })
+            )
+          );
         }
       }
-      const res = toJson(documentAst);
+
       if (isServer) {
         const content = print(res);
         writeFileSync(join(assets, `magnus.server.graphql`), content);
@@ -158,46 +196,9 @@ export async function bootstrap(config: MagnusConfig) {
         writeFileSync(join(assets, `magnus.metadata.json`), metadataContent);
         const serverContent = JSON.stringify(res, null, 2);
         writeFileSync(join(assets, `magnus.server.json`), serverContent);
-        const schema = makeExecutableSchema({ typeDefs: res });
-        const schemaContent = JSON.stringify(
-          introspectionFromSchema(schema),
-          null,
-          2
-        );
-        await config.broadcast(
-          Buffer.from(
-            JSON.stringify({
-              name: config.name,
-              type: "assets",
-              debug: config.debug,
-              fileName: `magnus.server-schema.json`,
-              content: schemaContent,
-              host: config.host
-            })
-          )
-        );
       } else {
         const content = JSON.stringify(res, null, 2);
         writeFileSync(join(assets, `magnus.json`), content);
-
-        const schema = makeExecutableSchema({ typeDefs: res });
-        const schemaContent = JSON.stringify(
-          introspectionFromSchema(schema),
-          null,
-          2
-        );
-        await config.broadcast(
-          Buffer.from(
-            JSON.stringify({
-              name: config.name,
-              type: "assets",
-              debug: config.debug,
-              fileName: `magnus.client-schema.json`,
-              content: schemaContent,
-              host: config.host
-            })
-          )
-        );
       }
       if (!isServer) {
         // proto
