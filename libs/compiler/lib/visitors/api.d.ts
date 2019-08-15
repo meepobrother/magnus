@@ -35,7 +35,7 @@ export declare class ApiVisitor implements ast.Visitor {
     mutation: any;
     subscription: any;
     visitDocumentAst(node: ast.DocumentAst, context: any): any;
-    visitScalarTypeDefinitionAst(node: ast.ScalarTypeDefinitionAst, context: any): void;
+    visitScalarTypeDefinitionAst(node: ast.ScalarTypeDefinitionAst, context: any): undefined;
     visitObjectTypeDefinitionAst(node: ast.ObjectTypeDefinitionAst, context: any): any;
     visitInputObjectTypeDefinitionAst(node: ast.InputObjectTypeDefinitionAst, context: any): void;
     visitFieldDefinitionAst(node: ast.FieldDefinitionAst, context: any): any;

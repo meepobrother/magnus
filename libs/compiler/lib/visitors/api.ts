@@ -119,7 +119,9 @@ export class ApiVisitor implements ast.Visitor {
   visitScalarTypeDefinitionAst(
     node: ast.ScalarTypeDefinitionAst,
     context: any
-  ) {}
+  ) {
+    return undefined;
+  }
   visitObjectTypeDefinitionAst(
     node: ast.ObjectTypeDefinitionAst,
     context: any

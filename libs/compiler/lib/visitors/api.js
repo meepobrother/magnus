@@ -107,7 +107,9 @@ class ApiVisitor {
         });
         return context;
     }
-    visitScalarTypeDefinitionAst(node, context) { }
+    visitScalarTypeDefinitionAst(node, context) {
+        return undefined;
+    }
     visitObjectTypeDefinitionAst(node, context) {
         const nodeName = node.name.value;
         if (nodeName === "Query") {
