@@ -1,5 +1,5 @@
 {
-  "name": "angular",
+  "name": "@notadd/magnus-angular",
   "version": "3.1.24",
   "description": "> TODO: description",
   "author": "imeepos <1037483576@qq.com>",
@@ -22,5 +22,6 @@
   },
   "bugs": {
     "url": "https://github.com/meepobrother/magnus/issues"
-  }
+  },
+  "gitHead": "01a92a2f73463e3b91df98d32120775fe46c1ea5"
 }
