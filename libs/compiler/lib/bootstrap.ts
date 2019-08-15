@@ -83,10 +83,34 @@ export async function bootstrap(config: MagnusConfig) {
         apiVisitor.subscription.list.map((li: string) => (api += `${li}\n`));
       }
       if (api.length > 0) {
-        if (isServer)
+        if (isServer) {
           writeFileSync(join(assets, `magnus.server-api.graphql`), api);
-        else {
+          await config.broadcast(
+            Buffer.from(
+              JSON.stringify({
+                name: config.name,
+                type: "assets",
+                debug: config.debug,
+                fileName: `magnus.server-api.graphql`,
+                content: api,
+                host: config.host
+              })
+            )
+          );
+        } else {
           writeFileSync(join(assets, `magnus.client-api.graphql`), api);
+          await config.broadcast(
+            Buffer.from(
+              JSON.stringify({
+                name: config.name,
+                type: "assets",
+                debug: config.debug,
+                fileName: `magnus.client-api.graphql`,
+                content: api,
+                host: config.host
+              })
+            )
+          );
         }
       }
       const res = toJson(documentAst);
