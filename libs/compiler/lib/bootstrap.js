@@ -128,24 +128,28 @@ async function bootstrap(config) {
                 fs_extra_1.writeFileSync(path_1.join(assets, `magnus.metadata.json`), metadataContent);
                 const serverContent = JSON.stringify(res, null, 2);
                 fs_extra_1.writeFileSync(path_1.join(assets, `magnus.server.json`), serverContent);
+                const schema = graphql_1.buildASTSchema(res);
+                const schemaContent = JSON.stringify(schema, null, 2);
                 await config.broadcast(Buffer.from(JSON.stringify({
                     name: config.name,
                     type: "assets",
                     debug: config.debug,
-                    fileName: `magnus.server.json`,
-                    content: serverContent,
+                    fileName: `magnus.server-schema.json`,
+                    content: schemaContent,
                     host: config.host
                 })));
             }
             else {
                 const content = JSON.stringify(res, null, 2);
                 fs_extra_1.writeFileSync(path_1.join(assets, `magnus.json`), content);
+                const schema = graphql_1.buildASTSchema(res);
+                const schemaContent = JSON.stringify(schema, null, 2);
                 await config.broadcast(Buffer.from(JSON.stringify({
                     name: config.name,
                     type: "assets",
                     debug: config.debug,
-                    fileName: `magnus.json`,
-                    content: content,
+                    fileName: `magnus.client-schema.json`,
+                    content: schemaContent,
                     host: config.host
                 })));
             }

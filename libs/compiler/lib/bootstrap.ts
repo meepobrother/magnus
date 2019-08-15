@@ -15,7 +15,7 @@ import { collectionVisitor, CollectionContext } from "./visitors/collection";
 import { MangusContextManager, MagnusVisitor } from "./visitors/magnus";
 import { AstToGraphqlVisitor } from "./visitors/astToGraphql";
 import { AstToProtoVisitor } from "./visitors/astToProto";
-import { print } from "graphql";
+import { print, buildASTSchema } from "graphql";
 import { watch } from "chokidar";
 import globby = require("globby");
 import { GraphqlToTs } from "./visitors/graphqlToTs";
@@ -157,14 +157,16 @@ export async function bootstrap(config: MagnusConfig) {
         writeFileSync(join(assets, `magnus.metadata.json`), metadataContent);
         const serverContent = JSON.stringify(res, null, 2);
         writeFileSync(join(assets, `magnus.server.json`), serverContent);
+        const schema = buildASTSchema(res);
+        const schemaContent = JSON.stringify(schema, null, 2);
         await config.broadcast(
           Buffer.from(
             JSON.stringify({
               name: config.name,
               type: "assets",
               debug: config.debug,
-              fileName: `magnus.server.json`,
-              content: serverContent,
+              fileName: `magnus.server-schema.json`,
+              content: schemaContent,
               host: config.host
             })
           )
@@ -172,14 +174,17 @@ export async function bootstrap(config: MagnusConfig) {
       } else {
         const content = JSON.stringify(res, null, 2);
         writeFileSync(join(assets, `magnus.json`), content);
+
+        const schema = buildASTSchema(res);
+        const schemaContent = JSON.stringify(schema, null, 2);
         await config.broadcast(
           Buffer.from(
             JSON.stringify({
               name: config.name,
               type: "assets",
               debug: config.debug,
-              fileName: `magnus.json`,
-              content: content,
+              fileName: `magnus.client-schema.json`,
+              content: schemaContent,
               host: config.host
             })
           )
