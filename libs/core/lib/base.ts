@@ -50,9 +50,7 @@ export abstract class MagnusBase<T = any> {
       const resolveProperty = this.relations.find(
         it =>
           it.name === key &&
-          it.decorators.some(dec =>
-            ["ManyToOne", "OneToMany", "OneToOne", "ManyToMany"].includes(dec)
-          )
+          it.decorators.some(dec => ["ResolveProperty"].includes(dec))
       );
       if (!!relation) {
         if (!resolveProperty) {
