@@ -10,7 +10,7 @@ declare type Arguments = {
     name: string;
     type: string;
     index: number;
-    decorator: string;
+    decorator: string[];
 }[];
 export declare type HandlerDef = [FieldName, ClassName, TableName, MethodName, Arguments];
 export interface HandlerDefMap {
