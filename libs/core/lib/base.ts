@@ -38,6 +38,7 @@ export abstract class MagnusBase<T = any> {
   } {
     const select: any[] = [];
     const relations: any[] = [];
+
     Object.keys(this.selection).map(key => {
       const relation = this.relations.find(
         it =>
@@ -46,12 +47,21 @@ export abstract class MagnusBase<T = any> {
             ["ManyToOne", "OneToMany", "OneToOne", "ManyToMany"].includes(dec)
           )
       );
+      const resolveProperty = this.relations.find(
+        it =>
+          it.name === key &&
+          it.decorators.some(dec =>
+            ["ManyToOne", "OneToMany", "OneToOne", "ManyToMany"].includes(dec)
+          )
+      );
       if (!!relation) {
-        if (!relation.decorators.includes("ResolveProperty")) {
+        if (!resolveProperty) {
           relations.push(key);
         }
       } else {
-        select.push(key);
+        if (!resolveProperty) {
+          select.push(key);
+        }
       }
     });
     return {

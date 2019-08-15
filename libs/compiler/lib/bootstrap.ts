@@ -233,12 +233,10 @@ export const ${camelCase(config.name)}Options: any = {
       }
       if (isServer) {
         const entities = astToGraphqlVisitor.tsToGraphqlVisitor.entities;
-        if (Object.keys(entities).length > 0) {
-          writeFileSync(
-            join(assets, `magnus.entity.json`),
-            JSON.stringify(entities, null, 2)
-          );
-        }
+        writeFileSync(
+          join(assets, `magnus.entity.json`),
+          JSON.stringify(entities, null, 2)
+        );
       } else {
         const permissions = astToGraphqlVisitor.tsToGraphqlVisitor.permission;
         if (Object.keys(permissions).length > 0) {

@@ -196,9 +196,7 @@ export const ${lodash_1.camelCase(config.name)}Options: any = {
             }
             if (isServer) {
                 const entities = astToGraphqlVisitor.tsToGraphqlVisitor.entities;
-                if (Object.keys(entities).length > 0) {
-                    fs_extra_1.writeFileSync(path_1.join(assets, `magnus.entity.json`), JSON.stringify(entities, null, 2));
-                }
+                fs_extra_1.writeFileSync(path_1.join(assets, `magnus.entity.json`), JSON.stringify(entities, null, 2));
             }
             else {
                 const permissions = astToGraphqlVisitor.tsToGraphqlVisitor.permission;
