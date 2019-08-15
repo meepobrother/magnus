@@ -201,4 +201,4 @@ class ErrorScalar extends util_1.BaseScalar {
     }
 }
 exports.Error = new graphql_1.GraphQLScalarType(new ErrorScalar());
-//# sourceMappingURL=int32.js.map
+//# sourceMappingURL=Int32.js.map

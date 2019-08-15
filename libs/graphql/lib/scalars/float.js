@@ -16,4 +16,4 @@ class FloatScalar extends util_1.BaseScalar {
     }
 }
 exports.Float = new graphql_1.GraphQLScalarType(new FloatScalar());
-//# sourceMappingURL=float.js.map
+//# sourceMappingURL=Float.js.map
