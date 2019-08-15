@@ -106,9 +106,7 @@ class AstToProtoVisitor {
     }
     createType(node, context) {
         if (node instanceof magnus_graphql_1.ast.ListTypeAst) {
-            if (!this.isGrpc) {
-                context.decorator.unshift("repeated");
-            }
+            context.decorator.unshift("repeated");
             return this.createType(node.type, context);
         }
         else if (node instanceof magnus_graphql_1.ast.NonNullTypeAst) {

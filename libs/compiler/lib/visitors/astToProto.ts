@@ -120,9 +120,7 @@ export class AstToProtoVisitor implements graphql.Visitor {
   isGrpc: boolean;
   createType(node: graphql.TypeAst, context: ast.Method | ast.Field): string {
     if (node instanceof graphql.ListTypeAst) {
-      if (!this.isGrpc) {
-        context.decorator.unshift("repeated");
-      }
+      context.decorator.unshift("repeated");
       return this.createType(node.type, context);
     } else if (node instanceof graphql.NonNullTypeAst) {
       return this.createType(node.type, context);
