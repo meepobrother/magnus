@@ -3,17 +3,18 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const bootstrap_1 = require("./bootstrap");
 const program = require("commander");
-const packages = require('../package.json');
+const packages = require("../package.json");
 const root = process.cwd();
 const path_1 = require("path");
-const pull = require('pull-stream');
+const pull = require("pull-stream");
 const p2p_1 = require("./p2p");
 const fs_1 = require("fs");
 const fs_extra_1 = require("fs-extra");
-program.version(packages.version)
-    .option('--watch', '生产模式')
+program
+    .version(packages.version)
+    .option("--watch", "生产模式")
     .parse(process.argv);
-const config = require(path_1.join(root, 'magnus.json'));
+const config = require(path_1.join(root, "magnus.json"));
 config.root = root;
 config.debug = !!program.watch;
 async function start() {
@@ -25,10 +26,10 @@ async function start() {
             pull(conn, pull.asyncMap(), pull.collect((err, array) => {
                 if (err)
                     return;
-                const res = Buffer.concat(array).toString('utf8');
+                const res = Buffer.concat(array).toString("utf8");
                 const obj = JSON.parse(res);
                 const { name, fileName, content, type, debug, host } = obj;
-                console.log(`收到来自主机: ${host}\n 文件名为:${fileName}\n 类型为:${type}\n`);
+                console.log(`收到来自主机: ${host}\n文件名为:${fileName}\n类型为:${type}\n`);
                 let canWrite = false;
                 if (config.hosts) {
                     if (config.hosts.includes(host)) {
@@ -43,22 +44,18 @@ async function start() {
                      * 开发模式相同 相互同步文件
                      */
                     if (Array.isArray(config.reciveName)) {
-                        const names = [
-                            ...config.reciveName,
-                            config.name
-                        ];
+                        const names = [...config.reciveName, config.name];
                         if (names.includes(name)) {
                             const dist = path_1.join(config.root, config.output);
                             const assets = path_1.join(config.root, config.assets);
                             fs_extra_1.ensureDirSync(path_1.join(dist, name));
                             fs_extra_1.ensureDirSync(path_1.join(assets, name));
-                            if (type === 'assets') {
+                            if (type === "assets") {
                                 fs_1.writeFileSync(path_1.join(assets, name, fileName), content);
                             }
                             else {
                                 fs_1.writeFileSync(path_1.join(dist, name, fileName), content);
                             }
-                            console.log(`收到模块${name}的文件${fileName}`);
                         }
                     }
                     else {
@@ -66,7 +63,7 @@ async function start() {
                         const assets = path_1.join(config.root, config.assets);
                         fs_extra_1.ensureDirSync(path_1.join(dist, name));
                         fs_extra_1.ensureDirSync(path_1.join(assets, name));
-                        if (type === 'assets') {
+                        if (type === "assets") {
                             fs_1.writeFileSync(path_1.join(assets, name, fileName), content);
                         }
                         else {
@@ -87,7 +84,7 @@ async function start() {
         Object.keys(peers).map(key => {
             const info = peers[key];
             node.dialProtocol(info, `/magnus/file`, function (err, conn) {
-                pull(pull.values([data.toString('utf8')]), conn);
+                pull(pull.values([data.toString("utf8")]), conn);
             });
         });
     };

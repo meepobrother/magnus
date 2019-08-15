@@ -1,0 +1,48 @@
+package permissionSystem;
+syntax = "proto3";
+message Empty{
+}
+message SystemRightDataInput{
+	int32 id = 0;
+	string title = 1;
+	string type = 2;
+	string code = 3;
+	repeated SystemRightDataInput children = 4;
+}
+message SaveSystemInput{
+	int32 id = 0;
+	string title = 1;
+	string code = 2;
+	repeated SystemRightDataInput rights = 3;
+}
+message AddSystemRightResult{
+	int32 code = 0;
+	string message = 1;
+}
+message AddSystemRightInput{
+	int32 roleId = 0;
+	int32 rightId = 1;
+	int32 status = 2;
+}
+message SaveSystemResult{
+	int32 code = 0;
+	string message = 1;
+}
+message GetActionPermissionData{
+	int32 id = 0;
+	string type = 1;
+	string title = 2;
+	string code = 3;
+	repeated GetActionPermissionData children = 4;
+}
+message GetPermissionResult{
+	GetActionPermissionData data = 0;
+	int32 code = 1;
+	string message = 2;
+}
+service PermissionService {
+	rpc CheckInstall(SaveSystemInput) returns(Empty) {}
+	rpc AddOrRemoveSystemRight(AddSystemRightInput) returns(AddSystemRightResult) {}
+	rpc SaveSystem(SaveSystemInput) returns(SaveSystemResult) {}
+	rpc GetPermission(Empty) returns(GetPermissionResult) {}
+}

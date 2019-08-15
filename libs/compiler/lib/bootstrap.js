@@ -33,15 +33,6 @@ async function bootstrap(config) {
         ...clientTss.map(file => `!${file.replace(".graphql", ".ts")}`)
     ];
     const inputs = await globby(srcs);
-    inputs.filter(it => {
-        if (!it.endsWith('.ts')) {
-            const filePath = path_1.dirname(it);
-            const fileName = it.replace(filePath, '').replace('/', '');
-            sendLocalFile(filePath, fileName, config);
-            return false;
-        }
-        return it.endsWith('.ts');
-    });
     async function compile(isServer = false) {
         const project = new morph.Project();
         project.addSourceFilesFromTsConfig(path_1.join(process.cwd(), "tsconfig.json"));
@@ -211,7 +202,7 @@ export const ${lodash_1.camelCase(config.name)}Options: any = {
                     fs_extra_1.writeFileSync(path_1.join(assets, `magnus.permission.json`), JSON.stringify(permissions, null, 2));
                 }
             }
-            fs_extra_1.writeFileSync(path_1.join(assets, `ip.txt`), `${config.name}前端接口:${config.host}${config.port ? `:${config.port}` : ''}`);
+            fs_extra_1.writeFileSync(path_1.join(assets, `ip.txt`), `${config.name}前端接口:${config.host}${config.port ? `:${config.port}` : ""}`);
             config.broadcast(Buffer.from(JSON.stringify({
                 name: config.name,
                 fileName: `ip.txt`,
@@ -224,43 +215,54 @@ export const ${lodash_1.camelCase(config.name)}Options: any = {
     if (config.debug) {
         chokidar_1.watch(inputs)
             .on("add", (path) => {
-            if (path.endsWith('.ts')) {
+            if (path.endsWith(".ts")) {
                 compile();
                 compile(true);
             }
             else {
                 const filePath = path_1.dirname(path);
-                const fileName = path.replace(filePath, '');
+                const fileName = path.replace(filePath, "");
+                console.log("send local file " + fileName);
                 sendLocalFile(filePath, fileName, config);
             }
             client_1.bootstrapClient(config);
         })
             .on("change", (path) => {
-            if (path.endsWith('.ts')) {
+            if (path.endsWith(".ts")) {
                 compile();
                 compile(true);
             }
             else {
                 const filePath = path_1.dirname(path);
-                const fileName = path.replace(filePath, '');
+                const fileName = path.replace(filePath, "");
+                console.log("send local file " + fileName);
                 sendLocalFile(filePath, fileName, config);
             }
             client_1.bootstrapClient(config);
         })
             .on("unlink", (path) => {
-            if (path.endsWith('.ts')) {
+            if (path.endsWith(".ts")) {
                 compile();
                 compile(true);
             }
             else {
                 const filePath = path_1.dirname(path);
-                const fileName = path.replace(filePath, '');
+                const fileName = path.replace(filePath, "");
+                console.log("send local file " + fileName);
                 sendLocalFile(filePath, fileName, config);
             }
             client_1.bootstrapClient(config);
         });
     }
     else {
+        inputs.map(it => {
+            if (!it.endsWith(".ts")) {
+                const filePath = path_1.dirname(it);
+                const fileName = it.replace(filePath, "").replace("/", "");
+                sendLocalFile(filePath, fileName, config);
+                return false;
+            }
+        });
         compile();
         compile(true);
         client_1.bootstrapClient(config);

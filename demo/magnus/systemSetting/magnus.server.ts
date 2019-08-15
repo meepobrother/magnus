@@ -14,7 +14,7 @@ import {
     Bool,
     String,
     Bytes,
-    Empty,
+    Empty
 } from '@notadd/magnus-core';
 import { Observable } from 'rxjs';
 
