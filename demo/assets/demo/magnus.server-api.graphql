@@ -1,0 +1,620 @@
+query getUser($entity: UserInputWhere!){
+	getUser(entity: $entity){
+		id
+		username
+		email
+		avatar
+		mobile
+		password
+		status
+		randomCode
+		isRestPassword
+		passwordDate
+		createDate
+		createUserId
+		safetyScore
+	}
+
+}
+
+query getSystem($entity: SystemInputWhere!){
+	getSystem(entity: $entity){
+		id
+		title
+		image
+		link
+		code
+		createDate
+	}
+
+}
+
+query getSystemEvent($entity: SystemEventInputWhere!){
+	getSystemEvent(entity: $entity){
+		id
+		title
+	}
+
+}
+
+query getSystemRight($entity: SystemRightInputWhere!){
+	getSystemRight(entity: $entity){
+		id
+		type
+		title
+		namespace
+		code
+		link
+	}
+
+}
+
+query getDepartment($entity: DepartmentInputWhere!){
+	getDepartment(entity: $entity){
+		id
+		title
+		status
+		shown
+		createDate
+		domainId
+	}
+
+}
+
+query getRole($entity: RoleInputWhere!){
+	getRole(entity: $entity){
+		id
+		code
+		title
+		desc
+		createDate
+		updateDate
+	}
+
+}
+
+query getStation($entity: StationInputWhere!){
+	getStation(entity: $entity){
+		id
+		title
+		desc
+		code
+		responsibilities
+		requirements
+		status
+		createDate
+	}
+
+}
+
+query getToDoItem($entity: ToDoItemInputWhere!){
+	getToDoItem(entity: $entity){
+		id
+		title
+		desc
+		createDate
+		fromSystemId
+		fromEventId
+		fromUserId
+		toUserId
+	}
+
+}
+
+query getRoleGroup($entity: RoleGroupInputWhere!){
+	getRoleGroup(entity: $entity){
+		id
+		title
+		desc
+	}
+
+}
+
+query getUserLoginLog($entity: UserLoginLogInputWhere!){
+	getUserLoginLog(entity: $entity){
+		id
+		ip
+		deviceId
+		createDate
+	}
+
+}
+
+query getSafetyScoreLog($entity: SafetyScoreLogInputWhere!){
+	getSafetyScoreLog(entity: $entity){
+		id
+		score
+		createDate
+	}
+
+}
+
+query getSafetyScoreRule($entity: SafetyScoreRuleInputWhere!){
+	getSafetyScoreRule(entity: $entity){
+		id
+		title
+		code
+		score
+		isReplace
+		createDate
+	}
+
+}
+
+query findUser($entity: UserInputWhere!,$order: UserInputOrder!,$limit: PageLimitInput){
+	findUser(entity: $entity,order: $order,limit: $limit){
+		id
+		username
+		email
+		avatar
+		mobile
+		password
+		status
+		randomCode
+		isRestPassword
+		passwordDate
+		createDate
+		createUserId
+		safetyScore
+	}
+
+}
+
+query findSystem($entity: SystemInputWhere!,$order: SystemInputOrder!,$limit: PageLimitInput){
+	findSystem(entity: $entity,order: $order,limit: $limit){
+		id
+		title
+		image
+		link
+		code
+		createDate
+	}
+
+}
+
+query findSystemEvent($entity: SystemEventInputWhere!,$order: SystemEventInputOrder!,$limit: PageLimitInput){
+	findSystemEvent(entity: $entity,order: $order,limit: $limit){
+		id
+		title
+	}
+
+}
+
+query findSystemRight($entity: SystemRightInputWhere!,$order: SystemRightInputOrder!,$limit: PageLimitInput){
+	findSystemRight(entity: $entity,order: $order,limit: $limit){
+		id
+		type
+		title
+		namespace
+		code
+		link
+	}
+
+}
+
+query findDepartment($entity: DepartmentInputWhere!,$order: DepartmentInputOrder!,$limit: PageLimitInput){
+	findDepartment(entity: $entity,order: $order,limit: $limit){
+		id
+		title
+		status
+		shown
+		createDate
+		domainId
+	}
+
+}
+
+query findRole($entity: RoleInputWhere!,$order: RoleInputOrder!,$limit: PageLimitInput){
+	findRole(entity: $entity,order: $order,limit: $limit){
+		id
+		code
+		title
+		desc
+		createDate
+		updateDate
+	}
+
+}
+
+query findStation($entity: StationInputWhere!,$order: StationInputOrder!,$limit: PageLimitInput){
+	findStation(entity: $entity,order: $order,limit: $limit){
+		id
+		title
+		desc
+		code
+		responsibilities
+		requirements
+		status
+		createDate
+	}
+
+}
+
+query findToDoItem($entity: ToDoItemInputWhere!,$order: ToDoItemInputOrder!,$limit: PageLimitInput){
+	findToDoItem(entity: $entity,order: $order,limit: $limit){
+		id
+		title
+		desc
+		createDate
+		fromSystemId
+		fromEventId
+		fromUserId
+		toUserId
+	}
+
+}
+
+query findRoleGroup($entity: RoleGroupInputWhere!,$order: RoleGroupInputOrder!,$limit: PageLimitInput){
+	findRoleGroup(entity: $entity,order: $order,limit: $limit){
+		id
+		title
+		desc
+	}
+
+}
+
+query findUserLoginLog($entity: UserLoginLogInputWhere!,$order: UserLoginLogInputOrder!,$limit: PageLimitInput){
+	findUserLoginLog(entity: $entity,order: $order,limit: $limit){
+		id
+		ip
+		deviceId
+		createDate
+	}
+
+}
+
+query findSafetyScoreLog($entity: SafetyScoreLogInputWhere!,$order: SafetyScoreLogInputOrder!,$limit: PageLimitInput){
+	findSafetyScoreLog(entity: $entity,order: $order,limit: $limit){
+		id
+		score
+		createDate
+	}
+
+}
+
+query findSafetyScoreRule($entity: SafetyScoreRuleInputWhere!,$order: SafetyScoreRuleInputOrder!,$limit: PageLimitInput){
+	findSafetyScoreRule(entity: $entity,order: $order,limit: $limit){
+		id
+		title
+		code
+		score
+		isReplace
+		createDate
+	}
+
+}
+
+query deleteUser($id: Int!){
+	deleteUser(id: $id)
+}
+
+query deleteSystem($id: Int!){
+	deleteSystem(id: $id)
+}
+
+query deleteSystemEvent($id: Int!){
+	deleteSystemEvent(id: $id)
+}
+
+query deleteSystemRight($id: Int!){
+	deleteSystemRight(id: $id)
+}
+
+query deleteDepartment($id: Int!){
+	deleteDepartment(id: $id)
+}
+
+query deleteRole($id: Int!){
+	deleteRole(id: $id)
+}
+
+query deleteStation($id: Int!){
+	deleteStation(id: $id)
+}
+
+query deleteToDoItem($id: Int!){
+	deleteToDoItem(id: $id)
+}
+
+query deleteRoleGroup($id: Int!){
+	deleteRoleGroup(id: $id)
+}
+
+query deleteUserLoginLog($id: Int!){
+	deleteUserLoginLog(id: $id)
+}
+
+query deleteSafetyScoreLog($id: Int!){
+	deleteSafetyScoreLog(id: $id)
+}
+
+query deleteSafetyScoreRule($id: Int!){
+	deleteSafetyScoreRule(id: $id)
+}
+
+mutation saveUser($entity: UserInput!){
+	saveUser(entity: $entity){
+		id
+		username
+		email
+		avatar
+		mobile
+		password
+		status
+		randomCode
+		isRestPassword
+		passwordDate
+		createDate
+		createUserId
+		safetyScore
+	}
+
+}
+
+mutation saveSystem($entity: SystemInput!){
+	saveSystem(entity: $entity){
+		id
+		title
+		image
+		link
+		code
+		createDate
+	}
+
+}
+
+mutation saveSystemEvent($entity: SystemEventInput!){
+	saveSystemEvent(entity: $entity){
+		id
+		title
+	}
+
+}
+
+mutation saveSystemRight($entity: SystemRightInput!){
+	saveSystemRight(entity: $entity){
+		id
+		type
+		title
+		namespace
+		code
+		link
+	}
+
+}
+
+mutation saveDepartment($entity: DepartmentInput!){
+	saveDepartment(entity: $entity){
+		id
+		title
+		status
+		shown
+		createDate
+		domainId
+	}
+
+}
+
+mutation saveRole($entity: RoleInput!){
+	saveRole(entity: $entity){
+		id
+		code
+		title
+		desc
+		createDate
+		updateDate
+	}
+
+}
+
+mutation saveStation($entity: StationInput!){
+	saveStation(entity: $entity){
+		id
+		title
+		desc
+		code
+		responsibilities
+		requirements
+		status
+		createDate
+	}
+
+}
+
+mutation saveToDoItem($entity: ToDoItemInput!){
+	saveToDoItem(entity: $entity){
+		id
+		title
+		desc
+		createDate
+		fromSystemId
+		fromEventId
+		fromUserId
+		toUserId
+	}
+
+}
+
+mutation saveRoleGroup($entity: RoleGroupInput!){
+	saveRoleGroup(entity: $entity){
+		id
+		title
+		desc
+	}
+
+}
+
+mutation saveUserLoginLog($entity: UserLoginLogInput!){
+	saveUserLoginLog(entity: $entity){
+		id
+		ip
+		deviceId
+		createDate
+	}
+
+}
+
+mutation saveSafetyScoreLog($entity: SafetyScoreLogInput!){
+	saveSafetyScoreLog(entity: $entity){
+		id
+		score
+		createDate
+	}
+
+}
+
+mutation saveSafetyScoreRule($entity: SafetyScoreRuleInput!){
+	saveSafetyScoreRule(entity: $entity){
+		id
+		title
+		code
+		score
+		isReplace
+		createDate
+	}
+
+}
+
+mutation insertUser($entity: UserInput!){
+	insertUser(entity: $entity){
+		id
+		username
+		email
+		avatar
+		mobile
+		password
+		status
+		randomCode
+		isRestPassword
+		passwordDate
+		createDate
+		createUserId
+		safetyScore
+	}
+
+}
+
+mutation insertSystem($entity: SystemInput!){
+	insertSystem(entity: $entity){
+		id
+		title
+		image
+		link
+		code
+		createDate
+	}
+
+}
+
+mutation insertSystemEvent($entity: SystemEventInput!){
+	insertSystemEvent(entity: $entity){
+		id
+		title
+	}
+
+}
+
+mutation insertSystemRight($entity: SystemRightInput!){
+	insertSystemRight(entity: $entity){
+		id
+		type
+		title
+		namespace
+		code
+		link
+	}
+
+}
+
+mutation insertDepartment($entity: DepartmentInput!){
+	insertDepartment(entity: $entity){
+		id
+		title
+		status
+		shown
+		createDate
+		domainId
+	}
+
+}
+
+mutation insertRole($entity: RoleInput!){
+	insertRole(entity: $entity){
+		id
+		code
+		title
+		desc
+		createDate
+		updateDate
+	}
+
+}
+
+mutation insertStation($entity: StationInput!){
+	insertStation(entity: $entity){
+		id
+		title
+		desc
+		code
+		responsibilities
+		requirements
+		status
+		createDate
+	}
+
+}
+
+mutation insertToDoItem($entity: ToDoItemInput!){
+	insertToDoItem(entity: $entity){
+		id
+		title
+		desc
+		createDate
+		fromSystemId
+		fromEventId
+		fromUserId
+		toUserId
+	}
+
+}
+
+mutation insertRoleGroup($entity: RoleGroupInput!){
+	insertRoleGroup(entity: $entity){
+		id
+		title
+		desc
+	}
+
+}
+
+mutation insertUserLoginLog($entity: UserLoginLogInput!){
+	insertUserLoginLog(entity: $entity){
+		id
+		ip
+		deviceId
+		createDate
+	}
+
+}
+
+mutation insertSafetyScoreLog($entity: SafetyScoreLogInput!){
+	insertSafetyScoreLog(entity: $entity){
+		id
+		score
+		createDate
+	}
+
+}
+
+mutation insertSafetyScoreRule($entity: SafetyScoreRuleInput!){
+	insertSafetyScoreRule(entity: $entity){
+		id
+		title
+		code
+		score
+		isReplace
+		createDate
+	}
+
+}
+

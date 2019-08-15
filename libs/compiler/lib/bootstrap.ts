@@ -71,7 +71,24 @@ export async function bootstrap(config: MagnusConfig) {
     // 这里生成客户端使用的对应的graphql
     const apiVisitor = new ApiVisitor();
     if (documentAst.definitions.length > 17) {
-      const api = documentAst.visit(apiVisitor, {});
+      documentAst.visit(apiVisitor, {});
+      let api = ``;
+      if (apiVisitor.query) {
+        apiVisitor.query.list.map((li: string) => (api += `${li}\n`));
+      }
+      if (apiVisitor.mutation) {
+        apiVisitor.mutation.list.map((li: string) => (api += `${li}\n`));
+      }
+      if (apiVisitor.subscription) {
+        apiVisitor.subscription.list.map((li: string) => (api += `${li}\n`));
+      }
+      if (api.length > 0) {
+        if (isServer)
+          writeFileSync(join(assets, `magnus.server-api.graphql`), api);
+        else {
+          writeFileSync(join(assets, `magnus.client-api.graphql`), api);
+        }
+      }
       const res = toJson(documentAst);
       if (isServer) {
         const content = print(res);

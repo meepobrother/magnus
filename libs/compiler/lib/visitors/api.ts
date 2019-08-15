@@ -94,12 +94,16 @@ export class ApiObjectTypeVisitor implements ast.Visitor {
 export class ApiVisitor implements ast.Visitor {
   name: string = "ApiVisitor";
   objectType: ApiObjectTypeVisitor = new ApiObjectTypeVisitor();
+
+  query: any;
+  mutation: any;
+  subscription: any;
+
   visitDocumentAst(node: ast.DocumentAst, context: any) {
     this.objectType.doc = node;
-    const defs = node.definitions
-      .map(def => def.visit(this, context))
-      .filter(it => !!it);
-    debugger;
+    node.definitions.map(def => {
+      def.visit(this, context);
+    });
     return context;
   }
   visitScalarTypeDefinitionAst(
@@ -117,7 +121,7 @@ export class ApiVisitor implements ast.Visitor {
         list: []
       };
       node.fields.map(field => field.visit(this, query));
-      context.query = query;
+      this.query = query;
       return context;
     } else if (nodeName === "Mutation") {
       const mutation = context.mutation || {
@@ -125,7 +129,7 @@ export class ApiVisitor implements ast.Visitor {
         list: []
       };
       node.fields.map(field => field.visit(this, mutation));
-      context.mutation = mutation;
+      this.mutation = mutation;
       return context;
     } else if (nodeName === "Subscription") {
       const subscription = context.subscription || {
@@ -133,7 +137,7 @@ export class ApiVisitor implements ast.Visitor {
         list: []
       };
       node.fields.map(field => field.visit(this, subscription));
-      context.subscription = subscription;
+      this.subscription = subscription;
       return context;
     } else {
     }
