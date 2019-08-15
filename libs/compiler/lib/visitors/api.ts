@@ -41,6 +41,12 @@ class ImportCore {
     return length;
   }
 }
+export class ApiLevel implements ast.Visitor {
+  name: string = "ApiLevel";
+  visitNamedTypeAst(node: ast.NamedTypeAst, context: any) {
+    return ``;
+  }
+}
 export class ApiObjectTypeVisitor implements ast.Visitor {
   name: string = "ApiVisitor";
   doc: ast.DocumentAst;
@@ -48,13 +54,13 @@ export class ApiObjectTypeVisitor implements ast.Visitor {
   imports: Map<string, string[]> = new Map();
   visitNamedTypeAst(node: ast.NamedTypeAst, context: ImportCore): any {
     const name = node.name.value;
-    const parent = context.findParent(name);
-    if (parent) {
-      return;
-    }
+    const parent = context.parent;
     const core = context.create(name);
     const def = this.doc.hasDefinitionAst(name);
     if (def) {
+      if (parent) {
+        return `__magnus__parent__`;
+      }
       const result = def.visit(this, core);
       return result;
     }
@@ -66,12 +72,19 @@ export class ApiObjectTypeVisitor implements ast.Visitor {
   ): any {
     const result = `{\n${node.fields
       .map(field => field.visit(this, context))
-      .join("")}}\n`;
+      .join("")}\t}\n`;
     return result;
   }
 
   visitFieldDefinitionAst(node: ast.FieldDefinitionAst, context: any): any {
-    return `${node.name.value} ${node.type.visit(this, context)}`;
+    const type = node.type.visit(this, context);
+    if (type === "__magnus__parent__") {
+      return ``;
+    }
+    if (type) {
+      return `\t\t${node.name.value} ${type} \n`;
+    }
+    return `\t\t${node.name.value}\n`;
   }
 
   visitListTypeAst(node: ast.ListTypeAst, context: any): any {
@@ -84,6 +97,7 @@ export class ApiVisitor implements ast.Visitor {
   visitDocumentAst(node: ast.DocumentAst, context: any) {
     this.objectType.doc = node;
     node.definitions.map(def => def.visit(this, context));
+    return context;
   }
   visitScalarTypeDefinitionAst(
     node: ast.ScalarTypeDefinitionAst,
@@ -95,6 +109,7 @@ export class ApiVisitor implements ast.Visitor {
   ) {
     const nodeName = node.name.value;
     if (nodeName === "Query") {
+      debugger;
       context.query = context.query || {
         type: "query",
         list: []
@@ -129,14 +144,16 @@ export class ApiVisitor implements ast.Visitor {
         .join(",")}){\n`;
       graphql += `\t${name.value}(${args.map(
         arg => `${arg.name.value}: $${arg.name.value}`
-      )}){\n`;
+      )})`;
       graphql += type.visit(this.objectType, new ImportCore(name.value));
-      graphql += `\t}\n`;
-      graphql += `}\n`;
-      writeFileSync(join(__dirname, "1.graphql"), graphql);
-      debugger;
+      graphql += `\n}\n`;
+      context.list.push(graphql);
     } else {
-      const graphql = `${context.type} ${name.value}{}`;
+      let graphql = `${context.type} ${name.value}{\n`;
+      graphql += `\t${name.value}`;
+      graphql += type.visit(this.objectType, new ImportCore(name.value));
+      graphql += `}\n`;
+      context.list.push(graphql);
     }
   }
   visitInputValueDefinitionAst(

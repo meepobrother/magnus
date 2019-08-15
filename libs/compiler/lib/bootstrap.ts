@@ -71,7 +71,7 @@ export async function bootstrap(config: MagnusConfig) {
     // 这里生成客户端使用的对应的graphql
     const apiVisitor = new ApiVisitor();
     if (documentAst.definitions.length > 17) {
-      documentAst.visit(apiVisitor, {});
+      const api = documentAst.visit(apiVisitor, {});
       const res = toJson(documentAst);
       if (isServer) {
         const content = print(res);
