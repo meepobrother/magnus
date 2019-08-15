@@ -21,6 +21,7 @@ import globby = require("globby");
 import { GraphqlToTs } from "./visitors/graphqlToTs";
 import { camelCase } from "lodash";
 import { ApiVisitor } from "./visitors/api";
+import { makeExecutableSchema } from "graphql-tools";
 export async function bootstrap(config: MagnusConfig) {
   config.output = config.output || "output";
   config.assets = config.assets || "assets";
@@ -157,7 +158,9 @@ export async function bootstrap(config: MagnusConfig) {
         writeFileSync(join(assets, `magnus.metadata.json`), metadataContent);
         const serverContent = JSON.stringify(res, null, 2);
         writeFileSync(join(assets, `magnus.server.json`), serverContent);
-        const schema = buildASTSchema(res);
+        const schema = makeExecutableSchema({
+          typeDefs: res
+        });
         const schemaContent = JSON.stringify(schema, null, 2);
         await config.broadcast(
           Buffer.from(
@@ -175,7 +178,9 @@ export async function bootstrap(config: MagnusConfig) {
         const content = JSON.stringify(res, null, 2);
         writeFileSync(join(assets, `magnus.json`), content);
 
-        const schema = buildASTSchema(res);
+        const schema = makeExecutableSchema({
+          typeDefs: res
+        });
         const schemaContent = JSON.stringify(schema, null, 2);
         await config.broadcast(
           Buffer.from(
