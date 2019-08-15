@@ -48,10 +48,16 @@ export class ApiLevel implements ast.Visitor {
   }
 }
 export class ApiObjectTypeVisitor implements ast.Visitor {
-  name: string = "ApiVisitor";
+  name: string = "ApiObjectTypeVisitor";
   doc: ast.DocumentAst;
   // 一个名称下面引用很多名称
   imports: Map<string, string[]> = new Map();
+
+  visitScalarTypeDefinitionAst(
+    node: ast.ScalarTypeDefinitionAst,
+    context: any
+  ): any {}
+
   visitNamedTypeAst(node: ast.NamedTypeAst, context: ImportCore): any {
     const name = node.name.value;
     const parent = context.findParent(name);

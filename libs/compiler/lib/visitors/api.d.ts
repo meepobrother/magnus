@@ -21,6 +21,7 @@ export declare class ApiObjectTypeVisitor implements ast.Visitor {
     name: string;
     doc: ast.DocumentAst;
     imports: Map<string, string[]>;
+    visitScalarTypeDefinitionAst(node: ast.ScalarTypeDefinitionAst, context: any): any;
     visitNamedTypeAst(node: ast.NamedTypeAst, context: ImportCore): any;
     visitObjectTypeDefinitionAst(node: ast.ObjectTypeDefinitionAst, context: ImportCore): any;
     visitFieldDefinitionAst(node: ast.FieldDefinitionAst, context: any): any;

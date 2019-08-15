@@ -52,10 +52,11 @@ class ApiLevel {
 exports.ApiLevel = ApiLevel;
 class ApiObjectTypeVisitor {
     constructor() {
-        this.name = "ApiVisitor";
+        this.name = "ApiObjectTypeVisitor";
         // 一个名称下面引用很多名称
         this.imports = new Map();
     }
+    visitScalarTypeDefinitionAst(node, context) { }
     visitNamedTypeAst(node, context) {
         const name = node.name.value;
         const parent = context.findParent(name);
