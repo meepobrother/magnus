@@ -31,12 +31,15 @@ class GraphqlToTs {
         if (this.config) {
             context += `import { ${this.config.runner.name} } from '${this.config.runner.path}';\n`;
         }
-        const res = node.definitions.filter(def => !(def instanceof magnus_graphql_1.ast.ScalarTypeDefinitionAst) && !!def).map(def => def.visit(this, ``)).join(`\n`);
+        const res = node.definitions
+            .filter(def => !(def instanceof magnus_graphql_1.ast.ScalarTypeDefinitionAst) && !!def)
+            .map(def => def.visit(this, ``))
+            .join(`\n`);
         const types = [];
         this.types.forEach(t => types.push(t));
         if (this.config) {
             if (types.length > 0) {
-                context += `import { ${types.join(', ')} } from '${this.config.types}';\n`;
+                context += `import { ${types.join(", ")} } from '${this.config.types}';\n`;
             }
         }
         context += res;
@@ -62,7 +65,7 @@ class GraphqlToTs {
         if (this.isProto) {
             if (node.arguments) {
                 if (parameters.length > 0) {
-                    res += `\t${name}(${parameters.join(',')}): Observable<${type}>;\n`;
+                    res += `\t${name}(${parameters.join(",")}): Observable<${type}>;\n`;
                 }
                 else {
                     res += `\t${name}(): Observable<${type}>;\n`;
@@ -81,7 +84,7 @@ class GraphqlToTs {
         if (this.isGraphql) {
             if (node.arguments) {
                 if (parameters.length > 0) {
-                    res += `\t${name}<T>(${parameters.join(', ')}, __selection?: string): Promise<T & ${type}>;\n`;
+                    res += `\t${name}<T>(${parameters.join(", ")}, __selection?: string): Promise<T & ${type}>;\n`;
                 }
                 else {
                     res += `\t${name}<T>(__selection?: string): Promise<T & ${type}>;\n`;
@@ -99,7 +102,7 @@ class GraphqlToTs {
         }
         if (node.arguments) {
             if (parameters.length > 0) {
-                res += `\t${name}(${parameters.join(', ')}, __selection?: string): ${type};\n`;
+                res += `\t${name}(${parameters.join(", ")}, __selection?: string): ${type};\n`;
             }
             else {
                 res += `\t${name}(__selection?: string): ${type};\n`;
@@ -146,17 +149,17 @@ class GraphqlToTs {
     }
     visitNameAst(node, context) {
         switch (node.value) {
-            case 'Int':
-            case 'Int32':
-            case 'Int64':
+            case "Int":
+            case "Int32":
+            case "Int64":
                 return `number`;
-            case 'String':
+            case "String":
                 return `string`;
-            case 'Boolean':
-            case 'Bool':
-                return 'boolean';
-            case 'Json':
-                return 'object';
+            case "Boolean":
+            case "Bool":
+                return "boolean";
+            case "Json":
+                return "object";
             default:
                 return node.value;
         }
@@ -165,21 +168,23 @@ class GraphqlToTs {
         return node.name.visit(this, context);
     }
     visitScalarTypeDefinitionAst(node, context) {
-        return ``;
+        return node.name.visit(this, context);
     }
     visitObjectTypeDefinitionAst(node, context) {
         const name = node.name.visit(this, ``);
-        this.isProto = !!node.isProto || name === 'Subscription';
-        this.isGraphql = name === 'Query' || name === 'Mutation';
+        this.isProto = !!node.isProto || name === "Subscription";
+        this.isGraphql = name === "Query" || name === "Mutation";
         if (node.description) {
             context += `/*`;
             context += node.description.value || ``;
             context += `*/\n`;
         }
         context += `export interface ${name} {\n`;
-        context += node.fields.map(field => {
-            return field.visit(this, name === 'Proto');
-        }).join(``);
+        context += node.fields
+            .map(field => {
+            return field.visit(this, name === "Proto");
+        })
+            .join(``);
         context += `}`;
         return context;
     }
@@ -194,7 +199,7 @@ class GraphqlToTs {
             }
             return t;
         });
-        return `type ${name} = ${types.join('|')};`;
+        return `type ${name} = ${types.join("|")};`;
     }
     visitInputObjectTypeDefinitionAst(node, context) {
         this.isParameter = false;
@@ -209,7 +214,9 @@ class GraphqlToTs {
     visitEnumTypeDefinitionAst(node, context) {
         if (node.name) {
             return `enum ${node.name.visit(this, context)}{
-                ${node.values.map(value => value.visit(this, context)).join(',\n')}
+                ${node.values
+                .map(value => value.visit(this, context))
+                .join(",\n")}
                 }`;
         }
         return ``;
@@ -218,12 +225,15 @@ class GraphqlToTs {
         return `\t${node.name.visit(this, context)}`;
     }
     visitSelectionSetAst(node, context) {
-        return node.selections.map(selec => selec.visit(this, context)).join(``) + `\n`;
+        return (node.selections.map(selec => selec.visit(this, context)).join(``) + `\n`);
     }
     visitSelectionAst(node, context) {
-        if (node instanceof magnus_graphql_1.ast.FieldAst) { }
-        if (node instanceof magnus_graphql_1.ast.FragmentSpreadAst) { }
-        if (node instanceof magnus_graphql_1.ast.InlineFragmentAst) { }
+        if (node instanceof magnus_graphql_1.ast.FieldAst) {
+        }
+        if (node instanceof magnus_graphql_1.ast.FragmentSpreadAst) {
+        }
+        if (node instanceof magnus_graphql_1.ast.InlineFragmentAst) {
+        }
     }
     createType(type, fileAlias, selectionSet, isArray, context) {
         const ast = this.schema.hasDefinitionAst(type);
@@ -232,19 +242,23 @@ class GraphqlToTs {
                 return `\t${fileAlias}: {\n${selectionSet.visit(this, {
                     ...context,
                     schema: ast
-                })}}${isArray ? '[]' : ''};\n`;
+                })}}${isArray ? "[]" : ""};\n`;
             }
             else {
-                debugger;
+                if (ast) {
+                    if (ast.name) {
+                        return `${ast.name.visit(this, ``)}`;
+                    }
+                }
             }
         }
         switch (type) {
-            case 'Int':
-                return `\t${fileAlias}: number${isArray ? '[]' : ''};\n`;
+            case "Int":
+                return `\t${fileAlias}: number${isArray ? "[]" : ""};\n`;
             case "String":
-                return `\t${fileAlias}: string${isArray ? '[]' : ''};\n`;
+                return `\t${fileAlias}: string${isArray ? "[]" : ""};\n`;
             case "Boolean":
-                return `\t${fileAlias}: boolean${isArray ? '[]' : ''};\n`;
+                return `\t${fileAlias}: boolean${isArray ? "[]" : ""};\n`;
             default:
                 debugger;
         }
@@ -286,7 +300,7 @@ class GraphqlToTs {
     }
     __getType(type) {
         switch (type) {
-            case 'Int':
+            case "Int":
                 return `number`;
             case "String":
                 return `string`;
@@ -302,9 +316,10 @@ class GraphqlToTs {
         const clientAst = client.visitOperationDefinitionAst(node, {});
         const operation = node.operation;
         const names = [];
-        const parameters = clientAst.variableDefinitions.map(variable => {
+        const parameters = clientAst.variableDefinitions
+            .map(variable => {
             let type = ``;
-            if (typeof variable.type === 'object') {
+            if (typeof variable.type === "object") {
                 const variableType = variable.type;
                 if (variableType.required) {
                     type = `: ${this.__getType(variableType.type)}`;
@@ -323,11 +338,15 @@ class GraphqlToTs {
             else {
                 return `${variable.variable}${type}`;
             }
-        }).join(`, `);
+        })
+            .join(`, `);
         const doc = new magnus_graphql_1.ast.DocumentAst();
         doc.definitions.push(node);
         const graphql = graphql_1.print(magnus_graphql_1.toJson(doc));
-        const selection = node.selectionSet.visit(this, { operation, schema: this.getSchema(operation) });
+        const selection = node.selectionSet.visit(this, {
+            operation,
+            schema: this.getSchema(operation)
+        });
         context += `interface ${lodash_1.upperFirst(clientAst.name)}Result {
     ${selection}
 }\n`;

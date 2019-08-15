@@ -1,5 +1,5 @@
-import * as ts from 'typescript';
-import * as util from './util';
+import * as ts from "typescript";
+import * as util from "./util";
 export declare abstract class Node<T extends ts.Node = ts.Node> {
     decorators: Decorator[];
     parent: Node;
@@ -75,6 +75,7 @@ export declare class PropertyDeclaration extends ClassElement<ts.PropertyDeclara
     exclamationToken: ExclamationToken;
     initializer: Expression;
     visit(visitor: Visitor, context: any): any;
+    getDecorators(): (visitor: Visitor) => string[];
     getDecorator<T>(name: string): (visitor: Visitor) => T | undefined | null;
 }
 export declare class Identifier extends Node<ts.Identifier> {
@@ -162,6 +163,7 @@ export declare class MethodDeclaration extends Node<ts.MethodDeclaration> {
     typeParameters: TypeParameterDeclaration[];
     questionToken: QuestionToken;
     visit(visitor: Visitor, context: any): any;
+    getDecorators(): (visitor: Visitor) => string[];
     getDecorator<T>(name: string): (visitor: Visitor) => T | undefined | null;
 }
 export declare class TypeReferenceNode extends Node<ts.TypeReferenceNode> {
@@ -208,7 +210,7 @@ export declare class AsteriskToken extends Node<ts.AsteriskToken> {
     visit(visitor: Visitor, context: any): any;
 }
 export declare class Modifier extends Node<ts.Modifier> {
-    name: 'static' | 'readonly' | 'declare' | 'protected' | 'private' | 'export' | 'default' | 'const' | 'async' | 'abstract' | 'public';
+    name: "static" | "readonly" | "declare" | "protected" | "private" | "export" | "default" | "const" | "async" | "abstract" | "public";
     visit(visitor: Visitor, context: any): any;
 }
 export declare class FunctionBody extends Node<ts.FunctionBody> {
@@ -224,7 +226,7 @@ export declare class ParameterDeclaration extends Node<ts.ParameterDeclaration> 
     index: number;
     visit(visitor: Visitor, context: any): any;
     getDecorator<T>(name: string): (visitor: Visitor) => T | undefined | null;
-    getDecorators(): (visitor: Visitor) => string;
+    getDecorators(): (visitor: Visitor) => string[];
 }
 export declare class TupleTypeNode extends Node<ts.TupleTypeNode> {
     elementTypes: TypeNode[];
@@ -256,7 +258,7 @@ export declare class InterfaceDeclaration extends Node<ts.InterfaceDeclaration> 
     visit(visitor: Visitor, context: any): any;
 }
 export declare class HeritageClause extends Node<ts.HeritageClause> {
-    token: 'extends' | 'implements';
+    token: "extends" | "implements";
     types: ExpressionWithTypeArguments[];
     visit(visitor: Visitor, context: any): any;
 }

@@ -8,7 +8,6 @@ class File {
     constructor(program, node) {
         this.tsVisitor = new ts_1.TsVisitor();
         this.parseVisitor = new parse_1.ParseVisitor();
-        this.tsVisitor.program = program;
         this.parseVisitor.program = program;
         this.program = program;
         this.ast = this.tsVisitor.visitSourceFile(new ast.SourceFile(), node);

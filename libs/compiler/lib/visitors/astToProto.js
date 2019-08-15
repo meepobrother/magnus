@@ -14,7 +14,7 @@ class AstToProtoVisitor {
         this.root = root;
         const pkg = new magnus_grpc_1.ast.Package();
         this.package = pkg;
-        pkg.name = this.config.name || 'magnus';
+        pkg.name = this.config.name || "magnus";
         pkg.syntax = `proto3`;
         pkg.children.push(this.createEmpty());
         node.protos.map(proto => proto.visit(this, pkg));
@@ -107,7 +107,7 @@ class AstToProtoVisitor {
     createType(node, context) {
         if (node instanceof magnus_graphql_1.ast.ListTypeAst) {
             if (!this.isGrpc) {
-                context.decorator.unshift('repeated');
+                context.decorator.unshift("repeated");
             }
             return this.createType(node.type, context);
         }
@@ -123,49 +123,49 @@ class AstToProtoVisitor {
     }
     visitNameAst(node, context) {
         switch (node.value) {
-            case 'String':
-            case 'string':
+            case "String":
+            case "string":
                 return `string`;
-            case 'Double':
-                return 'double';
-            case 'Float':
-                return 'float';
-            case 'Int':
-            case 'Int32':
+            case "Double":
+                return "double";
+            case "Float":
+                return "float";
+            case "Int":
+            case "Int32":
                 return `int32`;
-            case 'Uint32':
+            case "Uint32":
                 return `uint32`;
-            case 'Sint32':
+            case "Sint32":
                 return `sint32`;
-            case 'fixed32':
+            case "fixed32":
                 return `fixed32`;
-            case 'Sfixed32':
+            case "Sfixed32":
                 return `sfixed32`;
-            case 'Int64':
+            case "Int64":
                 return `int64`;
-            case 'Uint64':
+            case "Uint64":
                 return `uint64`;
-            case 'Sint64':
+            case "Sint64":
                 return `sint64`;
-            case 'Fixed64':
+            case "Fixed64":
                 return `fixed64`;
-            case 'Sfixed64':
+            case "Sfixed64":
                 return `sfixed64`;
-            case 'Bool':
-            case 'Boolean':
+            case "Bool":
+            case "Boolean":
                 return `bool`;
-            case 'ID':
-            case 'Bytes':
+            case "ID":
+            case "Bytes":
                 return `bytes`;
             default:
                 return node.value;
         }
     }
+    visitListTypeAst(node, context) { }
     visitNamedTypeAst(node, context) {
         return node.name.visit(this, context);
     }
-    visitScalarTypeDefinitionAst(node, context) {
-    }
+    visitScalarTypeDefinitionAst(node, context) { }
     visitEnumTypeDefinitionAst(node, context) { }
 }
 exports.AstToProtoVisitor = AstToProtoVisitor;

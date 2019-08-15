@@ -200,7 +200,7 @@ export declare class InputValueDefinitionAst<C = any, O = any> extends Ast<C, O>
     defaultValue: ValueAst<C, O>;
     directives: Array<DirectiveAst<C, O>>;
     index: number;
-    decorator: string;
+    decorator: string[];
     visit(visitor: Visitor, context: C): O;
     copy(): InputValueDefinitionAst<any, any>;
 }

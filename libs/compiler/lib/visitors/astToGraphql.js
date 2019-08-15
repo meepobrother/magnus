@@ -146,7 +146,7 @@ class AstToGraphqlVisitor {
                 const params = query.params;
                 let name = ctx.name;
                 let method = query.name;
-                if (typeof params === 'string') {
+                if (typeof params === "string") {
                     name = params;
                 }
                 else if (Array.isArray(params) && params.length >= 2) {
@@ -183,9 +183,9 @@ class AstToGraphqlVisitor {
                 }
             });
         });
-        const queryRes = this.createObjectTypeDefinitionAst('Query', querys);
-        const mutationRes = this.createObjectTypeDefinitionAst('Mutation', mutations);
-        const subscriptionRes = this.createObjectTypeDefinitionAst('Subscription', subscriptions);
+        const queryRes = this.createObjectTypeDefinitionAst("Query", querys);
+        const mutationRes = this.createObjectTypeDefinitionAst("Mutation", mutations);
+        const subscriptionRes = this.createObjectTypeDefinitionAst("Subscription", subscriptions);
         Object.keys(this.protos).map(key => {
             const protos = this.protos[key];
             const protoRes = this.createObjectTypeDefinitionAst(key, protos);
@@ -210,10 +210,8 @@ class AstToGraphqlVisitor {
     }
     collectCls(node, context) {
         const scalar = node.getDecorator(`Scalar`)(expression_1.expressionVisitor);
-        const directive = node.getDecorator(`Directive`)(expression_1.expressionVisitor);
-        const injectable = node.getDecorator(`Injectable`)(expression_1.expressionVisitor);
-        const module = node.getDecorator(`Module`)(expression_1.expressionVisitor);
         const resolver = node.getDecorator(`Resolver`)(expression_1.expressionVisitor);
+        const entity = node.getDecorator(`Entity`)(expression_1.expressionVisitor);
         if (scalar !== null) {
             const scalarDef = new magnus_graphql_1.ast.ScalarTypeDefinitionAst();
             const context = new magnus_1.MagnusContext();
@@ -243,12 +241,16 @@ class AstToGraphqlVisitor {
                 return type;
             }
         }
+        if (entity !== null) {
+            const ctx = new magnus_1.MagnusContext();
+            this.tsToGraphqlVisitor.visitClassDeclaration(node, ctx);
+        }
     }
     createObjectTypeDefinitionAst(name, fields) {
         const node = parse.visitObjectTypeDefinitionAst(new magnus_graphql_1.ast.ObjectTypeDefinitionAst(), {
-            kind: 'ObjectTypeDefinition',
+            kind: "ObjectTypeDefinition",
             name: {
-                kind: 'Name',
+                kind: "Name",
                 value: name
             }
         });

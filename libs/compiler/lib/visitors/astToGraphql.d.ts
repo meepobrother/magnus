@@ -1,8 +1,8 @@
-import { MangusContextManager } from './magnus';
-import { ast } from '@notadd/magnus-graphql';
-import { TsToGraphqlVisitor } from './tsToGraphql';
-import { CollectionContext } from './collection';
-import * as ts from './visitor';
+import { MangusContextManager } from "./magnus";
+import { ast } from "@notadd/magnus-graphql";
+import { TsToGraphqlVisitor } from "./tsToGraphql";
+import { CollectionContext } from "./collection";
+import * as ts from "./visitor";
 export declare class AstToGraphqlVisitor implements ast.Visitor {
     name: string;
     collection: CollectionContext;

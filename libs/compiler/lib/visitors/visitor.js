@@ -153,6 +153,12 @@ class PropertyDeclaration extends ClassElement {
             throw new Error(`${visitor.name} 没有 visitPropertyDeclaration 方法`);
         }
     }
+    getDecorators() {
+        return (visitor) => {
+            const decorators = this.decorators.map(dec => dec.visit(visitor, {}));
+            return decorators.map(dec => dec.name);
+        };
+    }
     getDecorator(name) {
         return (visitor) => {
             const decorators = this.decorators.map(dec => dec.visit(visitor, {}));
@@ -391,6 +397,12 @@ class MethodDeclaration extends Node {
             throw new Error(`${visitor.name} 没有 visitMethodDeclaration 方法`);
         }
     }
+    getDecorators() {
+        return (visitor) => {
+            const decorators = this.decorators.map(dec => dec.visit(visitor, {}));
+            return decorators.map(dec => dec.name);
+        };
+    }
     getDecorator(name) {
         return (visitor) => {
             const decorators = this.decorators.map(dec => dec.visit(visitor, {}));
@@ -574,9 +586,7 @@ class ParameterDeclaration extends Node {
     getDecorators() {
         return (visitor) => {
             const decorators = this.decorators.map(dec => dec.visit(visitor, {}));
-            const ress = decorators.map(dec => dec.name);
-            if (ress.length >= 1)
-                return ress[0];
+            return decorators.map(dec => dec.name);
         };
     }
 }
@@ -1861,7 +1871,6 @@ class TsVisitor {
         if (context.moduleName) {
             node.moduleName = context.moduleName;
         }
-        ;
         node.node = context;
         node.statements = context.statements.map(state => {
             const ast = this.visitStatement(undefined, state);
@@ -1869,11 +1878,11 @@ class TsVisitor {
             ast.from = node.fileName;
             if (ast instanceof ImportDeclaration) {
                 const fromPath = ast.moduleSpecifier.text;
-                if (typeof fromPath === 'string') {
-                    if (fromPath.startsWith('./')) {
+                if (typeof fromPath === "string") {
+                    if (fromPath.startsWith("./")) {
                         ast.sourcePath = path_1.join(ast.from, fromPath);
                     }
-                    else if (fromPath.startsWith('/')) {
+                    else if (fromPath.startsWith("/")) {
                         ast.sourcePath = fromPath;
                     }
                     else {
@@ -2185,10 +2194,10 @@ class TsVisitor {
     visitHeritageClause(node, context) {
         node.node = context;
         if (context.token === ts.SyntaxKind.ExtendsKeyword) {
-            node.token = 'extends';
+            node.token = "extends";
         }
         if (context.token === ts.SyntaxKind.ImplementsKeyword) {
-            node.token = 'implements';
+            node.token = "implements";
         }
         node.types = context.types.map(type => this.visitExpressionWithTypeArguments(new ExpressionWithTypeArguments(), type));
         return node;
@@ -2581,7 +2590,7 @@ class TsVisitor {
             });
             if (node.docs.length > 0) {
                 const doc = node.docs[0];
-                const tags = doc.tags.filter(tag => tag.tagName.text === 'param');
+                const tags = doc.tags.filter(tag => tag.tagName.text === "param");
                 if (tags.length > 0) {
                     node.parameters = node.parameters.map((par, index) => {
                         if (tags.length > index) {
@@ -2611,7 +2620,7 @@ class TsVisitor {
         node.modifiers = this.createModifiers(node, context.modifiers);
         node.name = this.visitBindingName(undefined, context.name);
         if (context.questionToken) {
-            node.questionToken = this.visitQuestionToken(new QuestionToken, context.questionToken);
+            node.questionToken = this.visitQuestionToken(new QuestionToken(), context.questionToken);
         }
         if (context.type) {
             node.type = this.visitTypeNode(undefined, context.type);
@@ -2695,37 +2704,37 @@ class TsVisitor {
     visitModifier(node, context) {
         node.node = context;
         if (context.kind === ts.SyntaxKind.PublicKeyword) {
-            node.name = 'public';
+            node.name = "public";
         }
         else if (context.kind === ts.SyntaxKind.AbstractKeyword) {
-            node.name = 'abstract';
+            node.name = "abstract";
         }
         else if (context.kind === ts.SyntaxKind.AsyncKeyword) {
-            node.name = 'async';
+            node.name = "async";
         }
         else if (context.kind === ts.SyntaxKind.ConstKeyword) {
-            node.name = 'const';
+            node.name = "const";
         }
         else if (context.kind === ts.SyntaxKind.DeclareKeyword) {
-            node.name = 'declare';
+            node.name = "declare";
         }
         else if (context.kind === ts.SyntaxKind.DefaultKeyword) {
-            node.name = 'default';
+            node.name = "default";
         }
         else if (context.kind === ts.SyntaxKind.ExportKeyword) {
-            node.name = 'export';
+            node.name = "export";
         }
         else if (context.kind === ts.SyntaxKind.PrivateKeyword) {
-            node.name = 'private';
+            node.name = "private";
         }
         else if (context.kind === ts.SyntaxKind.ProtectedKeyword) {
-            node.name = 'protected';
+            node.name = "protected";
         }
         else if (context.kind === ts.SyntaxKind.ReadonlyKeyword) {
-            node.name = 'readonly';
+            node.name = "readonly";
         }
         else if (context.kind === ts.SyntaxKind.StaticKeyword) {
-            node.name = 'static';
+            node.name = "static";
         }
         return node;
     }

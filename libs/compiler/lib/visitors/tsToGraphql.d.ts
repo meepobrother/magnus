@@ -43,7 +43,7 @@ export declare class TsToGraphqlVisitor implements ast.Visitor {
     entities: {
         [key: string]: {
             name: string;
-            relation: string;
+            decorators: string[];
             entity: string;
         }[];
     };

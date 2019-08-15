@@ -1,5 +1,5 @@
-import { ast, InputObjectTypeDefinitionAst, ListTypeAst, EnumTypeDefinitionAst, EnumValueDefinitionAst, OperationDefinitionAst, ClientVisitor, DocumentAst, SelectionSetAst, SelectionAst, ObjectTypeDefinitionAst } from '@notadd/magnus-graphql';
-import { MagnusConfig } from '@notadd/magnus-core';
+import { ast, InputObjectTypeDefinitionAst, ListTypeAst, EnumTypeDefinitionAst, EnumValueDefinitionAst, OperationDefinitionAst, ClientVisitor, DocumentAst, SelectionSetAst, SelectionAst, ObjectTypeDefinitionAst } from "@notadd/magnus-graphql";
+import { MagnusConfig } from "@notadd/magnus-core";
 export declare class ClientTs extends ClientVisitor {
     visitVariableAst(node: ast.VariableAst, context: any): any;
     visitNonNullTypeAst(node: ast.NonNullTypeAst, context: any): any;

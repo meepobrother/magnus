@@ -46,8 +46,7 @@ function generateDocumentation(fileNames, options) {
         return {
             name: symbol.getName(),
             documentation: ts.displayPartsToString(symbol.getDocumentationComment(checker)),
-            type: checker.typeToString(checker.getTypeOfSymbolAtLocation(symbol, symbol.valueDeclaration)),
-            properties: []
+            type: checker.typeToString(checker.getTypeOfSymbolAtLocation(symbol, symbol.valueDeclaration))
         };
     }
     /** Serialize a class symbol information */
@@ -58,16 +57,32 @@ function generateDocumentation(fileNames, options) {
         details.constructors = constructorType
             .getConstructSignatures()
             .map(serializeSignature);
-        if (symbol.members)
+        if (symbol.members) {
+            details.members = [];
             symbol.members.forEach(element => {
                 const name = element.getName();
                 const typeNode = checker.getTypeOfSymbolAtLocation(element, element.valueDeclaration);
-                const callSignatures = typeNode.getCallSignatures();
+                const modifiers = element.valueDeclaration.modifiers;
                 const type = checker.typeToString(typeNode);
                 debugger;
-                if (Array.isArray(details.properties))
-                    details.properties.push(element);
+                const signatures = typeNode.getCallSignatures().map(serializeSignature);
+                if (signatures.length > 0) {
+                    const signature = signatures[0];
+                    if (Array.isArray(details.members))
+                        details.members.push({
+                            ...signature,
+                            name
+                        });
+                }
+                else {
+                    if (Array.isArray(details.members))
+                        details.members.push({
+                            type,
+                            name
+                        });
+                }
             });
+        }
         return details;
     }
     /** Serialize a signature (call or construct) */

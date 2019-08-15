@@ -11,7 +11,6 @@ import * as ts from 'typescript';
  */
 export declare class TsVisitor implements ast.Visitor {
     name: string;
-    program: ts.Program;
     visitSourceFile(node: ast.SourceFile, context: ts.SourceFile): ast.SourceFile;
     visitStatement(node: any, context: ts.Statement): any;
     visitReturnStatement(node: ast.ReturnStatement, context: ts.ReturnStatement): ast.ReturnStatement;

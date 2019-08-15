@@ -9,6 +9,25 @@
                 "returnType": "Basic1",
                 "documentation": ""
             }
+        ],
+        "members": [
+            {
+                "parameters": [
+                    {
+                        "name": "a",
+                        "documentation": "",
+                        "type": "string"
+                    },
+                    {
+                        "name": "b",
+                        "documentation": "",
+                        "type": "string"
+                    }
+                ],
+                "returnType": "Promise<string>",
+                "documentation": "",
+                "name": "add"
+            }
         ]
     },
     {
@@ -20,6 +39,12 @@
                 "parameters": [],
                 "returnType": "Basic2",
                 "documentation": ""
+            }
+        ],
+        "members": [
+            {
+                "type": "string",
+                "name": "title"
             }
         ]
     }
