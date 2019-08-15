@@ -58,7 +58,7 @@ class ApiObjectTypeVisitor {
     }
     visitNamedTypeAst(node, context) {
         const name = node.name.value;
-        const parent = context.parent;
+        const parent = context.findParent(name);
         const core = context.create(name);
         const def = this.doc.hasDefinitionAst(name);
         if (def) {

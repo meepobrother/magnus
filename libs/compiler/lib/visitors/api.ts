@@ -54,7 +54,7 @@ export class ApiObjectTypeVisitor implements ast.Visitor {
   imports: Map<string, string[]> = new Map();
   visitNamedTypeAst(node: ast.NamedTypeAst, context: ImportCore): any {
     const name = node.name.value;
-    const parent = context.parent;
+    const parent = context.findParent(name);
     const core = context.create(name);
     const def = this.doc.hasDefinitionAst(name);
     if (def) {
