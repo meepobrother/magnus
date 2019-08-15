@@ -158,7 +158,7 @@ export async function bootstrap(config: MagnusConfig) {
         writeFileSync(join(assets, `magnus.metadata.json`), metadataContent);
         const serverContent = JSON.stringify(res, null, 2);
         writeFileSync(join(assets, `magnus.server.json`), serverContent);
-        const schema = buildASTSchema(res);
+        const schema = makeExecutableSchema({ typeDefs: res });
         const schemaContent = JSON.stringify(
           introspectionFromSchema(schema),
           null,
@@ -180,7 +180,7 @@ export async function bootstrap(config: MagnusConfig) {
         const content = JSON.stringify(res, null, 2);
         writeFileSync(join(assets, `magnus.json`), content);
 
-        const schema = buildASTSchema(res);
+        const schema = makeExecutableSchema({ typeDefs: res });
         const schemaContent = JSON.stringify(
           introspectionFromSchema(schema),
           null,
