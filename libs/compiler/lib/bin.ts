@@ -29,6 +29,7 @@ async function start() {
                     const res = Buffer.concat(array).toString('utf8');
                     const obj = JSON.parse(res);
                     const { name, fileName, content, type, debug, host } = obj;
+                    console.log(`收到来自主机: ${host}\n 文件名为:${fileName}\n 类型为:${type}\n`)
                     let canWrite = false;
                     if (config.hosts) {
                         if (config.hosts.includes(host)) {
@@ -39,8 +40,9 @@ async function start() {
                     }
                     if (canWrite) {
                         /**
-                             * 开发模式相同 相互同步文件
-                             */
+                         * 开发模式相同 相互同步文件
+                         */
+
                         if (Array.isArray(config.reciveName)) {
                             const names = [
                                 ...config.reciveName,
@@ -68,7 +70,6 @@ async function start() {
                             } else {
                                 writeFileSync(join(dist, name, fileName), content);
                             }
-                            console.log(`收到模块${name}的文件${fileName}`)
                         }
                     }
                 })
