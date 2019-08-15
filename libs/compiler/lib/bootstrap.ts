@@ -157,9 +157,33 @@ export async function bootstrap(config: MagnusConfig) {
         writeFileSync(join(assets, `magnus.metadata.json`), metadataContent);
         const serverContent = JSON.stringify(res, null, 2);
         writeFileSync(join(assets, `magnus.server.json`), serverContent);
+        await config.broadcast(
+          Buffer.from(
+            JSON.stringify({
+              name: config.name,
+              type: "assets",
+              debug: config.debug,
+              fileName: `magnus.server.json`,
+              content: serverContent,
+              host: config.host
+            })
+          )
+        );
       } else {
         const content = JSON.stringify(res, null, 2);
         writeFileSync(join(assets, `magnus.json`), content);
+        await config.broadcast(
+          Buffer.from(
+            JSON.stringify({
+              name: config.name,
+              type: "assets",
+              debug: config.debug,
+              fileName: `magnus.json`,
+              content: content,
+              host: config.host
+            })
+          )
+        );
       }
       if (!isServer) {
         // proto
