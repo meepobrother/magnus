@@ -19,6 +19,7 @@ const graphqlToTs_1 = require("./visitors/graphqlToTs");
 const lodash_1 = require("lodash");
 const api_1 = require("./visitors/api");
 const graphql_tools_1 = require("graphql-tools");
+const buildApi_1 = require("./buildApi");
 async function bootstrap(config) {
     config.output = config.output || "output";
     config.assets = config.assets || "assets";
@@ -85,15 +86,9 @@ async function bootstrap(config) {
                         host: config.host
                     })));
                     const schema = graphql_tools_1.makeExecutableSchema({ typeDefs: res });
-                    const schemaContent = JSON.stringify(graphql_1.introspectionFromSchema(schema), null, 2);
-                    await config.broadcast(Buffer.from(JSON.stringify({
-                        name: config.name,
-                        type: "assets",
-                        debug: config.debug,
-                        fileName: `magnus.server-schema.json`,
-                        content: schemaContent,
-                        host: config.host
-                    })));
+                    const introspectionSchema = graphql_1.introspectionFromSchema(schema);
+                    buildApi_1.buildNgApi(introspectionSchema, path_1.join(assets, `magnus.server-api.graphql`), path_1.join(dist, `magnus.service.ts`));
+                    sendLocalFile(dist, `magnus.service.ts`, config);
                 }
                 else {
                     fs_extra_1.writeFileSync(path_1.join(assets, `magnus.client-api.graphql`), api);
@@ -106,15 +101,9 @@ async function bootstrap(config) {
                         host: config.host
                     })));
                     const schema = graphql_tools_1.makeExecutableSchema({ typeDefs: res });
-                    const schemaContent = JSON.stringify(graphql_1.introspectionFromSchema(schema), null, 2);
-                    await config.broadcast(Buffer.from(JSON.stringify({
-                        name: config.name,
-                        type: "assets",
-                        debug: config.debug,
-                        fileName: `magnus.client-schema.json`,
-                        content: schemaContent,
-                        host: config.host
-                    })));
+                    const introspectionSchema = graphql_1.introspectionFromSchema(schema);
+                    buildApi_1.buildNgApi(introspectionSchema, path_1.join(assets, `magnus.client-api.graphql`), path_1.join(dist, `magnus.service.ts`));
+                    sendLocalFile(dist, `magnus.service.ts`, config);
                 }
             }
             if (isServer) {
