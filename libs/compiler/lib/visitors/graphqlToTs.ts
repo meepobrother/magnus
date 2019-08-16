@@ -58,9 +58,12 @@ export class GraphqlToTs implements ast.Visitor {
     const res = node.definitions
       .filter(def => !(def instanceof ast.ScalarTypeDefinitionAst) && !!def)
       .map(def => def.visit(this, ``))
+      .filter(it => !!it)
       .join(`\n`);
     const types: string[] = [];
-    this.types.forEach(t => types.push(t));
+    this.types.forEach(t => {
+      if (t) types.push(t);
+    });
     if (this.config) {
       if (types.length > 0) {
         context += `import { ${types.join(", ")} } from '${
@@ -379,7 +382,7 @@ export class GraphqlToTs implements ast.Visitor {
       case "Bool":
         return `boolean`;
       default:
-        this.types.add(type);
+        if (type.length > 0) this.types.add(type);
         return type;
     }
   }

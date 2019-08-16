@@ -42,9 +42,13 @@ class GraphqlToTs {
         const res = node.definitions
             .filter(def => !(def instanceof magnus_graphql_1.ast.ScalarTypeDefinitionAst) && !!def)
             .map(def => def.visit(this, ``))
+            .filter(it => !!it)
             .join(`\n`);
         const types = [];
-        this.types.forEach(t => types.push(t));
+        this.types.forEach(t => {
+            if (t)
+                types.push(t);
+        });
         if (this.config) {
             if (types.length > 0) {
                 context += `import { ${types.join(", ")} } from '${this.config.types}';\n`;
@@ -316,7 +320,8 @@ class GraphqlToTs {
             case "Bool":
                 return `boolean`;
             default:
-                this.types.add(type);
+                if (type.length > 0)
+                    this.types.add(type);
                 return type;
         }
     }
