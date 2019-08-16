@@ -75,4 +75,8 @@ export interface MagnusConfig {
      * hosts
      */
     hosts: string[];
+    /**
+     * 版本号
+     */
+    version: string;
 }

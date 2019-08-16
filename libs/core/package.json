@@ -1,6 +1,6 @@
 {
 	"name": "@notadd/magnus-core",
-	"version": "3.1.13",
+	"version": "3.1.25",
 	"description": "> TODO: description",
 	"author": "imeepos <1037483576@qq.com>",
 	"homepage": "https://github.com/notadd/magnus/tree/master/libs/core#readme",
@@ -26,7 +26,7 @@
 	"bugs": {
 		"url": "https://github.com/notadd/magnus/issues"
 	},
-	"gitHead": "3cdb10e40f409d0acd323e2b31297e40e747a8db",
+	"gitHead": "01a92a2f73463e3b91df98d32120775fe46c1ea5",
 	"dependencies": {
 		"graphql": "^14.4.2",
 		"tslib": "^1.10.0",
