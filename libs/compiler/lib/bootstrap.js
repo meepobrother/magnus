@@ -18,7 +18,6 @@ const globby = require("globby");
 const graphqlToTs_1 = require("./visitors/graphqlToTs");
 const lodash_1 = require("lodash");
 const api_1 = require("./visitors/api");
-const graphql_tools_1 = require("graphql-tools");
 const buildApi_1 = require("./buildApi");
 async function bootstrap(config) {
     config.output = config.output || "output";
@@ -85,7 +84,7 @@ async function bootstrap(config) {
                         content: api,
                         host: config.host
                     })));
-                    const schema = graphql_tools_1.makeExecutableSchema({ typeDefs: res });
+                    const schema = graphql_1.buildASTSchema(res);
                     const introspectionSchema = JSON.stringify(graphql_1.introspectionFromSchema(schema), null, 2);
                     buildApi_1.buildNgApi(introspectionSchema, path_1.join(assets, `magnus.server-api.graphql`), path_1.join(dist, `magnus.service.ts`));
                     sendLocalFile(dist, `magnus.service.ts`, config);
@@ -100,7 +99,7 @@ async function bootstrap(config) {
                         content: api,
                         host: config.host
                     })));
-                    const schema = graphql_tools_1.makeExecutableSchema({ typeDefs: res });
+                    const schema = graphql_1.buildASTSchema(res);
                     const introspectionSchema = JSON.stringify(graphql_1.introspectionFromSchema(schema), null, 2);
                     buildApi_1.buildNgApi(introspectionSchema, path_1.join(assets, `magnus.client-api.graphql`), path_1.join(dist, `magnus.service.ts`));
                     sendLocalFile(dist, `magnus.service.ts`, config);

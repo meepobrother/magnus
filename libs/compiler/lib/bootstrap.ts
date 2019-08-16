@@ -15,7 +15,7 @@ import { collectionVisitor, CollectionContext } from "./visitors/collection";
 import { MangusContextManager, MagnusVisitor } from "./visitors/magnus";
 import { AstToGraphqlVisitor } from "./visitors/astToGraphql";
 import { AstToProtoVisitor } from "./visitors/astToProto";
-import { print, introspectionFromSchema } from "graphql";
+import { print, introspectionFromSchema, buildASTSchema } from "graphql";
 import { watch } from "chokidar";
 import globby = require("globby");
 import { GraphqlToTs } from "./visitors/graphqlToTs";
@@ -100,7 +100,7 @@ export async function bootstrap(config: MagnusConfig) {
               })
             )
           );
-          const schema = makeExecutableSchema({ typeDefs: res });
+          const schema = buildASTSchema(res);
           const introspectionSchema = JSON.stringify(
             introspectionFromSchema(schema),
             null,
@@ -126,7 +126,7 @@ export async function bootstrap(config: MagnusConfig) {
               })
             )
           );
-          const schema = makeExecutableSchema({ typeDefs: res });
+          const schema = buildASTSchema(res);
           const introspectionSchema = JSON.stringify(
             introspectionFromSchema(schema),
             null,
