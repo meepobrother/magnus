@@ -1,8 +1,8 @@
-import * as ast from './visitor';
-import { MagnusContext } from './magnus';
-import { ast as graphql, ToString } from '@notadd/magnus-graphql';
-import { PermissionOptions, HandlerDef } from '@notadd/magnus-core';
-import { CollectionContext } from './collection';
+import * as ast from "./visitor";
+import { MagnusContext } from "./magnus";
+import { ast as graphql, ToString } from "@notadd/magnus-graphql";
+import { PermissionOptions, HandlerDef } from "@notadd/magnus-core";
+import { CollectionContext } from "./collection";
 export declare const toString: ToString;
 export declare const WhereMap: {
     [key: string]: string;
