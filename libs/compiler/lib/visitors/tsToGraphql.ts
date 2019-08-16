@@ -669,7 +669,9 @@ export class TsToGraphqlVisitor implements ast.Visitor {
         if (context.currentEntity.length > 0) {
             if (ResolveProperty === null) {
                 context._needChangeName = true;
-                context.currentName = `${node.name.visit(expressionVisitor, ``)}${context.currentEntity}`;
+                context.currentName = `${
+                  context.currentEntity
+                }${node.name.visit(expressionVisitor, ``)}`;
             }
         } else {
             context._needChangeName = false;
@@ -955,9 +957,11 @@ export class TsToGraphqlVisitor implements ast.Visitor {
     }
     visitIdentifier(node: ast.Identifier, context: MagnusContext) {
         if (context.needChangeName) {
+            const name =
+              context.currentName ||
+              `${context.currentEntity}_${node.text}`;
             if (context.isProperty) {
                 // 如果是属性
-                const name = context.currentName || `${context.currentEntity}_${node.text}`;
                 if (context.isUpperFirst) {
                     // return this.createNameAst(upperFirst(camelCase(name)))
                     return this.createNameAst(name)
@@ -965,7 +969,6 @@ export class TsToGraphqlVisitor implements ast.Visitor {
                 // return this.createNameAst(camelCase(name))
                 return this.createNameAst(name)
             } else {
-                const name = context.currentName || `${node.text}_${context.currentEntity}`;
                 if (context.isUpperFirst) {
                     // return this.createNameAst(upperFirst(camelCase(name)))
                     return this.createNameAst(name)
