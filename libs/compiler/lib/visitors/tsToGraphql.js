@@ -709,7 +709,7 @@ class TsToGraphqlVisitor {
         if (context.currentEntity.length > 0) {
             if (ResolveProperty === null) {
                 context._needChangeName = true;
-                context.currentName = `${context.currentEntity}${node.name.visit(expression_1.expressionVisitor, ``)}`;
+                context.currentName = `${node.name.visit(expression_1.expressionVisitor, ``)}${context.currentEntity}`;
             }
         }
         else {
@@ -1015,10 +1015,9 @@ class TsToGraphqlVisitor {
     }
     visitIdentifier(node, context) {
         if (context.needChangeName) {
-            const name = context.currentName ||
-                `${context.currentEntity}_${node.text}`;
             if (context.isProperty) {
                 // 如果是属性
+                const name = context.currentName || `${context.currentEntity}_${node.text}`;
                 if (context.isUpperFirst) {
                     // return this.createNameAst(upperFirst(camelCase(name)))
                     return this.createNameAst(name);
@@ -1027,6 +1026,7 @@ class TsToGraphqlVisitor {
                 return this.createNameAst(name);
             }
             else {
+                const name = context.currentName || `${node.text}_${context.currentEntity}`;
                 if (context.isUpperFirst) {
                     // return this.createNameAst(upperFirst(camelCase(name)))
                     return this.createNameAst(name);
