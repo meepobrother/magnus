@@ -86,7 +86,7 @@ async function bootstrap(config) {
                         host: config.host
                     })));
                     const schema = graphql_tools_1.makeExecutableSchema({ typeDefs: res });
-                    const introspectionSchema = graphql_1.introspectionFromSchema(schema);
+                    const introspectionSchema = JSON.stringify(graphql_1.introspectionFromSchema(schema), null, 2);
                     buildApi_1.buildNgApi(introspectionSchema, path_1.join(assets, `magnus.server-api.graphql`), path_1.join(dist, `magnus.service.ts`));
                     sendLocalFile(dist, `magnus.service.ts`, config);
                 }
@@ -101,7 +101,7 @@ async function bootstrap(config) {
                         host: config.host
                     })));
                     const schema = graphql_tools_1.makeExecutableSchema({ typeDefs: res });
-                    const introspectionSchema = graphql_1.introspectionFromSchema(schema);
+                    const introspectionSchema = JSON.stringify(graphql_1.introspectionFromSchema(schema), null, 2);
                     buildApi_1.buildNgApi(introspectionSchema, path_1.join(assets, `magnus.client-api.graphql`), path_1.join(dist, `magnus.service.ts`));
                     sendLocalFile(dist, `magnus.service.ts`, config);
                 }

@@ -101,7 +101,11 @@ export async function bootstrap(config: MagnusConfig) {
             )
           );
           const schema = makeExecutableSchema({ typeDefs: res });
-          const introspectionSchema = introspectionFromSchema(schema);
+          const introspectionSchema = JSON.stringify(
+            introspectionFromSchema(schema),
+            null,
+            2
+          );
           buildNgApi(
             introspectionSchema,
             join(assets, `magnus.server-api.graphql`),
@@ -123,7 +127,11 @@ export async function bootstrap(config: MagnusConfig) {
             )
           );
           const schema = makeExecutableSchema({ typeDefs: res });
-          const introspectionSchema = introspectionFromSchema(schema);
+          const introspectionSchema = JSON.stringify(
+            introspectionFromSchema(schema),
+            null,
+            2
+          );
           buildNgApi(
             introspectionSchema,
             join(assets, `magnus.client-api.graphql`),
