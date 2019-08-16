@@ -2,6 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const { generate } = require("@graphql-codegen/cli");
 async function buildNgApi(schema, documents, output) {
+    console.log({
+        documents,
+        output,
+        schema
+    });
     await generate({
         overwrite: true,
         schema,

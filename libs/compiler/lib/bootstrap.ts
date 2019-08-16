@@ -8,7 +8,8 @@ import {
   writeFileSync,
   ensureDirSync,
   existsSync,
-  readFileSync
+  readFileSync,
+  writeFile
 } from "fs-extra";
 import * as ast from "./visitors/visitor";
 import { collectionVisitor, CollectionContext } from "./visitors/collection";
@@ -101,17 +102,20 @@ export async function bootstrap(config: MagnusConfig) {
             )
           );
           const schema = buildASTSchema(res);
-          const introspectionSchema = JSON.stringify(
-            introspectionFromSchema(schema),
-            null,
-            2
+          writeFileSync(
+            join(assets, "magnus.server-schema.json"),
+            JSON.stringify(introspectionFromSchema(schema), null, 2)
           );
           buildNgApi(
-            introspectionSchema,
+            join(assets, "magnus.server-schema.json"),
             join(assets, `magnus.server-api.graphql`),
-            join(dist, `magnus.service.ts`)
+            join(dist, `magnus.server-service.v${config.version || `1.0.0`}.ts`)
           );
-          sendLocalFile(dist, `magnus.service.ts`, config);
+          sendLocalFile(
+            dist,
+            `magnus.server-service.v${config.version || `1.0.0`}.ts`,
+            config
+          );
         } else {
           writeFileSync(join(assets, `magnus.client-api.graphql`), api);
           await config.broadcast(
@@ -127,17 +131,20 @@ export async function bootstrap(config: MagnusConfig) {
             )
           );
           const schema = buildASTSchema(res);
-          const introspectionSchema = JSON.stringify(
-            introspectionFromSchema(schema),
-            null,
-            2
+          writeFileSync(
+            join(assets, "magnus.client-schema.json"),
+            JSON.stringify(introspectionFromSchema(schema), null, 2)
           );
           buildNgApi(
-            introspectionSchema,
+            join(assets, "magnus.client-schema.json"),
             join(assets, `magnus.client-api.graphql`),
-            join(dist, `magnus.service.ts`)
+            join(dist, `magnus.client-service.v${config.version || `1.0.0`}.ts`)
           );
-          sendLocalFile(dist, `magnus.service.ts`, config);
+          sendLocalFile(
+            dist,
+            `magnus.client-service.v${config.version || `1.0.0`}.ts`,
+            config
+          );
         }
       }
 

@@ -85,9 +85,9 @@ async function bootstrap(config) {
                         host: config.host
                     })));
                     const schema = graphql_1.buildASTSchema(res);
-                    const introspectionSchema = JSON.stringify(graphql_1.introspectionFromSchema(schema), null, 2);
-                    buildApi_1.buildNgApi(introspectionSchema, path_1.join(assets, `magnus.server-api.graphql`), path_1.join(dist, `magnus.service.ts`));
-                    sendLocalFile(dist, `magnus.service.ts`, config);
+                    fs_extra_1.writeFileSync(path_1.join(assets, "magnus.server-schema.json"), JSON.stringify(graphql_1.introspectionFromSchema(schema), null, 2));
+                    buildApi_1.buildNgApi(path_1.join(assets, "magnus.server-schema.json"), path_1.join(assets, `magnus.server-api.graphql`), path_1.join(dist, `magnus.server-service.v${config.version || `1.0.0`}.ts`));
+                    sendLocalFile(dist, `magnus.server-service.v${config.version || `1.0.0`}.ts`, config);
                 }
                 else {
                     fs_extra_1.writeFileSync(path_1.join(assets, `magnus.client-api.graphql`), api);
@@ -100,9 +100,9 @@ async function bootstrap(config) {
                         host: config.host
                     })));
                     const schema = graphql_1.buildASTSchema(res);
-                    const introspectionSchema = JSON.stringify(graphql_1.introspectionFromSchema(schema), null, 2);
-                    buildApi_1.buildNgApi(introspectionSchema, path_1.join(assets, `magnus.client-api.graphql`), path_1.join(dist, `magnus.service.ts`));
-                    sendLocalFile(dist, `magnus.service.ts`, config);
+                    fs_extra_1.writeFileSync(path_1.join(assets, "magnus.client-schema.json"), JSON.stringify(graphql_1.introspectionFromSchema(schema), null, 2));
+                    buildApi_1.buildNgApi(path_1.join(assets, "magnus.client-schema.json"), path_1.join(assets, `magnus.client-api.graphql`), path_1.join(dist, `magnus.client-service.v${config.version || `1.0.0`}.ts`));
+                    sendLocalFile(dist, `magnus.client-service.v${config.version || `1.0.0`}.ts`, config);
                 }
             }
             if (isServer) {
