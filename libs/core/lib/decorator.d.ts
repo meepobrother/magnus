@@ -130,3 +130,4 @@ export declare const Permission: (options: PermissionOptions) => (...args: any[]
 export declare const DefDomain: () => (...args: any[]) => void;
 export declare const DefObject: () => (...args: any[]) => void;
 export declare const Entity: () => (...args: any[]) => void;
+export declare const OneToMany: () => (...args: any[]) => void;
