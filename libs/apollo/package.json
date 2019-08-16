@@ -30,5 +30,5 @@
 		"@notadd/magnus-graphql": "^3.1.26",
 		"apollo-server": "^2.6.7"
 	},
-	"gitHead": "01a92a2f73463e3b91df98d32120775fe46c1ea5"
+	"gitHead": "acbf551528e935fe60bc728c46992f3671bfe140"
 }
