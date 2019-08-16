@@ -9,22 +9,17 @@ interface Type<T> extends Function {
   new (...args: any[]): T;
 }
 export abstract class MagnusBase<T = any> {
-  readonly entity: Type<T>;
-  readonly tablename: string;
-  readonly selection: client.SelectionSetJson;
-  readonly relations: {
+  entity: Type<T>;
+  tablename: string;
+  selection: client.SelectionSetJson;
+  relations: {
     name: string;
     decorators: string[];
     entity: string;
   }[];
-  readonly typeDef: TypeDef;
-  readonly entities: Entities;
-  constructor(
-    tablename: string,
-    selection: any,
-    def: TypeDef,
-    entities: Entities
-  ) {
+  typeDef: TypeDef;
+  entities: Entities;
+  init(tablename: string, selection: any, def: TypeDef, entities: Entities) {
     this.tablename = this.tablename || tablename;
     this.selection = selection;
     this.typeDef = def;
