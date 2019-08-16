@@ -4,11 +4,6 @@ export async function buildNgApi(
   documents: string,
   output: string
 ) {
-  console.log({
-    documents,
-    output,
-    schema
-  });
   await generate(
     {
       overwrite: true,

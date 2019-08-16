@@ -30,16 +30,26 @@ async function start() {
           const res = Buffer.concat(array).toString("utf8");
           const obj = JSON.parse(res);
           const { name, fileName, content, type, debug, host } = obj;
-          console.log(
-            `收到来自主机: ${host}\n文件名为:${fileName}\n类型为:${type}\n`
-          );
+          const target = config.target || "magnus";
           let canWrite = false;
           if (config.hosts) {
             if (config.hosts.includes(host)) {
-              canWrite = true;
+              if (target === "magnus") {
+                canWrite = true;
+              } else if (target === "angular") {
+                if (fileName.includes("angular")) {
+                  canWrite = true;
+                }
+              }
             }
           } else {
-            canWrite = true;
+            if (target === "magnus") {
+              canWrite = true;
+            } else if (target === "angular") {
+              if (fileName.includes("angular")) {
+                canWrite = true;
+              }
+            }
           }
           if (canWrite) {
             /**

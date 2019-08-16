@@ -83,5 +83,5 @@ export interface MagnusConfig {
      * target
      * angular/vue/react/magnus
      */
-    target: string;
+    target: "angular" | "vue" | "react" | "magnus";
 }
