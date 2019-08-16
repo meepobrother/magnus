@@ -1,5 +1,5 @@
-import { Type } from './type';
-import { Provider } from './provider';
+import { Type } from "./type";
+import { Provider } from "./provider";
 /**
  * magnus相关
  */
@@ -67,7 +67,7 @@ export declare const Inject: (type?: Type<any> | undefined) => (...args: any[]) 
  * @param type
  */
 export interface InjectableOptions {
-    providedIn: Type<any> | 'root' | 'any' | null;
+    providedIn: Type<any> | "root" | "any" | null;
 }
 export declare const Injectable: (options?: InjectableOptions | undefined) => (...args: any[]) => void;
 /**
@@ -129,3 +129,4 @@ export declare const Permission: (options: PermissionOptions) => (...args: any[]
  */
 export declare const DefDomain: () => (...args: any[]) => void;
 export declare const DefObject: () => (...args: any[]) => void;
+export declare const Entity: () => (...args: any[]) => void;
