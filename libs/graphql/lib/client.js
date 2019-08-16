@@ -26,7 +26,7 @@ class ClientVisitor {
             directives,
             name,
             selectionSet,
-            type: 'FieldJson'
+            type: "FieldJson"
         };
     }
     visitDocumentAst(node, context) {
@@ -89,7 +89,9 @@ class ClientVisitor {
         const name = node.name.visit(this, context);
         const directives = this.createDirectives(node.directives, context);
         return {
-            name, directives, type: 'FragmentSpread'
+            name,
+            directives,
+            type: "FragmentSpread"
         };
     }
     visitInlineFragmentAst(node, context) {
@@ -100,7 +102,7 @@ class ClientVisitor {
             name: typeCondition,
             directives,
             selectionSet,
-            type: 'InlineFragment'
+            type: "InlineFragment"
         };
     }
     visitArgumentAst(node, context) {

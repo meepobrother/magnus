@@ -25,7 +25,15 @@ export class ClientTs extends ClientVisitor {
   visitNonNullTypeAst(node: ast.NonNullTypeAst, context: any): any {
     return {
       required: true,
-      type: node.type.visit(this, context)
+      type: node.type.visit(this, context),
+      kind: "NonNullTypeAst"
+    };
+  }
+  visitListTypeAst(node: ast.ListTypeAst, context: any): any {
+    const type = node.type.visit(this, context);
+    return {
+      type,
+      kind: "ListTypeAst"
     };
   }
   visitNamedTypeAst(node: ast.NamedTypeAst, context: any): string {
@@ -361,7 +369,7 @@ export class GraphqlToTs implements ast.Visitor {
   getSchema(operation: string) {
     return this.schema.hasDefinitionAst(upperFirst(operation));
   }
-  private __getType(type: string) {
+  private __getType(type: string): any {
     switch (type) {
       case "Int":
         return `number`;
@@ -384,8 +392,17 @@ export class GraphqlToTs implements ast.Visitor {
         let type = ``;
         if (typeof variable.type === "object") {
           const variableType = variable.type as any;
-          if (variableType.required) {
-            type = `: ${this.__getType(variableType.type)}`;
+          if (variableType.kind === "ListTypeAst") {
+            const def = variableType.type;
+            type = `?: ${this.__getType(def.type)}[]`;
+          } else if (variableType.required) {
+            let def = variableType.type;
+            if (def.kind === "ListTypeAst") {
+              def = def.type;
+              type = `: ${this.__getType(def.type)}[]`;
+            } else {
+              type = `: ${this.__getType(variableType.type)}`;
+            }
           } else {
             type = `?: ${this.__getType(variableType.type)}`;
           }
