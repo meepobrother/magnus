@@ -299,6 +299,11 @@ export function sendLocalFile(
 ) {
   const filePath = join(path, name);
   if (existsSync(filePath)) {
+    let context = readFileSync(join(path, name)).toString("utf8");
+    context = context.replace(
+      `import * as Apollo from "apollo-angular";`,
+      `import * as Apollo from "@magnus-plugins/angular";`
+    );
     config.broadcast(
       Buffer.from(
         JSON.stringify({
@@ -306,7 +311,7 @@ export function sendLocalFile(
           type: name.endsWith(".ts") ? "output" : "assets",
           fileName: name,
           debug: config.debug,
-          content: readFileSync(join(path, name)).toString("utf8"),
+          content: context,
           host: config.host
         })
       )
