@@ -229,7 +229,7 @@ export const ${camelCase(config.name)}Options: any = {
           }`
         );
         writeFileSync(
-          join(dist, `apiUrl.v${config.version}.ts`),
+          join(dist, `api-url.v${config.version}.ts`),
           `export const apiUrl = 'http://${config.host}${
             config.port ? `:${config.port}` : ""
           }/graphql'`

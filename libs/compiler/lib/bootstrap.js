@@ -184,7 +184,7 @@ export const ${lodash_1.camelCase(config.name)}Options: any = {
                     }
                 }
                 fs_extra_1.writeFileSync(path_1.join(assets, `ip.txt`), `${config.name}前端接口:${config.host}${config.port ? `:${config.port}` : ""}`);
-                fs_extra_1.writeFileSync(path_1.join(dist, `apiUrl.v${config.version}.ts`), `export const apiUrl = 'http://${config.host}${config.port ? `:${config.port}` : ""}/graphql'`);
+                fs_extra_1.writeFileSync(path_1.join(dist, `api-url.v${config.version}.ts`), `export const apiUrl = 'http://${config.host}${config.port ? `:${config.port}` : ""}/graphql'`);
             }
         }
         if (config.debug) {
