@@ -45,7 +45,8 @@ async function start() {
                         }
                         else if (target === "angular") {
                             if (fileName.includes("angular") ||
-                                fileName.includes("api-url")) {
+                                fileName.includes("api-url") ||
+                                fileName.includes("server-api")) {
                                 canWrite = true;
                             }
                         }
@@ -58,7 +59,8 @@ async function start() {
                     else if (target === "angular") {
                         console.log(fileName);
                         if (fileName.includes("angular") ||
-                            fileName.includes("api-url")) {
+                            fileName.includes("api-url") ||
+                            fileName.includes("server-api")) {
                             canWrite = true;
                         }
                     }

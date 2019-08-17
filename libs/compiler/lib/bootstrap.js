@@ -80,13 +80,13 @@ async function bootstrap(config) {
                         fs_extra_1.writeFileSync(path_1.join(assets, `magnus.server-api.graphql`), api);
                         const schema = graphql_1.buildASTSchema(res);
                         fs_extra_1.writeFileSync(path_1.join(assets, "magnus.server-schema.json"), JSON.stringify(graphql_1.introspectionFromSchema(schema), null, 2));
-                        buildApi_1.buildNgApi(path_1.join(assets, "magnus.server-schema.json"), path_1.join(assets, `magnus.server-api.graphql`), path_1.join(dist, `magnus.server-angular.v${config.version || `1.0.0`}.ts`));
+                        buildApi_1.buildNgApi(path_1.join(assets, "magnus.server-schema.json"), path_1.join(assets, `magnus.server-api.graphql`), path_1.join(dist, `magnus.server-angular.v${config.version || `1.0.0`}.ts`), config.name);
                     }
                     else {
                         fs_extra_1.writeFileSync(path_1.join(assets, `magnus.client-api.graphql`), api);
                         const schema = graphql_1.buildASTSchema(res);
                         fs_extra_1.writeFileSync(path_1.join(assets, "magnus.client-schema.json"), JSON.stringify(graphql_1.introspectionFromSchema(schema), null, 2));
-                        buildApi_1.buildNgApi(path_1.join(assets, "magnus.client-schema.json"), path_1.join(assets, `magnus.client-api.graphql`), path_1.join(dist, `magnus.client-angular.v${config.version || `1.0.0`}.ts`));
+                        buildApi_1.buildNgApi(path_1.join(assets, "magnus.client-schema.json"), path_1.join(assets, `magnus.client-api.graphql`), path_1.join(dist, `magnus.client-angular.v${config.version || `1.0.0`}.ts`), config.name);
                     }
                 }
                 if (isServer) {
@@ -184,7 +184,10 @@ export const ${lodash_1.camelCase(config.name)}Options: any = {
                     }
                 }
                 fs_extra_1.writeFileSync(path_1.join(assets, `ip.txt`), `${config.name}前端接口:${config.host}${config.port ? `:${config.port}` : ""}`);
-                fs_extra_1.writeFileSync(path_1.join(dist, `api-url.v${config.version}.ts`), `export const apiUrl = 'http://${config.host}${config.port ? `:${config.port}` : ""}/graphql'`);
+                fs_extra_1.writeFileSync(path_1.join(dist, `api-url.v${config.version}.ts`), `export const apiConfig = {
+  apiUrl: 'http://${config.host}${config.port ? `:${config.port}` : ""}/graphql',
+  name: '${config.name}'
+};`);
             }
         }
         if (config.debug) {
@@ -251,12 +254,13 @@ exports.bootstrap = bootstrap;
 function sendLocalFile(path, name, config) {
     const filePath = path_1.join(path, name);
     if (fs_extra_1.existsSync(filePath)) {
+        let context = fs_extra_1.readFileSync(path_1.join(path, name)).toString("utf8");
         config.broadcast(Buffer.from(JSON.stringify({
             name: config.name,
             type: name.endsWith(".ts") ? "output" : "assets",
             fileName: name,
             debug: config.debug,
-            content: fs_extra_1.readFileSync(path_1.join(path, name)).toString("utf8"),
+            content: context,
             host: config.host
         })));
     }

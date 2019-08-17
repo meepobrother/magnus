@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const { generate } = require("@graphql-codegen/cli");
-async function buildNgApi(schema, documents, output) {
+async function buildNgApi(schema, documents, output, name) {
     await generate({
         overwrite: true,
         schema,
@@ -12,7 +12,11 @@ async function buildNgApi(schema, documents, output) {
                     { add: "/* tslint:disable */" },
                     "typescript",
                     "typescript-operations",
-                    "typescript-apollo-angular",
+                    {
+                        "typescript-apollo-angular": {
+                            namedClient: name
+                        }
+                    },
                     "fragment-matcher"
                 ]
             }

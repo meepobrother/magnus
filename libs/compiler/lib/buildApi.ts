@@ -2,7 +2,8 @@ const { generate } = require("@graphql-codegen/cli");
 export async function buildNgApi(
   schema: any,
   documents: string,
-  output: string
+  output: string,
+  name: string
 ) {
   await generate(
     {
@@ -15,7 +16,11 @@ export async function buildNgApi(
             { add: "/* tslint:disable */" },
             "typescript",
             "typescript-operations",
-            "typescript-apollo-angular",
+            {
+              "typescript-apollo-angular": {
+                namedClient: name
+              }
+            },
             "fragment-matcher"
           ]
         }

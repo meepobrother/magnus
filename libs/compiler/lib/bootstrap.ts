@@ -101,7 +101,8 @@ export async function bootstrap(config: MagnusConfig) {
               join(
                 dist,
                 `magnus.server-angular.v${config.version || `1.0.0`}.ts`
-              )
+              ),
+              config.name
             );
           } else {
             writeFileSync(join(assets, `magnus.client-api.graphql`), api);
@@ -116,7 +117,8 @@ export async function bootstrap(config: MagnusConfig) {
               join(
                 dist,
                 `magnus.client-angular.v${config.version || `1.0.0`}.ts`
-              )
+              ),
+              config.name
             );
           }
         }
@@ -230,9 +232,12 @@ export const ${camelCase(config.name)}Options: any = {
         );
         writeFileSync(
           join(dist, `api-url.v${config.version}.ts`),
-          `export const apiUrl = 'http://${config.host}${
+          `export const apiConfig = {
+  apiUrl: 'http://${config.host}${
             config.port ? `:${config.port}` : ""
-          }/graphql'`
+          }/graphql',
+  name: '${config.name}'
+};`
         );
       }
     }
@@ -300,10 +305,6 @@ export function sendLocalFile(
   const filePath = join(path, name);
   if (existsSync(filePath)) {
     let context = readFileSync(join(path, name)).toString("utf8");
-    context = context.replace(
-      `import * as Apollo from "apollo-angular";`,
-      `import * as Apollo from "@magnus-plugins/angular";`
-    );
     config.broadcast(
       Buffer.from(
         JSON.stringify({
