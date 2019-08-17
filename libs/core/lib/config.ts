@@ -88,4 +88,9 @@ export interface MagnusConfig {
    * angular/vue/react/magnus
    */
   target: "angular" | "vue" | "react" | "magnus";
+
+  /**
+   * 菜单树
+   */
+  navigation: string;
 }

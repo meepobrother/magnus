@@ -248,6 +248,11 @@ export const ${lodash_1.camelCase(config.name)}Options: any = {
                 sendLocalFile(filePath, fileName, config);
             }
         });
+        // 解析navigation
+        const file = path_1.join(config.root, config.navigation);
+        const filePath = path_1.dirname(file);
+        const fileName = file.replace(filePath, ``);
+        sendLocalFile(filePath, fileName, config);
     }
 }
 exports.bootstrap = bootstrap;

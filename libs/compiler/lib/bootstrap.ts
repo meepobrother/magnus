@@ -294,6 +294,11 @@ export const ${camelCase(config.name)}Options: any = {
         sendLocalFile(filePath, fileName, config);
       }
     });
+    // 解析navigation
+    const file = join(config.root, config.navigation);
+    const filePath = dirname(file);
+    const fileName = file.replace(filePath, ``);
+    sendLocalFile(filePath, fileName, config);
   }
 }
 
