@@ -13,8 +13,15 @@ const fs_extra_1 = require("fs-extra");
 program
     .version(packages.version)
     .option("--watch", "生产模式")
+    .option("-c, --config [config]", "配置文件目录")
     .parse(process.argv);
-const config = require(path_1.join(root, "magnus.json"));
+let config;
+if (program.config) {
+    config = require(path_1.join(root, program.config));
+}
+else {
+    config = require(path_1.join(root, "magnus.json"));
+}
 config.root = root;
 config.debug = !!program.watch;
 async function start() {

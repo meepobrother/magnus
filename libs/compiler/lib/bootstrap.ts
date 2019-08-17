@@ -273,6 +273,13 @@ export const ${camelCase(config.name)}Options: any = {
       compile(true);
       sendFile(config);
       bootstrapClient(config);
+      inputs.filter(it => {
+        if (it.endsWith(".json")) {
+          const filePath = dirname(it);
+          const fileName = it.replace(filePath, ``);
+          sendLocalFile(filePath, fileName, config);
+        }
+      });
     }
   }
 }

@@ -13,7 +13,7 @@ export declare class CollectionContext {
     addTypeAliasDeclaration(node: ast.TypeAliasDeclaration): void;
     addEnumDeclaration(node: ast.EnumDeclaration): void;
     addVariableStatement(node: ast.VariableStatement): void;
-    findByName(name: string): ast.InterfaceDeclaration | ast.ClassDeclaration | ast.TypeAliasDeclaration | ast.EnumDeclaration | undefined;
+    findByName(name: string): ast.ClassDeclaration | ast.InterfaceDeclaration | ast.EnumDeclaration | ast.TypeAliasDeclaration | undefined;
     findInterfaceByName(name: string): ast.InterfaceDeclaration | undefined;
     findTypeByName(name: string): ast.TypeAliasDeclaration | undefined;
     findClassByName(name: string): ast.ClassDeclaration | undefined;

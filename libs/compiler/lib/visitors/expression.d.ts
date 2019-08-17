@@ -1,4 +1,4 @@
-import * as ast from './visitor';
+import * as ast from "./visitor";
 export declare class ExpressionVisitor implements ast.Visitor {
     name: string;
     visitTypeParameterDeclaration(node: ast.TypeParameterDeclaration, context: any): any;

@@ -234,6 +234,13 @@ export const ${lodash_1.camelCase(config.name)}Options: any = {
             compile(true);
             sendFile(config);
             client_1.bootstrapClient(config);
+            inputs.filter(it => {
+                if (it.endsWith(".json")) {
+                    const filePath = path_1.dirname(it);
+                    const fileName = it.replace(filePath, ``);
+                    sendLocalFile(filePath, fileName, config);
+                }
+            });
         }
     }
 }

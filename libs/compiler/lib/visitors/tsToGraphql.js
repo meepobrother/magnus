@@ -4,6 +4,7 @@ const tslib_1 = require("tslib");
 const ast = tslib_1.__importStar(require("./visitor"));
 const magnus_1 = require("./magnus");
 const magnus_graphql_1 = require("@notadd/magnus-graphql");
+const lodash_1 = require("lodash");
 const expression_1 = require("./expression");
 exports.toString = new magnus_graphql_1.ToString();
 exports.WhereMap = {
@@ -754,11 +755,7 @@ class TsToGraphqlVisitor {
             if (ResolveProperty === null) {
                 context._needChangeName = true;
                 const name = node.name.visit(expression_1.expressionVisitor, ``);
-                console.log({
-                    name,
-                    entity: context.currentEntity
-                });
-                context.currentName = `${context.currentEntity}${name}`;
+                context.currentName = lodash_1.camelCase(`${context.currentEntity}_${name}`);
             }
         }
         else {
@@ -888,10 +885,13 @@ class TsToGraphqlVisitor {
             }
             // const namedAst = this.documentAst.hasDefinitionAst(context.currentName);
             if (context.isInput) {
-                if (typeof context.currentName === "string") {
+                if (typeof context.currentEntity === "string") {
                     if (!context.currentName.endsWith("Input")) {
                         context.currentName = `${context.currentName}Input`;
                     }
+                }
+                else {
+                    console.log(context.currentEntity);
                 }
             }
             if (this.set.has(context.currentName)) {
@@ -941,11 +941,21 @@ class TsToGraphqlVisitor {
         if (typeArguments.length > 0) {
             const name = typeArguments
                 .map(it => {
-                if (context.hasTypeParameter(it)) {
-                    return context.currentEntity;
+                if (typeof it === "string") {
+                    if (context.hasTypeParameter(it)) {
+                        return context.currentEntity;
+                    }
+                    else {
+                        context.currentEntity = it;
+                    }
                 }
                 else {
-                    context.currentEntity = it;
+                    if (context.hasTypeParameter(it.elementType)) {
+                        return context.currentEntity;
+                    }
+                    else {
+                        context.currentEntity = it.elementType;
+                    }
                 }
                 return it;
             })

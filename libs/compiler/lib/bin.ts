@@ -12,8 +12,14 @@ import { ensureDirSync } from "fs-extra";
 program
   .version(packages.version)
   .option("--watch", "生产模式")
+  .option("-c, --config [config]", "配置文件目录")
   .parse(process.argv);
-const config: MagnusConfig = require(join(root, "magnus.json"));
+let config: MagnusConfig;
+if (program.config) {
+  config = require(join(root, program.config));
+} else {
+  config = require(join(root, "magnus.json"));
+}
 config.root = root;
 config.debug = !!program.watch;
 async function start() {

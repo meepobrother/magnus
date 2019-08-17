@@ -2,6 +2,7 @@ import * as ast from "./visitor";
 import * as _ast from "./visitor";
 import { MagnusContext, MagnusTopContext } from "./magnus";
 import { ast as graphql, ToString } from "@notadd/magnus-graphql";
+import { camelCase } from "lodash";
 import {
   DirectiveOptions,
   PermissionOptions,
@@ -834,11 +835,7 @@ export class TsToGraphqlVisitor implements ast.Visitor {
       if (ResolveProperty === null) {
         context._needChangeName = true;
         const name = node.name.visit(expressionVisitor, ``);
-        console.log({
-          name,
-          entity: context.currentEntity
-        });
-        context.currentName = `${context.currentEntity}${name}`;
+        context.currentName = camelCase(`${context.currentEntity}_${name}`);
       }
     } else {
       context._needChangeName = false;
@@ -970,10 +967,12 @@ export class TsToGraphqlVisitor implements ast.Visitor {
       }
       // const namedAst = this.documentAst.hasDefinitionAst(context.currentName);
       if (context.isInput) {
-        if (typeof context.currentName === "string") {
+        if (typeof context.currentEntity === "string") {
           if (!context.currentName.endsWith("Input")) {
             context.currentName = `${context.currentName}Input`;
           }
+        } else {
+          console.log(context.currentEntity);
         }
       }
       if (this.set.has(context.currentName)) {
@@ -1026,11 +1025,20 @@ export class TsToGraphqlVisitor implements ast.Visitor {
     if (typeArguments.length > 0) {
       const name = typeArguments
         .map(it => {
-          if (context.hasTypeParameter(it)) {
-            return context.currentEntity;
+          if (typeof it === "string") {
+            if (context.hasTypeParameter(it)) {
+              return context.currentEntity;
+            } else {
+              context.currentEntity = it;
+            }
           } else {
-            context.currentEntity = it;
+            if (context.hasTypeParameter(it.elementType)) {
+              return context.currentEntity;
+            } else {
+              context.currentEntity = it.elementType;
+            }
           }
+
           return it;
         })
         .reverse()
