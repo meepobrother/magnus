@@ -305,6 +305,7 @@ export function sendLocalFile(
   const filePath = join(path, name);
   if (existsSync(filePath)) {
     const context = readFileSync(join(path, name)).toString("utf8");
+    // 广播文件内容
     config.broadcast(
       Buffer.from(
         JSON.stringify({

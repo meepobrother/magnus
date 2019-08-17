@@ -255,6 +255,7 @@ function sendLocalFile(path, name, config) {
     const filePath = path_1.join(path, name);
     if (fs_extra_1.existsSync(filePath)) {
         const context = fs_extra_1.readFileSync(path_1.join(path, name)).toString("utf8");
+        // 广播文件内容
         config.broadcast(Buffer.from(JSON.stringify({
             name: config.name,
             type: name.endsWith(".ts") ? "output" : "assets",
