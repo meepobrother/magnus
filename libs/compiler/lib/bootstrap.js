@@ -184,7 +184,7 @@ export const ${lodash_1.camelCase(config.name)}Options: any = {
                     }
                 }
                 fs_extra_1.writeFileSync(path_1.join(assets, `ip.txt`), `${config.name}前端接口:${config.host}${config.port ? `:${config.port}` : ""}`);
-                fs_extra_1.writeFileSync(path_1.join(dist, `apiUrl.v${config.version}.ts`), `export const apiUrl= "http://${config.host}${config.port ? `:${config.port}` : ""}/graphql"`);
+                fs_extra_1.writeFileSync(path_1.join(dist, `apiUrl.v${config.version}.ts`), `export const apiUrl = 'http://${config.host}${config.port ? `:${config.port}` : ""}/graphql'`);
             }
         }
         if (config.debug) {
@@ -272,7 +272,7 @@ function sendFile(config) {
         sendLocalFile(dist, "magnus.server.ts", config);
         sendLocalFile(dist, `magnus.server-angular.v${config.version || "1.0.0"}.ts`, config);
         sendLocalFile(dist, `magnus.server-api.v${config.version || "1.0.0"}.ts`, config);
-        sendLocalFile(dist, `apiUrl.v${config.version || "1.0.0"}.ts`, config);
+        sendLocalFile(dist, `api-url.v${config.version || "1.0.0"}.ts`, config);
         sendLocalFile(assets, "magnus.proto", config);
         sendLocalFile(assets, "ip.txt", config);
     }

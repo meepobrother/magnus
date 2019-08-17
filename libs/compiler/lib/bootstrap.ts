@@ -230,9 +230,9 @@ export const ${camelCase(config.name)}Options: any = {
         );
         writeFileSync(
           join(dist, `apiUrl.v${config.version}.ts`),
-          `export const apiUrl= "http://${config.host}${
+          `export const apiUrl = 'http://${config.host}${
             config.port ? `:${config.port}` : ""
-          }/graphql"`
+          }/graphql'`
         );
       }
     }
@@ -332,7 +332,7 @@ export function sendFile(config: MagnusConfig) {
       `magnus.server-api.v${config.version || "1.0.0"}.ts`,
       config
     );
-    sendLocalFile(dist, `apiUrl.v${config.version || "1.0.0"}.ts`, config);
+    sendLocalFile(dist, `api-url.v${config.version || "1.0.0"}.ts`, config);
     sendLocalFile(assets, "magnus.proto", config);
     sendLocalFile(assets, "ip.txt", config);
   }
