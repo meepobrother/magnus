@@ -21,22 +21,22 @@ const api_1 = require("./visitors/api");
 const buildApi_1 = require("./buildApi");
 async function bootstrap(config) {
     const target = config.target || "magnus";
+    const sources = config.inputs.map(input => path_1.join(config.root, input));
+    const clientTss = await globby((config.client || []).map(input => path_1.join(config.root, input)));
+    const srcs = [
+        ...sources,
+        `!${path_1.join(config.root, config.output)}/**/*`,
+        `!${path_1.join(config.root, config.assets)}/**/*`,
+        ...clientTss.map(file => `!${file.replace(".graphql", ".ts")}`)
+    ];
+    const inputs = await globby(srcs);
     if (target === "magnus") {
         config.output = config.output || "output";
         config.assets = config.assets || "assets";
-        const clientTss = await globby((config.client || []).map(input => path_1.join(config.root, input)));
         const dist = path_1.join(config.root, config.output, config.name);
         const assets = path_1.join(config.root, config.assets, config.name);
         fs_extra_1.ensureDirSync(dist);
         fs_extra_1.ensureDirSync(assets);
-        const sources = config.inputs.map(input => path_1.join(config.root, input));
-        const srcs = [
-            ...sources,
-            `!${path_1.join(config.root, config.output)}/**/*`,
-            `!${path_1.join(config.root, config.assets)}/**/*`,
-            ...clientTss.map(file => `!${file.replace(".graphql", ".ts")}`)
-        ];
-        const inputs = await globby(srcs);
         async function compile(isServer = false) {
             const project = new morph.Project();
             project.addSourceFilesFromTsConfig(path_1.join(process.cwd(), "tsconfig.json"));
@@ -184,6 +184,7 @@ export const ${lodash_1.camelCase(config.name)}Options: any = {
                     }
                 }
                 fs_extra_1.writeFileSync(path_1.join(assets, `ip.txt`), `${config.name}前端接口:${config.host}${config.port ? `:${config.port}` : ""}`);
+                fs_extra_1.writeFileSync(path_1.join(dist, `apiUrl.v${config.version}.ts`), `export const apiUrl= "http://${config.host}${config.port ? `:${config.port}` : ""}/graphql"`);
             }
         }
         if (config.debug) {
@@ -234,14 +235,16 @@ export const ${lodash_1.camelCase(config.name)}Options: any = {
             compile(true);
             sendFile(config);
             client_1.bootstrapClient(config);
-            inputs.filter(it => {
-                if (it.endsWith(".json")) {
-                    const filePath = path_1.dirname(it);
-                    const fileName = it.replace(filePath, ``);
-                    sendLocalFile(filePath, fileName, config);
-                }
-            });
         }
+    }
+    else {
+        inputs.filter(it => {
+            if (it.endsWith(".json")) {
+                const filePath = path_1.dirname(it);
+                const fileName = it.replace(filePath, ``);
+                sendLocalFile(filePath, fileName, config);
+            }
+        });
     }
 }
 exports.bootstrap = bootstrap;
@@ -268,7 +271,8 @@ function sendFile(config) {
         sendLocalFile(dist, "magnus.ts", config);
         sendLocalFile(dist, "magnus.server.ts", config);
         sendLocalFile(dist, `magnus.server-angular.v${config.version || "1.0.0"}.ts`, config);
-        sendLocalFile(dist, `magnus.client-angular.v${config.version || "1.0.0"}.ts`, config);
+        sendLocalFile(dist, `magnus.server-api.v${config.version || "1.0.0"}.ts`, config);
+        sendLocalFile(dist, `apiUrl.v${config.version || "1.0.0"}.ts`, config);
         sendLocalFile(assets, "magnus.proto", config);
         sendLocalFile(assets, "ip.txt", config);
     }

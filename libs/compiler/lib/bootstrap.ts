@@ -24,24 +24,25 @@ import { ApiVisitor } from "./visitors/api";
 import { buildNgApi } from "./buildApi";
 export async function bootstrap(config: MagnusConfig) {
   const target = config.target || "magnus";
+  const sources = config.inputs.map(input => join(config.root, input));
+  const clientTss = await globby(
+    (config.client || []).map(input => join(config.root, input))
+  );
+  const srcs = [
+    ...sources,
+    `!${join(config.root, config.output)}/**/*`,
+    `!${join(config.root, config.assets)}/**/*`,
+    ...clientTss.map(file => `!${file.replace(".graphql", ".ts")}`)
+  ];
+  const inputs = await globby(srcs);
   if (target === "magnus") {
     config.output = config.output || "output";
     config.assets = config.assets || "assets";
-    const clientTss = await globby(
-      (config.client || []).map(input => join(config.root, input))
-    );
     const dist = join(config.root, config.output, config.name);
     const assets = join(config.root, config.assets, config.name);
     ensureDirSync(dist);
     ensureDirSync(assets);
-    const sources = config.inputs.map(input => join(config.root, input));
-    const srcs = [
-      ...sources,
-      `!${join(config.root, config.output)}/**/*`,
-      `!${join(config.root, config.assets)}/**/*`,
-      ...clientTss.map(file => `!${file.replace(".graphql", ".ts")}`)
-    ];
-    const inputs = await globby(srcs);
+
     async function compile(isServer: boolean = false) {
       const project = new morph.Project();
       project.addSourceFilesFromTsConfig(join(process.cwd(), "tsconfig.json"));
@@ -227,6 +228,12 @@ export const ${camelCase(config.name)}Options: any = {
             config.port ? `:${config.port}` : ""
           }`
         );
+        writeFileSync(
+          join(dist, `apiUrl.v${config.version}.ts`),
+          `export const apiUrl= "http://${config.host}${
+            config.port ? `:${config.port}` : ""
+          }/graphql"`
+        );
       }
     }
     if (config.debug) {
@@ -273,14 +280,15 @@ export const ${camelCase(config.name)}Options: any = {
       compile(true);
       sendFile(config);
       bootstrapClient(config);
-      inputs.filter(it => {
-        if (it.endsWith(".json")) {
-          const filePath = dirname(it);
-          const fileName = it.replace(filePath, ``);
-          sendLocalFile(filePath, fileName, config);
-        }
-      });
     }
+  } else {
+    inputs.filter(it => {
+      if (it.endsWith(".json")) {
+        const filePath = dirname(it);
+        const fileName = it.replace(filePath, ``);
+        sendLocalFile(filePath, fileName, config);
+      }
+    });
   }
 }
 
@@ -321,9 +329,10 @@ export function sendFile(config: MagnusConfig) {
     );
     sendLocalFile(
       dist,
-      `magnus.client-angular.v${config.version || "1.0.0"}.ts`,
+      `magnus.server-api.v${config.version || "1.0.0"}.ts`,
       config
     );
+    sendLocalFile(dist, `apiUrl.v${config.version || "1.0.0"}.ts`, config);
     sendLocalFile(assets, "magnus.proto", config);
     sendLocalFile(assets, "ip.txt", config);
   }
