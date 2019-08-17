@@ -254,7 +254,7 @@ exports.bootstrap = bootstrap;
 function sendLocalFile(path, name, config) {
     const filePath = path_1.join(path, name);
     if (fs_extra_1.existsSync(filePath)) {
-        let context = fs_extra_1.readFileSync(path_1.join(path, name)).toString("utf8");
+        const context = fs_extra_1.readFileSync(path_1.join(path, name)).toString("utf8");
         config.broadcast(Buffer.from(JSON.stringify({
             name: config.name,
             type: name.endsWith(".ts") ? "output" : "assets",

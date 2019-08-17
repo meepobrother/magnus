@@ -304,7 +304,7 @@ export function sendLocalFile(
 ) {
   const filePath = join(path, name);
   if (existsSync(filePath)) {
-    let context = readFileSync(join(path, name)).toString("utf8");
+    const context = readFileSync(join(path, name)).toString("utf8");
     config.broadcast(
       Buffer.from(
         JSON.stringify({
