@@ -68,7 +68,6 @@ class AstToGraphqlVisitor {
                 if (entities.length > 0) {
                     entities.map(entity => {
                         query.currentEntity = entity;
-                        console.log(query.currentEntity);
                         this.tsToGraphqlVisitor.isEntity = false;
                         const ast = this.tsToGraphqlVisitor.visitMethodDeclaration(query.node, query);
                         if (ast)
@@ -95,7 +94,6 @@ class AstToGraphqlVisitor {
                 if (entities.length > 0) {
                     entities.map(entity => {
                         query.currentEntity = entity;
-                        console.log(query.currentEntity);
                         this.tsToGraphqlVisitor.isEntity = false;
                         const ast = this.tsToGraphqlVisitor.visitMethodDeclaration(query.node, query);
                         if (ast)
@@ -122,7 +120,6 @@ class AstToGraphqlVisitor {
                 if (entities.length > 0) {
                     entities.map(entity => {
                         query.currentEntity = entity;
-                        console.log(query.currentEntity);
                         this.tsToGraphqlVisitor.isEntity = false;
                         const ast = this.tsToGraphqlVisitor.visitMethodDeclaration(query.node, query);
                         if (ast)
@@ -159,7 +156,6 @@ class AstToGraphqlVisitor {
                 if (entities.length > 0) {
                     entities.map(entity => {
                         query.currentEntity = entity;
-                        console.log(query.currentEntity);
                         this.tsToGraphqlVisitor.isEntity = false;
                         const ast = this.tsToGraphqlVisitor.visitMethodDeclaration(query.node, query);
                         if (this.protos[name] && ast) {

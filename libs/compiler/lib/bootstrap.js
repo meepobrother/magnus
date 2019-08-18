@@ -81,12 +81,14 @@ async function bootstrap(config) {
                         const schema = graphql_1.buildASTSchema(res);
                         fs_extra_1.writeFileSync(path_1.join(assets, "magnus.server-schema.json"), JSON.stringify(graphql_1.introspectionFromSchema(schema), null, 2));
                         buildApi_1.buildNgApi(path_1.join(assets, "magnus.server-schema.json"), path_1.join(assets, `magnus.server-api.graphql`), path_1.join(dist, `magnus.server-angular.v${config.version || `1.0.0`}.ts`), config.name);
+                        buildApi_1.buildReactApi(path_1.join(assets, "magnus.server-schema.json"), path_1.join(assets, `magnus.server-api.graphql`), path_1.join(dist, `magnus.server-react.v${config.version || `1.0.0`}.tsx`), config.name);
                     }
                     else {
                         fs_extra_1.writeFileSync(path_1.join(assets, `magnus.client-api.graphql`), api);
                         const schema = graphql_1.buildASTSchema(res);
                         fs_extra_1.writeFileSync(path_1.join(assets, "magnus.client-schema.json"), JSON.stringify(graphql_1.introspectionFromSchema(schema), null, 2));
                         buildApi_1.buildNgApi(path_1.join(assets, "magnus.client-schema.json"), path_1.join(assets, `magnus.client-api.graphql`), path_1.join(dist, `magnus.client-angular.v${config.version || `1.0.0`}.ts`), config.name);
+                        buildApi_1.buildReactApi(path_1.join(assets, "magnus.client-schema.json"), path_1.join(assets, `magnus.client-api.graphql`), path_1.join(dist, `magnus.client-react.v${config.version || `1.0.0`}.tsx`), config.name);
                     }
                 }
                 if (isServer) {
@@ -261,9 +263,10 @@ function sendLocalFile(path, name, config) {
     if (fs_extra_1.existsSync(filePath)) {
         const context = fs_extra_1.readFileSync(path_1.join(path, name)).toString("utf8");
         // 广播文件内容
+        const isDist = (file) => file.endsWith('.ts') || file.endsWith('.tsx');
         config.broadcast(Buffer.from(JSON.stringify({
             name: config.name,
-            type: name.endsWith(".ts") ? "output" : "assets",
+            type: isDist(name) ? "output" : "assets",
             fileName: name,
             debug: config.debug,
             content: context,
@@ -281,6 +284,7 @@ function sendFile(config) {
         sendLocalFile(dist, "magnus.ts", config);
         sendLocalFile(dist, "magnus.server.ts", config);
         sendLocalFile(dist, `magnus.server-angular.v${config.version || "1.0.0"}.ts`, config);
+        sendLocalFile(dist, `magnus.server-react.v${config.version || "1.0.0"}.tsx`, config);
         sendLocalFile(dist, `magnus.server-api.v${config.version || "1.0.0"}.ts`, config);
         sendLocalFile(dist, `api-url.v${config.version || "1.0.0"}.ts`, config);
         sendLocalFile(assets, "magnus.proto", config);

@@ -971,8 +971,6 @@ export class TsToGraphqlVisitor implements ast.Visitor {
           if (!context.currentName.endsWith("Input")) {
             context.currentName = `${context.currentName}Input`;
           }
-        } else {
-          console.log(context.currentEntity);
         }
       }
       if (this.set.has(context.currentName)) {

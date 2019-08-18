@@ -84,7 +84,6 @@ export class AstToGraphqlVisitor implements ast.Visitor {
         if (entities.length > 0) {
           entities.map(entity => {
             query.currentEntity = entity;
-            console.log(query.currentEntity);
             this.tsToGraphqlVisitor.isEntity = false;
             const ast = this.tsToGraphqlVisitor.visitMethodDeclaration(
               query.node as any,
@@ -116,7 +115,6 @@ export class AstToGraphqlVisitor implements ast.Visitor {
         if (entities.length > 0) {
           entities.map(entity => {
             query.currentEntity = entity;
-            console.log(query.currentEntity);
             this.tsToGraphqlVisitor.isEntity = false;
             const ast = this.tsToGraphqlVisitor.visitMethodDeclaration(
               query.node as any,
@@ -148,7 +146,6 @@ export class AstToGraphqlVisitor implements ast.Visitor {
         if (entities.length > 0) {
           entities.map(entity => {
             query.currentEntity = entity;
-            console.log(query.currentEntity);
             this.tsToGraphqlVisitor.isEntity = false;
             const ast = this.tsToGraphqlVisitor.visitMethodDeclaration(
               query.node as any,
@@ -189,7 +186,6 @@ export class AstToGraphqlVisitor implements ast.Visitor {
         if (entities.length > 0) {
           entities.map(entity => {
             query.currentEntity = entity;
-            console.log(query.currentEntity);
             this.tsToGraphqlVisitor.isEntity = false;
             const ast = this.tsToGraphqlVisitor.visitMethodDeclaration(
               query.node as any,

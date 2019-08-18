@@ -43,8 +43,8 @@ async function start() {
                         if (target === "magnus") {
                             canWrite = true;
                         }
-                        else if (target === "angular") {
-                            if (fileName.includes("angular") ||
+                        else {
+                            if (fileName.includes(target) ||
                                 fileName.includes("api-url") ||
                                 fileName.includes("server-api")) {
                                 canWrite = true;
@@ -56,9 +56,8 @@ async function start() {
                     if (target === "magnus") {
                         canWrite = true;
                     }
-                    else if (target === "angular") {
-                        console.log(fileName);
-                        if (fileName.includes("angular") ||
+                    else {
+                        if (fileName.includes(target) ||
                             fileName.includes("api-url") ||
                             fileName.includes("server-api")) {
                             canWrite = true;
@@ -69,6 +68,7 @@ async function start() {
                     /**
                      * 开发模式相同 相互同步文件
                      */
+                    console.log(`receive file ${type} ${fileName}`);
                     if (Array.isArray(config.reciveName)) {
                         const names = [...config.reciveName, config.name];
                         if (names.includes(name)) {

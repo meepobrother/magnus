@@ -24,4 +24,27 @@ async function buildNgApi(schema, documents, output, name) {
     }, true);
 }
 exports.buildNgApi = buildNgApi;
+async function buildReactApi(schema, documents, output, name) {
+    await generate({
+        overwrite: true,
+        schema,
+        documents,
+        generates: {
+            [`${output}`]: {
+                plugins: [
+                    { add: "/* tslint:disable */" },
+                    "typescript",
+                    "typescript-operations",
+                    {
+                        "@graphql-codegen/typescript-react-apollo": {
+                            namedClient: name
+                        }
+                    },
+                    "fragment-matcher"
+                ]
+            }
+        }
+    }, true);
+}
+exports.buildReactApi = buildReactApi;
 //# sourceMappingURL=buildApi.js.map

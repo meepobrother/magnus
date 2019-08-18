@@ -890,9 +890,6 @@ class TsToGraphqlVisitor {
                         context.currentName = `${context.currentName}Input`;
                     }
                 }
-                else {
-                    console.log(context.currentEntity);
-                }
             }
             if (this.set.has(context.currentName)) {
                 return;
