@@ -11,7 +11,15 @@ class ClientTs extends magnus_graphql_1.ClientVisitor {
     visitNonNullTypeAst(node, context) {
         return {
             required: true,
-            type: node.type.visit(this, context)
+            type: node.type.visit(this, context),
+            kind: "NonNullTypeAst"
+        };
+    }
+    visitListTypeAst(node, context) {
+        const type = node.type.visit(this, context);
+        return {
+            type,
+            kind: "ListTypeAst"
         };
     }
     visitNamedTypeAst(node, context) {
@@ -34,9 +42,13 @@ class GraphqlToTs {
         const res = node.definitions
             .filter(def => !(def instanceof magnus_graphql_1.ast.ScalarTypeDefinitionAst) && !!def)
             .map(def => def.visit(this, ``))
+            .filter(it => !!it)
             .join(`\n`);
         const types = [];
-        this.types.forEach(t => types.push(t));
+        this.types.forEach(t => {
+            if (t)
+                types.push(t);
+        });
         if (this.config) {
             if (types.length > 0) {
                 context += `import { ${types.join(", ")} } from '${this.config.types}';\n`;
@@ -308,7 +320,8 @@ class GraphqlToTs {
             case "Bool":
                 return `boolean`;
             default:
-                this.types.add(type);
+                if (type.length > 0)
+                    this.types.add(type);
                 return type;
         }
     }
@@ -321,8 +334,19 @@ class GraphqlToTs {
             let type = ``;
             if (typeof variable.type === "object") {
                 const variableType = variable.type;
-                if (variableType.required) {
-                    type = `: ${this.__getType(variableType.type)}`;
+                if (variableType.kind === "ListTypeAst") {
+                    const def = variableType.type;
+                    type = `?: ${this.__getType(def.type)}[]`;
+                }
+                else if (variableType.required) {
+                    let def = variableType.type;
+                    if (def.kind === "ListTypeAst") {
+                        def = def.type;
+                        type = `: ${this.__getType(def.type)}[]`;
+                    }
+                    else {
+                        type = `: ${this.__getType(variableType.type)}`;
+                    }
                 }
                 else {
                     type = `?: ${this.__getType(variableType.type)}`;

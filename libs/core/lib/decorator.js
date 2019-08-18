@@ -69,4 +69,6 @@ exports.Permission = (options) => util_1.AnyDecorator;
  */
 exports.DefDomain = () => util_1.AnyDecorator;
 exports.DefObject = () => util_1.AnyDecorator;
+exports.Entity = () => util_1.AnyDecorator;
+exports.OneToMany = () => util_1.AnyDecorator;
 //# sourceMappingURL=decorator.js.map

@@ -1,4 +1,4 @@
-import * as ast from './visitor';
+import * as ast from "./visitor";
 export declare class CollectionContext {
     imports: ast.ImportDeclaration[];
     interfaces: ast.InterfaceDeclaration[];

@@ -64,12 +64,12 @@ class ExpressionVisitor {
     visitTypeReferenceNode(node, context) {
         return node.typeName.visit(this, context);
     }
-    // 
+    //
     visitImportDeclaration(node, context) {
         const moduleSpecifier = node.moduleSpecifier.visit(this, context);
         const importClause = node.importClause.visit(this, context);
         return {
-            kind: 'ImportDeclaration',
+            kind: "ImportDeclaration",
             moduleSpecifier,
             importClause
         };
@@ -78,7 +78,7 @@ class ExpressionVisitor {
         const name = node.name.visit(this, context);
         const namedBindings = node.namedBindings.visit(this, context);
         return {
-            kind: 'ImportClause',
+            kind: "ImportClause",
             name,
             namedBindings
         };
@@ -93,19 +93,19 @@ class ExpressionVisitor {
     }
     visitNamespaceImport(node, context) {
         return {
-            kind: 'NamespaceImport',
+            kind: "NamespaceImport",
             name: node.name.visit(this, context)
         };
     }
     visitNamedImports(node, context) {
         return {
-            kind: 'NamedImports',
+            kind: "NamedImports",
             elements: node.elements.map(ele => ele.visit(this, context))
         };
     }
     visitArrayTypeNode(node, context) {
         return {
-            kind: 'ArrayTypeNode',
+            kind: "ArrayTypeNode",
             elementType: node.elementType && node.elementType.visit(this, context)
         };
     }
@@ -130,7 +130,7 @@ class ExpressionVisitor {
     visitUnionTypeNode(node, context) { }
     visitNullLiteral(node, context) { }
     visitShorthandPropertyAssignment(node, context) {
-        // 
+        //
     }
 }
 exports.ExpressionVisitor = ExpressionVisitor;

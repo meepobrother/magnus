@@ -23,6 +23,8 @@
 	"dependencies": {
 		"@angular/core": "^8.1.0",
 		"@grpc/proto-loader": "^0.5.1",
+		"@magnus-plugins/faker": "^0.1.0",
+		"@magnus-plugins/mock": "^0.1.0",
 		"@nestjs/microservices": "^6.4.1",
 		"@nodeutils/defaults-deep": "^1.1.0",
 		"@types/commander": "^2.12.2",

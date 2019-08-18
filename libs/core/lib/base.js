@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class MagnusBase {
-    constructor(tablename, selection, def, entities) {
+    init(tablename, selection, def, entities) {
         this.tablename = this.tablename || tablename;
         this.selection = selection;
         this.typeDef = def;

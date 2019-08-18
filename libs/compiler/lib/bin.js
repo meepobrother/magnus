@@ -13,8 +13,15 @@ const fs_extra_1 = require("fs-extra");
 program
     .version(packages.version)
     .option("--watch", "生产模式")
+    .option("-c, --config [config]", "配置文件目录")
     .parse(process.argv);
-const config = require(path_1.join(root, "magnus.json"));
+let config;
+if (program.config) {
+    config = require(path_1.join(root, program.config));
+}
+else {
+    config = require(path_1.join(root, "magnus.json"));
+}
 config.root = root;
 config.debug = !!program.watch;
 async function start() {
@@ -29,15 +36,34 @@ async function start() {
                 const res = Buffer.concat(array).toString("utf8");
                 const obj = JSON.parse(res);
                 const { name, fileName, content, type, debug, host } = obj;
-                console.log(`收到来自主机: ${host}\n文件名为:${fileName}\n类型为:${type}\n`);
+                const target = config.target || "magnus";
                 let canWrite = false;
                 if (config.hosts) {
                     if (config.hosts.includes(host)) {
-                        canWrite = true;
+                        if (target === "magnus") {
+                            canWrite = true;
+                        }
+                        else if (target === "angular") {
+                            if (fileName.includes("angular") ||
+                                fileName.includes("api-url") ||
+                                fileName.includes("server-api")) {
+                                canWrite = true;
+                            }
+                        }
                     }
                 }
                 else {
-                    canWrite = true;
+                    if (target === "magnus") {
+                        canWrite = true;
+                    }
+                    else if (target === "angular") {
+                        console.log(fileName);
+                        if (fileName.includes("angular") ||
+                            fileName.includes("api-url") ||
+                            fileName.includes("server-api")) {
+                            canWrite = true;
+                        }
+                    }
                 }
                 if (canWrite) {
                     /**

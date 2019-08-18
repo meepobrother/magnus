@@ -41,7 +41,7 @@ export interface MagnusConfig {
      */
     reciveName: string[];
     /**
-     * 客户端
+     * 客户端 graphql 代码
      */
     client: string[];
     /**
@@ -75,4 +75,17 @@ export interface MagnusConfig {
      * hosts
      */
     hosts: string[];
+    /**
+     * 版本号
+     */
+    version: string;
+    /**
+     * target
+     * angular/vue/react/magnus
+     */
+    target: "angular" | "vue" | "react" | "magnus";
+    /**
+     * 菜单树
+     */
+    navigation: string;
 }

@@ -48,12 +48,8 @@ export function createFactoryByMap(
       const [fieldName, className, tableName, methodName, argsDef] = it;
       obj[fieldName] = (args: any, selectionSet: any) => {
         const Type = injectDef[className];
-        const controller = new Type(
-          tableName,
-          selectionSet,
-          entityDef,
-          entities
-        );
+        const controller = new Type();
+        controller.init(tableName, selectionSet, entityDef, entities);
         return controller[methodName](...argsDef.map(arg => args[arg.name]));
       };
     });

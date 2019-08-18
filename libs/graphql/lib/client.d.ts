@@ -29,13 +29,13 @@ export interface SelectionSetJson {
 interface FragmentSpreadJson {
     name: string;
     directives: Directives;
-    type: 'FragmentSpread';
+    type: "FragmentSpread";
 }
 interface InlineFragmentJson {
     name: string;
     directives: Directives;
     selectionSet: SelectionSetJson;
-    type: 'InlineFragment';
+    type: "InlineFragment";
 }
 export interface FieldJson {
     alias: string;

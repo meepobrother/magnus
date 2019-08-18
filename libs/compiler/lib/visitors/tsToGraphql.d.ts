@@ -1,8 +1,8 @@
-import * as ast from './visitor';
-import { MagnusContext } from './magnus';
-import { ast as graphql, ToString } from '@notadd/magnus-graphql';
-import { PermissionOptions, HandlerDef } from '@notadd/magnus-core';
-import { CollectionContext } from './collection';
+import * as ast from "./visitor";
+import { MagnusContext } from "./magnus";
+import { ast as graphql, ToString } from "@notadd/magnus-graphql";
+import { PermissionOptions, HandlerDef } from "@notadd/magnus-core";
+import { CollectionContext } from "./collection";
 export declare const toString: ToString;
 export declare const WhereMap: {
     [key: string]: string;
@@ -13,8 +13,8 @@ export declare class Handler {
     private __order;
     private __where;
     constructor(visitor: TsToGraphqlVisitor);
-    Promise(node: ast.TypeReferenceNode | ast.TypeAliasDeclaration, context: any): graphql.NamedTypeAst<any, any> | graphql.ListTypeAst<any, any> | graphql.NonNullTypeAst<any, any> | undefined;
-    Observable(node: ast.TypeReferenceNode | ast.TypeAliasDeclaration, context: any): graphql.NamedTypeAst<any, any> | graphql.ListTypeAst<any, any> | graphql.NonNullTypeAst<any, any> | undefined;
+    Promise(node: ast.TypeReferenceNode | ast.TypeAliasDeclaration, context: any): graphql.NonNullTypeAst<any, any> | graphql.NamedTypeAst<any, any> | graphql.ListTypeAst<any, any> | undefined;
+    Observable(node: ast.TypeReferenceNode | ast.TypeAliasDeclaration, context: any): graphql.NonNullTypeAst<any, any> | graphql.NamedTypeAst<any, any> | graphql.ListTypeAst<any, any> | undefined;
     Order(node: ast.TypeReferenceNode | ast.TypeAliasDeclaration, context: any): graphql.NamedTypeAst<any, any> | undefined;
     DeepPartial(node: ast.TypeReferenceNode | ast.TypeAliasDeclaration, context: any): graphql.NamedTypeAst<any, any> | undefined;
     Partial(node: ast.TypeReferenceNode | ast.TypeAliasDeclaration, context: any): graphql.NamedTypeAst<any, any> | undefined;

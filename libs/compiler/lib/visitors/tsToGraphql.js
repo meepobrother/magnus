@@ -4,6 +4,7 @@ const tslib_1 = require("tslib");
 const ast = tslib_1.__importStar(require("./visitor"));
 const magnus_1 = require("./magnus");
 const magnus_graphql_1 = require("@notadd/magnus-graphql");
+const lodash_1 = require("lodash");
 const expression_1 = require("./expression");
 exports.toString = new magnus_graphql_1.ToString();
 exports.WhereMap = {
@@ -60,16 +61,17 @@ class Handler {
                         const res = sourceAst.visit(this.visitor, context);
                         if (res) {
                             res.fields = res.fields.map(field => {
-                                const description = this.visitor.createStringValue([`排序可选值为ASC或者DESC`]);
+                                const description = this.visitor.createStringValue([
+                                    `排序可选值为ASC或者DESC`
+                                ]);
                                 if (field.description && description)
                                     field.description.value += `\n${description.value}`;
-                                field.type = this.visitor.createNamedTypeAst('String');
+                                field.type = this.visitor.createNamedTypeAst("String");
                                 return field;
                             });
-                            const astName = res.name.value + 'Order';
+                            const astName = res.name.value + "Order";
                             if (this.__order.has(astName)) {
                                 return this.visitor.createNamedTypeAst(astName);
-                                ;
                             }
                             res.name.value = astName;
                             this.visitor.documentAst.definitions.push(res);
@@ -81,18 +83,19 @@ class Handler {
                         const item = this.visitor.documentAst.hasDefinitionAst(name);
                         if (item) {
                             const res = item.copy();
-                            const astName = res.name.value + 'Order';
+                            const astName = res.name.value + "Order";
                             res.fields = res.fields || [];
                             res.fields = res.fields.map(field => {
-                                const description = this.visitor.createStringValue([`排序可选值为ASC或者DESC`]);
+                                const description = this.visitor.createStringValue([
+                                    `排序可选值为ASC或者DESC`
+                                ]);
                                 if (field.description && description)
                                     field.description.value += `\n${description.value}`;
-                                field.type = this.visitor.createNamedTypeAst('String');
+                                field.type = this.visitor.createNamedTypeAst("String");
                                 return field;
                             });
                             if (this.__order.has(astName)) {
                                 return this.visitor.createNamedTypeAst(astName);
-                                ;
                             }
                             res.name.value = astName;
                             this.visitor.documentAst.definitions.push(res);
@@ -119,10 +122,9 @@ class Handler {
                             }
                             return field;
                         });
-                        const astName = res.name.value + 'DeepPartial';
+                        const astName = res.name.value + "DeepPartial";
                         if (this.__partial.has(astName)) {
                             return this.visitor.createNamedTypeAst(astName);
-                            ;
                         }
                         res.name.value = astName;
                         this.visitor.documentAst.definitions.push(res);
@@ -149,7 +151,7 @@ class Handler {
                             }
                             return field;
                         });
-                        const astName = res.name.value + 'Partial';
+                        const astName = res.name.value + "Partial";
                         const old = this.visitor.documentAst.hasDefinitionAst(astName);
                         if (!old) {
                             res.name.value = astName;
@@ -180,10 +182,9 @@ class Handler {
                         const res = sourceAst.visit(this.visitor, context);
                         const fields = [];
                         if (res) {
-                            const astName = res.name.value + 'Where';
+                            const astName = res.name.value + "Where";
                             if (this.__where.has(astName)) {
                                 return this.visitor.createNamedTypeAst(astName);
-                                ;
                             }
                             const createField = (name) => {
                                 const ast = new magnus_graphql_1.ast.FieldDefinitionAst();
@@ -205,30 +206,42 @@ class Handler {
                                 }
                                 Object.keys(exports.WhereMap).map((key) => {
                                     const typeName = type.name.value;
-                                    if (['Int', "String", "Boolean"].includes(typeName)) {
+                                    if (["Int", "String", "Boolean"].includes(typeName)) {
                                         const newField = field.copy();
-                                        const desc1 = this.visitor.createStringValue([`${exports.WhereMap[key]}`]);
-                                        newField.description = newField.description || this.visitor.createStringValue([``]);
+                                        const desc1 = this.visitor.createStringValue([
+                                            `${exports.WhereMap[key]}`
+                                        ]);
+                                        newField.description =
+                                            newField.description ||
+                                                this.visitor.createStringValue([``]);
                                         if (field.description && desc1)
-                                            newField.description.value = field.description.value + ` ${desc1.value}`;
+                                            newField.description.value =
+                                                field.description.value + ` ${desc1.value}`;
                                         if (newField.name)
                                             newField.name.value = `${newField.name.value}_${key}`;
-                                        if (['In', 'NotIn'].includes(key)) {
-                                            if (typeName === 'Int' || typeName === 'String') {
+                                        if (["In", "NotIn"].includes(key)) {
+                                            if (typeName === "Int" || typeName === "String") {
                                                 newField.type = this.visitor.createListTypeAst(this.visitor.createNonNullTypeAst(field.type));
                                                 fields.push(newField);
                                                 needField = true;
                                             }
                                         }
-                                        else if (['Not', 'Lt', 'Lte', 'Gt', 'Gte'].includes(key)) {
-                                            if (typeName === 'Int' || typeName === 'String') {
+                                        else if (["Not", "Lt", "Lte", "Gt", "Gte"].includes(key)) {
+                                            if (typeName === "Int" || typeName === "String") {
                                                 newField.type = type;
                                                 fields.push(newField);
                                                 needField = true;
                                             }
                                         }
-                                        else if (['Contains', 'NotContains', 'StartsWith', 'NotStartsWith', 'EndsWith', 'NotEndsWith'].includes(key)) {
-                                            if (typeName === 'String') {
+                                        else if ([
+                                            "Contains",
+                                            "NotContains",
+                                            "StartsWith",
+                                            "NotStartsWith",
+                                            "EndsWith",
+                                            "NotEndsWith"
+                                        ].includes(key)) {
+                                            if (typeName === "String") {
                                                 newField.type = type;
                                                 fields.push(newField);
                                                 needField = true;
@@ -258,10 +271,9 @@ class Handler {
                         if (item) {
                             const res = item.copy();
                             const fields = [];
-                            const astName = res.name.value + 'Where';
+                            const astName = res.name.value + "Where";
                             if (this.__where.has(astName)) {
                                 return this.visitor.createNamedTypeAst(astName);
-                                ;
                             }
                             const createField = (name) => {
                                 const ast = new magnus_graphql_1.ast.FieldDefinitionAst();
@@ -283,30 +295,45 @@ class Handler {
                                 }
                                 Object.keys(exports.WhereMap).map((key) => {
                                     const typeName = type.name.value;
-                                    if (['Int', "String", "Boolean", "Timestamp", "Date"].includes(typeName)) {
+                                    if (["Int", "String", "Boolean", "Timestamp", "Date"].includes(typeName)) {
                                         const newField = field.copy();
-                                        const desc1 = this.visitor.createStringValue([`${exports.WhereMap[key]}`]);
-                                        newField.description = newField.description || this.visitor.createStringValue([``]);
+                                        const desc1 = this.visitor.createStringValue([
+                                            `${exports.WhereMap[key]}`
+                                        ]);
+                                        newField.description =
+                                            newField.description ||
+                                                this.visitor.createStringValue([``]);
                                         if (field.description && desc1)
-                                            newField.description.value = field.description.value + ` ${desc1.value}`;
+                                            newField.description.value =
+                                                field.description.value + ` ${desc1.value}`;
                                         if (newField.name)
                                             newField.name.value = `${newField.name.value}_${key}`;
-                                        if (['In', 'NotIn'].includes(key)) {
-                                            if (typeName === 'Int' || typeName === 'String') {
+                                        if (["In", "NotIn"].includes(key)) {
+                                            if (typeName === "Int" || typeName === "String") {
                                                 newField.type = this.visitor.createListTypeAst(this.visitor.createNonNullTypeAst(field.type));
                                                 fields.push(newField);
                                                 needField = true;
                                             }
                                         }
-                                        else if (['Not', 'Lt', 'Lte', 'Gt', 'Gte'].includes(key)) {
-                                            if (typeName === 'Int' || typeName === 'String' || typeName === 'Timestamp' || typeName === 'Date') {
+                                        else if (["Not", "Lt", "Lte", "Gt", "Gte"].includes(key)) {
+                                            if (typeName === "Int" ||
+                                                typeName === "String" ||
+                                                typeName === "Timestamp" ||
+                                                typeName === "Date") {
                                                 newField.type = type;
                                                 fields.push(newField);
                                                 needField = true;
                                             }
                                         }
-                                        else if (['Contains', 'NotContains', 'StartsWith', 'NotStartsWith', 'EndsWith', 'NotEndsWith'].includes(key)) {
-                                            if (typeName === 'String') {
+                                        else if ([
+                                            "Contains",
+                                            "NotContains",
+                                            "StartsWith",
+                                            "NotStartsWith",
+                                            "EndsWith",
+                                            "NotEndsWith"
+                                        ].includes(key)) {
+                                            if (typeName === "String") {
                                                 newField.type = type;
                                                 fields.push(newField);
                                                 needField = true;
@@ -371,7 +398,7 @@ class TsToGraphqlVisitor {
         return iden;
     }
     isUndefined(val) {
-        return typeof val === 'undefined';
+        return typeof val === "undefined";
     }
     visitClassDeclaration(node, context) {
         const top = new magnus_1.MagnusTopContext();
@@ -412,17 +439,21 @@ class TsToGraphqlVisitor {
         if (context.isInput) {
             // debugger;
         }
-        const members = node.members.filter(member => {
-            return !(member instanceof ast.MethodDeclaration) || member.getDecorator(`ResolveProperty`)(expression_1.expressionVisitor) !== null;
-        }).map((member) => {
+        const members = node.members
+            .filter(member => {
+            return (!(member instanceof ast.MethodDeclaration) ||
+                member.getDecorator(`ResolveProperty`)(expression_1.expressionVisitor) !== null);
+        })
+            .map(member => {
             member.questionToken = true;
             return member;
         });
-        if (resolver && typeof resolver === 'string') {
+        if (resolver && typeof resolver === "string") {
             const resolverCls = this.collection.findByName(resolver);
             const members = node.members.filter(member => member instanceof ast.MethodDeclaration);
             if (resolverCls instanceof ast.InterfaceDeclaration) {
-                const interfaceMembers = members.map((member) => {
+                const interfaceMembers = members
+                    .map((member) => {
                     const isResolveProperty = member.getDecorator(`ResolveProperty`)(expression_1.expressionVisitor);
                     if (isResolveProperty !== null) {
                         const node = new ast.MethodSignature();
@@ -433,16 +464,19 @@ class TsToGraphqlVisitor {
                         node.questionToken = new ast.QuestionToken();
                         return node;
                     }
-                }).filter(node => !!node);
+                })
+                    .filter(node => !!node);
                 resolverCls.members.push(...interfaceMembers);
                 return resolverCls.visit(this, context);
             }
             else if (resolverCls instanceof ast.ClassDeclaration) {
-                const interfaceMembers = members.map((member) => {
+                const interfaceMembers = members
+                    .map((member) => {
                     const isResolveProperty = member.getDecorator(`ResolveProperty`)(expression_1.expressionVisitor);
                     if (isResolveProperty !== null)
                         return member;
-                }).filter(node => !!node);
+                })
+                    .filter(node => !!node);
                 resolverCls.members.push(...interfaceMembers);
                 const res = resolverCls.visit(this, context);
                 return res;
@@ -469,7 +503,9 @@ class TsToGraphqlVisitor {
             ctx.isUpperFirst = true;
             ctx.isInput = true;
             ast.name = node.name.visit(this, ctx);
-            ast.fields = members.map(member => member.visit(this, ctx)).filter(item => !!item);
+            ast.fields = members
+                .map(member => member.visit(this, ctx))
+                .filter(item => !!item);
             const description = this.createStringValue(node.docs.map(doc => this.visitJSDoc(doc, context)));
             if (description)
                 ast.description = description;
@@ -485,7 +521,9 @@ class TsToGraphqlVisitor {
         ctx.isUpperFirst = true;
         // ctx.isInput = false;
         _ast.name = node.name.visit(this, ctx);
-        _ast.fields = members.map(member => member.visit(this, ctx)).filter(item => !!item);
+        _ast.fields = members
+            .map(member => member.visit(this, ctx))
+            .filter(item => !!item);
         if (_ast.fields.length > 0)
             return _ast;
     }
@@ -505,7 +543,7 @@ class TsToGraphqlVisitor {
         const args = node.parameters.filter(par => {
             const decorator = par.getDecorators()(expression_1.expressionVisitor);
             if (decorator) {
-                if (decorator.includes('Args')) {
+                if (decorator.includes("Args")) {
                     return true;
                 }
                 return false;
@@ -601,21 +639,21 @@ class TsToGraphqlVisitor {
      * 是否非必填项目
      */
     isNotRequired(node) {
-        if (node.getDecorator('CreateDateColumn')(expression_1.expressionVisitor) !== null)
+        if (node.getDecorator("CreateDateColumn")(expression_1.expressionVisitor) !== null)
             return true;
-        if (node.getDecorator('UpdateDateColumn')(expression_1.expressionVisitor) !== null)
+        if (node.getDecorator("UpdateDateColumn")(expression_1.expressionVisitor) !== null)
             return true;
-        if (node.getDecorator('PrimaryGeneratedColumn')(expression_1.expressionVisitor) !== null)
+        if (node.getDecorator("PrimaryGeneratedColumn")(expression_1.expressionVisitor) !== null)
             return true;
-        if (node.getDecorator('ManyToOne')(expression_1.expressionVisitor) !== null)
+        if (node.getDecorator("ManyToOne")(expression_1.expressionVisitor) !== null)
             return true;
-        if (node.getDecorator('OneToMany')(expression_1.expressionVisitor) !== null)
+        if (node.getDecorator("OneToMany")(expression_1.expressionVisitor) !== null)
             return true;
-        if (node.getDecorator('ManyToMany')(expression_1.expressionVisitor) !== null)
+        if (node.getDecorator("ManyToMany")(expression_1.expressionVisitor) !== null)
             return true;
-        if (node.getDecorator('OneToOne')(expression_1.expressionVisitor) !== null)
+        if (node.getDecorator("OneToOne")(expression_1.expressionVisitor) !== null)
             return true;
-        const column = node.getDecorator('Column')(expression_1.expressionVisitor);
+        const column = node.getDecorator("Column")(expression_1.expressionVisitor);
         if (column !== null) {
             if (column && !!column.default)
                 return true;
@@ -639,16 +677,23 @@ class TsToGraphqlVisitor {
         return property;
     }
     createMetadate(res, context, node) {
-        return [res.name.value, context.topName, context.currentEntity, node.name.visit(expression_1.expressionVisitor, ``), res.allArguments.map((arg) => {
+        return [
+            res.name.value,
+            context.topName,
+            context.currentEntity,
+            node.name.visit(expression_1.expressionVisitor, ``),
+            res.allArguments.map((arg) => {
                 const name = arg.name.visit(exports.toString, ``);
                 const type = arg.type.visit(exports.toString, ``);
                 const res = {
-                    name, type,
+                    name,
+                    type,
                     index: arg.index,
                     decorator: arg.decorator
                 };
                 return res;
-            })];
+            })
+        ];
     }
     visitMethodDeclaration(node, context) {
         context.isProperty = false;
@@ -661,7 +706,7 @@ class TsToGraphqlVisitor {
         const ResolveProperty = node.getDecorator(`ResolveProperty`)(expression_1.expressionVisitor);
         if (permission !== null) {
             if (proto !== null && permission) {
-                if (typeof proto === 'string') {
+                if (typeof proto === "string") {
                     if (permission) {
                         permission.namespace = proto;
                         this.permission.push(permission);
@@ -691,7 +736,7 @@ class TsToGraphqlVisitor {
         const args = node.parameters.filter(par => {
             const decorator = par.getDecorators()(expression_1.expressionVisitor);
             if (decorator && decorator.length > 0) {
-                if (decorator.includes('Args')) {
+                if (decorator.includes("Args")) {
                     return true;
                 }
                 return false;
@@ -709,7 +754,8 @@ class TsToGraphqlVisitor {
         if (context.currentEntity.length > 0) {
             if (ResolveProperty === null) {
                 context._needChangeName = true;
-                context.currentName = `${node.name.visit(expression_1.expressionVisitor, ``)}${context.currentEntity}`;
+                const name = node.name.visit(expression_1.expressionVisitor, ``);
+                context.currentName = lodash_1.camelCase(`${context.currentEntity}_${name}`);
             }
         }
         else {
@@ -810,7 +856,7 @@ class TsToGraphqlVisitor {
             return this.visitUnionTypeNode(node, context);
         }
         else {
-            return this.createNamedTypeAst('Empty');
+            return this.createNamedTypeAst("Empty");
         }
     }
     addType(name, context) {
@@ -839,8 +885,13 @@ class TsToGraphqlVisitor {
             }
             // const namedAst = this.documentAst.hasDefinitionAst(context.currentName);
             if (context.isInput) {
-                if (!context.currentName.endsWith('Input')) {
-                    context.currentName = `${context.currentName}Input`;
+                if (typeof context.currentEntity === "string") {
+                    if (!context.currentName.endsWith("Input")) {
+                        context.currentName = `${context.currentName}Input`;
+                    }
+                }
+                else {
+                    console.log(context.currentEntity);
                 }
             }
             if (this.set.has(context.currentName)) {
@@ -888,19 +939,32 @@ class TsToGraphqlVisitor {
             return this.createNamedTypeAst(ctx.currentName);
         }
         if (typeArguments.length > 0) {
-            const name = typeArguments.map(it => {
-                if (context.hasTypeParameter(it)) {
-                    return context.currentEntity;
+            const name = typeArguments
+                .map(it => {
+                if (typeof it === "string") {
+                    if (context.hasTypeParameter(it)) {
+                        return context.currentEntity;
+                    }
+                    else {
+                        context.currentEntity = it;
+                    }
                 }
                 else {
-                    context.currentEntity = it;
+                    if (context.hasTypeParameter(it.elementType)) {
+                        return context.currentEntity;
+                    }
+                    else {
+                        context.currentEntity = it.elementType;
+                    }
                 }
                 return it;
-            }).reverse().join('');
+            })
+                .reverse()
+                .join("");
             // 添加一个 type
             ctx.currentName = `${name}${typeName}`;
             context.currentName = ctx.currentName;
-            this.addType(typeName, ctx);
+            this.addType(`${typeName}`, ctx);
             return this.createNamedTypeAst(ctx.currentName);
         }
         // 需要补充的
@@ -919,7 +983,9 @@ class TsToGraphqlVisitor {
                 ast.description = description;
             ast.name = node.name.visit(this, context);
             context.isInput = true;
-            ast.fields = node.members.map(member => member.visit(this, context)).filter(res => !!res);
+            ast.fields = node.members
+                .map(member => member.visit(this, context))
+                .filter(res => !!res);
             if (ast.fields.length > 0)
                 return ast;
         }
@@ -959,27 +1025,27 @@ class TsToGraphqlVisitor {
     }
     visitKeywordTypeNode(node, context) {
         switch (node.name) {
-            case 'bigint':
-                return this.createNamedTypeAst('Int');
-            case 'boolean':
-                return this.createNamedTypeAst('Boolean');
-            case 'number':
-                return this.createNamedTypeAst('Int');
-            case 'string':
-                return this.createNamedTypeAst('String');
-            case 'null':
-            case 'undefined':
-                return this.createNamedTypeAst('Empty');
-            case 'unknown':
-            case 'any':
-            case 'object':
-                return this.createNamedTypeAst('Json');
-            case 'symbol':
-            case 'never':
-            case 'this':
-            case 'void':
+            case "bigint":
+                return this.createNamedTypeAst("Int");
+            case "boolean":
+                return this.createNamedTypeAst("Boolean");
+            case "number":
+                return this.createNamedTypeAst("Int");
+            case "string":
+                return this.createNamedTypeAst("String");
+            case "null":
+            case "undefined":
+                return this.createNamedTypeAst("Empty");
+            case "unknown":
+            case "any":
+            case "object":
+                return this.createNamedTypeAst("Json");
+            case "symbol":
+            case "never":
+            case "this":
+            case "void":
             default:
-                return this.createNamedTypeAst('Error');
+                return this.createNamedTypeAst("Error");
         }
     }
     visitArrayTypeNode(node, context) {
@@ -1071,8 +1137,7 @@ class TsToGraphqlVisitor {
         node.type = type;
         return node;
     }
-    visitConstructorDeclaration(node, context) {
-    }
+    visitConstructorDeclaration(node, context) { }
     visitTypeAliasDeclaration(node, context) {
         const type = node.type.visit(this, context);
         if (type instanceof magnus_graphql_1.ast.NamedTypeAst) {
@@ -1112,15 +1177,17 @@ class TsToGraphqlVisitor {
         return node.visit(this, context);
     }
     visitUnionTypeNode(node, context) {
-        const types = node.types.filter(t => {
+        const types = node.types
+            .filter(t => {
             if (t instanceof ast.KeywordTypeNode) {
-                if (t.name === 'undefined' || t.name === 'null') {
+                if (t.name === "undefined" || t.name === "null") {
                     context.isNonNull = true;
                     return false;
                 }
             }
             return true;
-        }).map(t => t.visit(this, context));
+        })
+            .map(t => t.visit(this, context));
         if (types.length === 1) {
             return types[0];
         }
