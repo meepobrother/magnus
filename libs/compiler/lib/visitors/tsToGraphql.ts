@@ -831,7 +831,10 @@ export class TsToGraphqlVisitor implements ast.Visitor {
     context.isNonNull = false;
     const type = this.visitTypeNode(node.type, context);
     if (type) res.type = type;
-    if (context.currentEntity.length > 0) {
+    if (
+      context.currentEntity.length > 0 &&
+      context.getTop().typeParameters.size > 0
+    ) {
       if (ResolveProperty === null) {
         context._needChangeName = true;
         const name = node.name.visit(expressionVisitor, ``);
@@ -1044,8 +1047,6 @@ export class TsToGraphqlVisitor implements ast.Visitor {
       // 添加一个 type
       ctx.currentEntity = context.currentEntity;
       ctx.currentName = `${name}${typeName}`;
-      console.log(ctx.currentName);
-
       context.currentName = ctx.currentName;
       this.addType(`${typeName}`, ctx);
       return this.createNamedTypeAst(ctx.currentName);
