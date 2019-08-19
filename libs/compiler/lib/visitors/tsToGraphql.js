@@ -413,21 +413,23 @@ class TsToGraphqlVisitor {
         if (entity !== null) {
             // 搜集字段
             this.isEntity = true;
-            const name = node.name.visit(expression_1.expressionVisitor, ``);
-            this.entities[name] = node.members.map((member) => {
+            const name = node.name && node.name.visit(expression_1.expressionVisitor, ``);
+            this.entities[name] = (node.members || []).map((member) => {
                 const name = member.name.visit(expression_1.expressionVisitor, ``);
                 const manyToOne = member.getDecorator(`ManyToOne`)(expression_1.expressionVisitor);
                 const oneToMany = member.getDecorator(`OneToMany`)(expression_1.expressionVisitor);
                 const oneToOne = member.getDecorator(`OneToOne`)(expression_1.expressionVisitor);
                 const manyToMany = member.getDecorator(`ManyToMany`)(expression_1.expressionVisitor);
                 const decorators = member.getDecorators()(expression_1.expressionVisitor);
-                const type = member.type.visit(expression_1.expressionVisitor, ``);
+                const type = member.type && member.type.visit(expression_1.expressionVisitor, ``);
                 let entity = ``;
                 if (typeof type === "string") {
                     entity = type;
                 }
-                else {
+                else if (entity) {
                     entity = type.elementType;
+                }
+                else {
                 }
                 return {
                     name,
@@ -701,7 +703,8 @@ class TsToGraphqlVisitor {
             // 完善信息
             return undefined;
         }
-        const proto = node.getDecorator(`GrpcMethod`)(expression_1.expressionVisitor);
+        const proto = node.getDecorator(`GrpcMethod`)(expression_1.expressionVisitor) ||
+            node.getDecorator(`Proto`)(expression_1.expressionVisitor);
         const permission = node.getDecorator(`Permission`)(expression_1.expressionVisitor);
         const ResolveProperty = node.getDecorator(`ResolveProperty`)(expression_1.expressionVisitor);
         if (permission !== null) {
@@ -751,7 +754,8 @@ class TsToGraphqlVisitor {
         const type = this.visitTypeNode(node.type, context);
         if (type)
             res.type = type;
-        if (context.currentEntity.length > 0) {
+        if (context.currentEntity.length > 0 &&
+            context.getTop().typeParameters.size > 0) {
             if (ResolveProperty === null) {
                 context._needChangeName = true;
                 const name = node.name.visit(expression_1.expressionVisitor, ``);
@@ -944,6 +948,7 @@ class TsToGraphqlVisitor {
                     }
                     else {
                         context.currentEntity = it;
+                        return context.currentEntity;
                     }
                 }
                 else {
@@ -952,13 +957,14 @@ class TsToGraphqlVisitor {
                     }
                     else {
                         context.currentEntity = it.elementType;
+                        return context.currentEntity;
                     }
                 }
-                return it;
             })
                 .reverse()
                 .join("");
             // 添加一个 type
+            ctx.currentEntity = context.currentEntity;
             ctx.currentName = `${name}${typeName}`;
             context.currentName = ctx.currentName;
             this.addType(`${typeName}`, ctx);

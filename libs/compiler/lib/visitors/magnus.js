@@ -19,7 +19,7 @@ class MagnusTopContext {
         const magnus = new MagnusContext();
         magnus.parent = this;
         switch (type) {
-            case 'query':
+            case "query":
                 this.querys.set(name, magnus);
                 break;
             case "mutation":
@@ -54,7 +54,7 @@ class MagnusContext {
     constructor() {
         this.typeParameters = new Set();
         this.entities = [];
-        this.type = 'query';
+        this.type = "query";
         // 当前操作的entity
         this.currentEntity = ``;
         this.isSelf = false;
@@ -87,26 +87,26 @@ class MagnusContext {
         return false;
     }
     get needChangeName() {
-        if (typeof this._needChangeName === 'boolean')
+        if (typeof this._needChangeName === "boolean")
             return this._needChangeName;
         if (!this.currentName)
             return false;
         return this.currentName !== this.name;
     }
     get isQuery() {
-        return this.type === 'query';
+        return this.type === "query";
     }
     get isMutation() {
-        return this.type === 'mutation';
+        return this.type === "mutation";
     }
     get isSubscription() {
-        return this.type === 'subscription';
+        return this.type === "subscription";
     }
     get isProto() {
-        return this.type === 'proto';
+        return this.type === "proto";
     }
     get isEntity() {
-        return this.type === 'entity';
+        return this.type === "entity";
     }
     get allEntities() {
         const entites = [];
@@ -158,10 +158,10 @@ class MagnusVisitor {
     }
     visitClassDeclaration(node, context) {
         this.collection = context;
-        const resolver = node.getDecorator('Resolver')(expression_1.expressionVisitor);
-        const controller = node.getDecorator('Controller')(expression_1.expressionVisitor);
-        const magnus = node.getDecorator('Magnus')(expression_1.expressionVisitor);
-        const entity = node.getDecorator('Entity')(expression_1.expressionVisitor);
+        const resolver = node.getDecorator("Resolver")(expression_1.expressionVisitor);
+        const controller = node.getDecorator("Controller")(expression_1.expressionVisitor);
+        const magnus = node.getDecorator("Magnus")(expression_1.expressionVisitor);
+        const entity = node.getDecorator("Entity")(expression_1.expressionVisitor);
         if (this.collection.isServer) {
             if (resolver !== null) {
                 const ctx = new MagnusTopContext();
@@ -227,37 +227,37 @@ class MagnusVisitor {
         return val === null;
     }
     setMagnus(node, context) {
-        const query = node.getDecorator('Query')(expression_1.expressionVisitor);
-        const field = node.getDecorator('Field')(expression_1.expressionVisitor);
-        const ResolveProperty = node.getDecorator('ResolveProperty')(expression_1.expressionVisitor);
-        const subscription = node.getDecorator('Supscription')(expression_1.expressionVisitor);
-        const mutation = node.getDecorator('Mutation')(expression_1.expressionVisitor);
-        const proto = node.getDecorator('Proto')(expression_1.expressionVisitor);
-        const grpcMethod = node.getDecorator('GrpcMethod')(expression_1.expressionVisitor);
+        const query = node.getDecorator("Query")(expression_1.expressionVisitor);
+        const field = node.getDecorator("Field")(expression_1.expressionVisitor);
+        const ResolveProperty = node.getDecorator("ResolveProperty")(expression_1.expressionVisitor);
+        const subscription = node.getDecorator("Supscription")(expression_1.expressionVisitor);
+        const mutation = node.getDecorator("Mutation")(expression_1.expressionVisitor);
+        const proto = node.getDecorator("Proto")(expression_1.expressionVisitor);
+        const grpcMethod = node.getDecorator("GrpcMethod")(expression_1.expressionVisitor);
         if (node instanceof ast.MethodDeclaration) {
             /**
              * 可以多个
              */
             if (!this.isNull(field)) {
-                this.registe(node, context, field, 'entity');
+                this.registe(node, context, field, "entity");
             }
             if (!this.isNull(ResolveProperty)) {
-                this.registe(node, context, ResolveProperty, 'entity');
+                this.registe(node, context, ResolveProperty, "entity");
             }
             if (!this.isNull(query)) {
-                this.registe(node, context, query, 'query');
+                this.registe(node, context, query, "query");
             }
             if (!this.isNull(mutation)) {
-                this.registe(node, context, mutation, 'mutation');
+                this.registe(node, context, mutation, "mutation");
             }
             if (!this.isNull(subscription)) {
-                this.registe(node, context, subscription, 'subscription');
+                this.registe(node, context, subscription, "subscription");
             }
             if (!this.isNull(proto)) {
-                this.registe(node, context, proto, 'proto');
+                this.registe(node, context, proto, "proto");
             }
             if (!this.isNull(grpcMethod)) {
-                this.registe(node, context, grpcMethod, 'proto');
+                this.registe(node, context, grpcMethod, "proto");
             }
         }
     }

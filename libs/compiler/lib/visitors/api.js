@@ -4,6 +4,7 @@ class ImportCore {
     constructor(name) {
         this.name = name;
         this.children = [];
+        this.parameters = [];
     }
     /**
      * 是否在某个
@@ -27,6 +28,11 @@ class ImportCore {
                 return res;
         }
         return undefined;
+    }
+    findTop() {
+        if (this.parent)
+            return this.parent.findTop();
+        return this;
     }
     create(name) {
         const core = new ImportCore(name);
@@ -82,10 +88,20 @@ class ApiObjectTypeVisitor {
         if (type === "__magnus__parent__") {
             return ``;
         }
+        if (node.arguments && node.arguments.length > 0) {
+            const args = node.arguments.map(arg => arg.visit(this, context));
+            const topName = context.findTop().name;
+            const items = this.api.parameters.get(topName).concat(...args);
+            this.api.parameters.set(topName, items);
+            return `\t\t${node.name.value} (${node.arguments.map(arg => `${arg.name.value}: $${arg.name.value}`)}) ${type} \n`;
+        }
         if (type) {
             return `\t\t${node.name.value} ${type} \n`;
         }
         return `\t\t${node.name.value}\n`;
+    }
+    visitInputValueDefinitionAst(node, context) {
+        return `$${node.name.value}: ${node.type.visit(this.api, context)}`;
     }
     visitListTypeAst(node, context) {
         return node.type.visit(this, context);
@@ -99,10 +115,14 @@ class ApiVisitor {
     constructor() {
         this.name = "ApiVisitor";
         this.objectType = new ApiObjectTypeVisitor();
+        this.parameters = new Map();
     }
     visitDocumentAst(node, context) {
         this.objectType.doc = node;
-        node.definitions.map(def => {
+        this.objectType.api = this;
+        node.definitions
+            .filter(it => !!it)
+            .map(def => {
             def.visit(this, context);
         });
         return context;
@@ -145,19 +165,26 @@ class ApiVisitor {
     visitInputObjectTypeDefinitionAst(node, context) { }
     visitFieldDefinitionAst(node, context) {
         const { type, name, arguments: args } = node;
+        const ctx = new ImportCore(name.value);
+        this.parameters.set(name.value, []);
+        const objectType = type.visit(this.objectType, ctx);
         if (args && args.length > 0) {
             let graphql = `${context.type} ${name.value}(${args
                 .map(arg => arg.visit(this, context))
+                .concat(...this.parameters.get(name.value))
                 .join(",")}){\n`;
             graphql += `\t${name.value}(${args.map(arg => `${arg.name.value}: $${arg.name.value}`)})`;
-            graphql += type.visit(this.objectType, new ImportCore(name.value));
+            graphql += objectType;
             graphql += `\n}\n`;
             context.list.push(graphql);
         }
         else {
             let graphql = `${context.type} ${name.value}{\n`;
             graphql += `\t${name.value}`;
-            graphql += type.visit(this.objectType, new ImportCore(name.value));
+            if (this.parameters.get(name.value).length > 0) {
+                graphql += `(${this.parameters.get(name.value).join(",")})`;
+            }
+            graphql += objectType;
             graphql += `}\n`;
             context.list.push(graphql);
         }

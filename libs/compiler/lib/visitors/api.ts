@@ -4,6 +4,7 @@ import { join } from "path";
 class ImportCore {
   parent: ImportCore;
   children: ImportCore[] = [];
+  parameters: string[] = [];
   constructor(public name: string) {}
   /**
    * 是否在某个
@@ -26,6 +27,11 @@ class ImportCore {
       if (res) return res;
     }
     return undefined;
+  }
+
+  findTop(): ImportCore {
+    if (this.parent) return this.parent.findTop();
+    return this;
   }
 
   create(name: string) {
@@ -52,6 +58,8 @@ export class ApiObjectTypeVisitor implements ast.Visitor {
   doc: ast.DocumentAst;
   // 一个名称下面引用很多名称
   imports: Map<string, string[]> = new Map();
+
+  api: ApiVisitor;
 
   visitScalarTypeDefinitionAst(
     node: ast.ScalarTypeDefinitionAst,
@@ -82,15 +90,33 @@ export class ApiObjectTypeVisitor implements ast.Visitor {
     return result;
   }
 
-  visitFieldDefinitionAst(node: ast.FieldDefinitionAst, context: any): any {
+  visitFieldDefinitionAst(
+    node: ast.FieldDefinitionAst,
+    context: ImportCore
+  ): any {
     const type = node.type.visit(this, context);
     if (type === "__magnus__parent__") {
       return ``;
+    }
+    if (node.arguments && node.arguments.length > 0) {
+      const args = node.arguments.map(arg => arg.visit(this, context));
+      const topName = context.findTop().name;
+      const items = this.api.parameters.get(topName)!.concat(...args);
+      this.api.parameters.set(topName, items);
+      return `\t\t${node.name.value} (${node.arguments.map(
+        arg => `${arg.name.value}: $${arg.name.value}`
+      )}) ${type} \n`;
     }
     if (type) {
       return `\t\t${node.name.value} ${type} \n`;
     }
     return `\t\t${node.name.value}\n`;
+  }
+  visitInputValueDefinitionAst(
+    node: ast.InputValueDefinitionAst,
+    context: any
+  ): any {
+    return `$${node.name.value}: ${node.type.visit(this.api, context)}`;
   }
 
   visitListTypeAst(node: ast.ListTypeAst, context: any): any {
@@ -109,11 +135,16 @@ export class ApiVisitor implements ast.Visitor {
   mutation: any;
   subscription: any;
 
+  parameters: Map<string, string[]> = new Map();
+
   visitDocumentAst(node: ast.DocumentAst, context: any) {
     this.objectType.doc = node;
-    node.definitions.map(def => {
-      def.visit(this, context);
-    });
+    this.objectType.api = this;
+    node.definitions
+      .filter(it => !!it)
+      .map(def => {
+        def.visit(this, context);
+      });
     return context;
   }
   visitScalarTypeDefinitionAst(
@@ -162,20 +193,27 @@ export class ApiVisitor implements ast.Visitor {
 
   visitFieldDefinitionAst(node: ast.FieldDefinitionAst, context: any) {
     const { type, name, arguments: args } = node;
+    const ctx = new ImportCore(name.value);
+    this.parameters.set(name.value, []);
+    const objectType = type.visit(this.objectType, ctx);
     if (args && args.length > 0) {
       let graphql = `${context.type} ${name.value}(${args
         .map(arg => arg.visit(this, context))
+        .concat(...this.parameters.get(name.value)!)
         .join(",")}){\n`;
       graphql += `\t${name.value}(${args.map(
         arg => `${arg.name.value}: $${arg.name.value}`
       )})`;
-      graphql += type.visit(this.objectType, new ImportCore(name.value));
+      graphql += objectType;
       graphql += `\n}\n`;
       context.list.push(graphql);
     } else {
       let graphql = `${context.type} ${name.value}{\n`;
       graphql += `\t${name.value}`;
-      graphql += type.visit(this.objectType, new ImportCore(name.value));
+      if (this.parameters.get(name.value)!.length > 0) {
+        graphql += `(${this.parameters.get(name.value)!.join(",")})`;
+      }
+      graphql += objectType;
       graphql += `}\n`;
       context.list.push(graphql);
     }

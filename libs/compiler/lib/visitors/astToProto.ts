@@ -19,11 +19,36 @@ export class AstToProtoVisitor implements graphql.Visitor {
     pkg.name = this.config.name || "magnus";
     pkg.syntax = `proto3`;
     pkg.children.push(this.createEmpty());
-    node.protos.map(proto => proto.visit(this, pkg));
+    node.definitions.filter(it => !!it).map(def => def.visit(this, pkg));
+    node.protos;
+    console.log({
+      mutation: this.mutation,
+      query: this.query
+    });
     root.packages.push(pkg);
     return root;
   }
 
+  query: any = {};
+  mutation: any = {};
+  subscription: any = {};
+  visitOperationDefinitionAst(
+    node: graphql.OperationDefinitionAst,
+    context: ast.Package
+  ) {
+    const name = node.name.visit(this, context);
+    const selectionSet = node.selectionSet.visit(this, context);
+    if (node.operation === "mutation") {
+      this.mutation[name] = {};
+    } else if (node.operation === "query") {
+      this.query[name] = {};
+    } else {
+      this.subscription[name] = {};
+    }
+  }
+  visitSelectionSetAst(node: graphql.SelectionSetAst, context: any) {
+    node.selections;
+  }
   createEmpty() {
     const service = new ast.Message();
     service.name = `Empty`;
@@ -86,7 +111,7 @@ export class AstToProtoVisitor implements graphql.Visitor {
   ) {
     const field = new ast.Field();
     field.index = node.index;
-    field.name = node.name.visit(this, ``);
+    field.name = node.name && node.name.visit(this, ``);
     field.type = this.createType(node.type, field);
     this.checkType(field.type, context);
     context.fields.push(field);
@@ -124,8 +149,10 @@ export class AstToProtoVisitor implements graphql.Visitor {
       return this.createType(node.type, context);
     } else if (node instanceof graphql.NonNullTypeAst) {
       return this.createType(node.type, context);
-    } else {
+    } else if (node) {
       return node.visit(this, ``);
+    } else {
+      return `Error`;
     }
   }
 

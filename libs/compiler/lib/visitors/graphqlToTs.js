@@ -32,7 +32,6 @@ class GraphqlToTs {
     constructor() {
         this.name = `GraphqlToTs`;
         this.types = new Set();
-        // visitEnumTypeDefinitionAst(node: EnumTypeDefinitionAst, context: any) { }
     }
     visitDocumentAst(node, context) {
         context += `\n`;

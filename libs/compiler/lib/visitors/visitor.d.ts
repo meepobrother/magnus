@@ -155,6 +155,9 @@ export declare class ExclamationToken extends Node<ts.ExclamationToken> {
 export declare class Expression extends Node<ts.Expression> {
     visit(visitor: Visitor, context: any): any;
 }
+export declare class NonNullExpression extends Expression {
+    visit(visitor: Visitor, context: any): any;
+}
 export declare class MethodDeclaration extends Node<ts.MethodDeclaration> {
     body: FunctionBody;
     name: PropertyName;
@@ -659,6 +662,7 @@ export declare class OtherStatement extends Node<ts.Node> {
 }
 export interface Visitor<C = any, O = any> {
     name: string;
+    visitNonNullExpression?(node: NonNullExpression, context: C): O;
     visitOtherStatement?(node: OtherStatement, context: C): O;
     visitJSDocNullableType?(node: JSDocNullableType, context: C): O;
     visitBigIntLiteral?(node: BigIntLiteral, context: C): O;
@@ -992,7 +996,8 @@ export declare class TsVisitor implements Visitor {
      * @param {ts.Modifier} context
      */
     visitModifier(node: Modifier, context: ts.Modifier): Modifier;
-    visitExpression(node: Expression, context: ts.Expression): ConditionalExpression | RegularExpressionLiteral | TaggedTemplateExpression | NoSubstitutionTemplateLiteral | NullLiteral | NewExpression | BinaryExpression | Expression | CallExpression | ObjectLiteralExpression | StringLiteral | NumericLiteral | ArrayLiteralExpression | AsExpression | AwaitExpression | ArrowFunction | BooleanLiteral | PropertyAccessExpression | Identifier | PrefixUnaryExpression | ElementAccessExpression | ParenthesizedExpression | ThisExpression | TemplateExpression | SpreadElement;
+    visitExpression(node: Expression, context: ts.Expression): any;
+    visitNonNullExpression(node: NonNullExpression, context: ts.NonNullExpression): void;
     visitSpreadElement(node: SpreadElement, context: any): SpreadElement;
     visitNoSubstitutionTemplateLiteral(node: NoSubstitutionTemplateLiteral, context: ts.NoSubstitutionTemplateLiteral): NoSubstitutionTemplateLiteral;
     visitNullLiteral(node: NullLiteral, context: any): NullLiteral;

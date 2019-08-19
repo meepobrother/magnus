@@ -1,11 +1,6 @@
 import { MangusContextManager } from "./magnus";
 import { ast, ParseVisitor } from "@notadd/magnus-graphql";
-import {
-  DirectiveOptions,
-  InjectableOptions,
-  ModuleOptions,
-  ScalarOptions
-} from "@notadd/magnus-core";
+import { ScalarOptions } from "@notadd/magnus-core";
 import { TsToGraphqlVisitor } from "./tsToGraphql";
 import { CollectionContext } from "./collection";
 import { MagnusContext } from "./magnus";

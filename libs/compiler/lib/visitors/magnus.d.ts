@@ -1,5 +1,5 @@
-import * as ast from './visitor';
-import { CollectionContext } from './collection';
+import * as ast from "./visitor";
+import { CollectionContext } from "./collection";
 export interface MagnusOptions {
     entities: string[];
 }
@@ -18,7 +18,7 @@ export declare class MagnusTopContext {
     entities: string[];
     node: ast.Node;
     name: string;
-    addChild(name: string, type: 'query' | 'mutation' | 'subscription' | 'proto' | 'entity'): MagnusContext;
+    addChild(name: string, type: "query" | "mutation" | "subscription" | "proto" | "entity"): MagnusContext;
     hasTypeParameter(name: string): boolean;
 }
 export declare class MagnusContext {
@@ -26,7 +26,7 @@ export declare class MagnusContext {
     parent: MagnusTopContext;
     contextParent: MagnusContext;
     entities: string[];
-    type: 'query' | 'mutation' | 'subscription' | 'proto' | 'entity';
+    type: "query" | "mutation" | "subscription" | "proto" | "entity";
     node: ast.Node;
     name: string;
     currentEntity: string;
@@ -69,7 +69,7 @@ export declare class MagnusVisitor implements ast.Visitor {
     visitClassDeclaration(node: ast.ClassDeclaration, context: CollectionContext): MagnusTopContext | undefined;
     isNull(val: any): val is null;
     setMagnus(node: ast.GetAccessorDeclaration | ast.SetAccessorDeclaration | ast.MethodDeclaration | ast.PropertyDeclaration, context: MagnusTopContext): void;
-    registe(node: ast.GetAccessorDeclaration | ast.SetAccessorDeclaration | ast.MethodDeclaration | ast.PropertyDeclaration, context: MagnusTopContext, query: MagnusOptions | undefined, type: 'query' | 'mutation' | 'subscription' | 'proto' | 'entity'): void;
+    registe(node: ast.GetAccessorDeclaration | ast.SetAccessorDeclaration | ast.MethodDeclaration | ast.PropertyDeclaration, context: MagnusTopContext, query: MagnusOptions | undefined, type: "query" | "mutation" | "subscription" | "proto" | "entity"): void;
     visitGetAccessorDeclaration(node: ast.GetAccessorDeclaration, context: MagnusTopContext): void;
     visitSetAccessorDeclaration(node: ast.SetAccessorDeclaration, context: MagnusTopContext): void;
     visitTypeParameterDeclaration(node: ast.TypeParameterDeclaration, context: MagnusContext): void;

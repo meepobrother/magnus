@@ -444,6 +444,4 @@ export class GraphqlToTs implements ast.Visitor {
 }\n`;
     return context;
   }
-
-  // visitEnumTypeDefinitionAst(node: EnumTypeDefinitionAst, context: any) { }
 }

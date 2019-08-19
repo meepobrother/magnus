@@ -6,6 +6,9 @@ const lodash_1 = require("lodash");
 class AstToProtoVisitor {
     constructor() {
         this.name = `AstToProtoVisitor`;
+        this.query = {};
+        this.mutation = {};
+        this.subscription = {};
         this.set = new Set();
     }
     visitDocumentAst(node, context) {
@@ -17,9 +20,30 @@ class AstToProtoVisitor {
         pkg.name = this.config.name || "magnus";
         pkg.syntax = `proto3`;
         pkg.children.push(this.createEmpty());
-        node.protos.map(proto => proto.visit(this, pkg));
+        node.definitions.filter(it => !!it).map(def => def.visit(this, pkg));
+        node.protos;
+        console.log({
+            mutation: this.mutation,
+            query: this.query
+        });
         root.packages.push(pkg);
         return root;
+    }
+    visitOperationDefinitionAst(node, context) {
+        const name = node.name.visit(this, context);
+        const selectionSet = node.selectionSet.visit(this, context);
+        if (node.operation === "mutation") {
+            this.mutation[name] = {};
+        }
+        else if (node.operation === "query") {
+            this.query[name] = {};
+        }
+        else {
+            this.subscription[name] = {};
+        }
+    }
+    visitSelectionSetAst(node, context) {
+        node.selections;
     }
     createEmpty() {
         const service = new magnus_grpc_1.ast.Message();
@@ -74,7 +98,7 @@ class AstToProtoVisitor {
     visitInputValueDefinitionAst(node, context) {
         const field = new magnus_grpc_1.ast.Field();
         field.index = node.index;
-        field.name = node.name.visit(this, ``);
+        field.name = node.name && node.name.visit(this, ``);
         field.type = this.createType(node.type, field);
         this.checkType(field.type, context);
         context.fields.push(field);
@@ -112,8 +136,11 @@ class AstToProtoVisitor {
         else if (node instanceof magnus_graphql_1.ast.NonNullTypeAst) {
             return this.createType(node.type, context);
         }
-        else {
+        else if (node) {
             return node.visit(this, ``);
+        }
+        else {
+            return `Error`;
         }
     }
     createArguments(node, context) {

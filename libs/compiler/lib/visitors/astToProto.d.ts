@@ -10,6 +10,11 @@ export declare class AstToProtoVisitor implements graphql.Visitor {
     documentAst: graphql.DocumentAst;
     config: MagnusConfig;
     visitDocumentAst(node: graphql.DocumentAst, context: CollectionContext): ast.Root;
+    query: any;
+    mutation: any;
+    subscription: any;
+    visitOperationDefinitionAst(node: graphql.OperationDefinitionAst, context: ast.Package): void;
+    visitSelectionSetAst(node: graphql.SelectionSetAst, context: any): void;
     createEmpty(): ast.Message;
     visitObjectTypeDefinitionAst(node: graphql.ObjectTypeDefinitionAst, context: ast.Package): void;
     set: Set<string>;
