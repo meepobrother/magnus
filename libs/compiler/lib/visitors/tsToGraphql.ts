@@ -1028,21 +1028,24 @@ export class TsToGraphqlVisitor implements ast.Visitor {
               return context.currentEntity;
             } else {
               context.currentEntity = it;
+              return context.currentEntity;
             }
           } else {
             if (context.hasTypeParameter(it.elementType)) {
               return context.currentEntity;
             } else {
               context.currentEntity = it.elementType;
+              return context.currentEntity;
             }
           }
-
-          return it;
         })
         .reverse()
         .join("");
       // 添加一个 type
+      ctx.currentEntity = context.currentEntity;
       ctx.currentName = `${name}${typeName}`;
+      console.log(ctx.currentName);
+
       context.currentName = ctx.currentName;
       this.addType(`${typeName}`, ctx);
       return this.createNamedTypeAst(ctx.currentName);

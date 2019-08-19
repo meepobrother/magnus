@@ -383,6 +383,17 @@ class Expression extends Node {
     }
 }
 exports.Expression = Expression;
+class NonNullExpression extends Expression {
+    visit(visitor, context) {
+        if (visitor.visitNonNullExpression) {
+            return visitor.visitNonNullExpression(this, context);
+        }
+        else {
+            throw new Error(`${visitor.name} 没有 visitNonNullExpression 方法`);
+        }
+    }
+}
+exports.NonNullExpression = NonNullExpression;
 class MethodDeclaration extends Node {
     constructor() {
         super(...arguments);
@@ -2812,11 +2823,15 @@ class TsVisitor {
         else if (ts.isParenthesizedExpression(context)) {
             return this.visitParenthesizedExpression(new ParenthesizedExpression(), context);
         }
+        else if (ts.isNonNullExpression(context)) {
+            return this.visitNonNullExpression(new NonNullExpression(), context);
+        }
         else {
             console.log(`visitExpression Error! ${context.kind}`);
         }
         return node;
     }
+    visitNonNullExpression(node, context) { }
     visitSpreadElement(node, context) {
         return node;
     }

@@ -155,6 +155,9 @@ export declare class ExclamationToken extends Node<ts.ExclamationToken> {
 export declare class Expression extends Node<ts.Expression> {
     visit(visitor: Visitor, context: any): any;
 }
+export declare class NonNullExpression extends Expression {
+    visit(visitor: Visitor, context: any): any;
+}
 export declare class MethodDeclaration extends Node<ts.MethodDeclaration> {
     body: FunctionBody;
     name: PropertyName;
@@ -659,6 +662,7 @@ export declare class OtherStatement extends Node<ts.Node> {
 }
 export interface Visitor<C = any, O = any> {
     name: string;
+    visitNonNullExpression?(node: NonNullExpression, context: C): O;
     visitOtherStatement?(node: OtherStatement, context: C): O;
     visitJSDocNullableType?(node: JSDocNullableType, context: C): O;
     visitBigIntLiteral?(node: BigIntLiteral, context: C): O;
@@ -992,7 +996,8 @@ export declare class TsVisitor implements Visitor {
      * @param {ts.Modifier} context
      */
     visitModifier(node: Modifier, context: ts.Modifier): Modifier;
-    visitExpression(node: Expression, context: ts.Expression): ConditionalExpression | RegularExpressionLiteral | TaggedTemplateExpression | NoSubstitutionTemplateLiteral | NullLiteral | NewExpression | BinaryExpression | Expression | CallExpression | ObjectLiteralExpression | StringLiteral | NumericLiteral | ArrayLiteralExpression | AsExpression | AwaitExpression | ArrowFunction | BooleanLiteral | PropertyAccessExpression | Identifier | PrefixUnaryExpression | ElementAccessExpression | ParenthesizedExpression | ThisExpression | TemplateExpression | SpreadElement;
+    visitExpression(node: Expression, context: ts.Expression): any;
+    visitNonNullExpression(node: NonNullExpression, context: ts.NonNullExpression): void;
     visitSpreadElement(node: SpreadElement, context: any): SpreadElement;
     visitNoSubstitutionTemplateLiteral(node: NoSubstitutionTemplateLiteral, context: ts.NoSubstitutionTemplateLiteral): NoSubstitutionTemplateLiteral;
     visitNullLiteral(node: NullLiteral, context: any): NullLiteral;
@@ -1052,7 +1057,7 @@ export declare class TsVisitor implements Visitor {
     /**
      * type node end
      */
-    visitEntityName(node: EntityName, context: ts.EntityName): QualifiedName | Identifier;
+    visitEntityName(node: EntityName, context: ts.EntityName): Identifier | QualifiedName;
     visitQualifiedName(node: QualifiedName, context: ts.QualifiedName): QualifiedName;
     visitPropertyName(node: any, context: ts.PropertyName): PropertyName;
     visitComputedPropertyName(node: ComputedPropertyName, context: ts.ComputedPropertyName): ComputedPropertyName;
@@ -1067,7 +1072,7 @@ export declare class TsVisitor implements Visitor {
     visitPropertyAccessExpression(node: PropertyAccessExpression, context: ts.PropertyAccessExpression): PropertyAccessExpression;
     visitCallExpression(node: CallExpression, context: ts.CallExpression): CallExpression;
     visitObjectLiteralExpression(node: ObjectLiteralExpression, context: ts.ObjectLiteralExpression): ObjectLiteralExpression;
-    visitObjectLiteralElementLike(node: ObjectLiteralElementLike, context: ts.ObjectLiteralElementLike): ShorthandPropertyAssignment | PropertyAssignment | MethodDeclaration | GetAccessorDeclaration | SetAccessorDeclaration | SpreadAssignment | ObjectLiteralElementLike;
+    visitObjectLiteralElementLike(node: ObjectLiteralElementLike, context: ts.ObjectLiteralElementLike): MethodDeclaration | GetAccessorDeclaration | SetAccessorDeclaration | ShorthandPropertyAssignment | SpreadAssignment | ObjectLiteralElementLike | PropertyAssignment;
     visitShorthandPropertyAssignment(node: ShorthandPropertyAssignment, context: ts.ShorthandPropertyAssignment): ShorthandPropertyAssignment;
     visitSpreadAssignment(node: SpreadAssignment, context: ts.SpreadAssignment): SpreadAssignment;
     visitPropertyAssignment(node: PropertyAssignment, context: ts.PropertyAssignment): PropertyAssignment;

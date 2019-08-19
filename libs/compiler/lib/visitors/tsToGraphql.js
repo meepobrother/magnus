@@ -944,6 +944,7 @@ class TsToGraphqlVisitor {
                     }
                     else {
                         context.currentEntity = it;
+                        return context.currentEntity;
                     }
                 }
                 else {
@@ -952,14 +953,16 @@ class TsToGraphqlVisitor {
                     }
                     else {
                         context.currentEntity = it.elementType;
+                        return context.currentEntity;
                     }
                 }
-                return it;
             })
                 .reverse()
                 .join("");
             // 添加一个 type
+            ctx.currentEntity = context.currentEntity;
             ctx.currentName = `${name}${typeName}`;
+            console.log(ctx.currentName);
             context.currentName = ctx.currentName;
             this.addType(`${typeName}`, ctx);
             return this.createNamedTypeAst(ctx.currentName);

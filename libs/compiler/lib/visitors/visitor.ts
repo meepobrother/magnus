@@ -465,6 +465,16 @@ export class Expression extends Node<ts.Expression> {
     }
   }
 }
+
+export class NonNullExpression extends Expression {
+  visit(visitor: Visitor, context: any) {
+    if (visitor.visitNonNullExpression) {
+      return visitor.visitNonNullExpression(this, context);
+    } else {
+      throw new Error(`${visitor.name} 没有 visitNonNullExpression 方法`);
+    }
+  }
+}
 export class MethodDeclaration extends Node<ts.MethodDeclaration> {
   body: FunctionBody;
   name: PropertyName;
@@ -1780,6 +1790,7 @@ export class OtherStatement extends Node<ts.Node> {
 }
 export interface Visitor<C = any, O = any> {
   name: string;
+  visitNonNullExpression?(node: NonNullExpression, context: C): O;
   visitOtherStatement?(node: OtherStatement, context: C): O;
   visitJSDocNullableType?(node: JSDocNullableType, context: C): O;
   visitBigIntLiteral?(node: BigIntLiteral, context: C): O;
@@ -3277,7 +3288,7 @@ export class TsVisitor implements Visitor {
     return node;
   }
 
-  visitExpression(node: Expression, context: ts.Expression) {
+  visitExpression(node: Expression, context: ts.Expression): any {
     node.node = context;
     if (ts.isStringLiteral(context)) {
       return this.visitStringLiteral(new StringLiteral(), context);
@@ -3357,11 +3368,18 @@ export class TsVisitor implements Visitor {
         new ParenthesizedExpression(),
         context
       );
+    } else if (ts.isNonNullExpression(context)) {
+      return this.visitNonNullExpression(new NonNullExpression(), context);
     } else {
       console.log(`visitExpression Error! ${context.kind}`);
     }
     return node;
   }
+
+  visitNonNullExpression(
+    node: NonNullExpression,
+    context: ts.NonNullExpression
+  ) {}
 
   visitSpreadElement(node: SpreadElement, context: any) {
     return node;

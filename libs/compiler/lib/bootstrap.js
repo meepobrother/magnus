@@ -77,6 +77,8 @@ async function bootstrap(config) {
                 const res = magnus_graphql_1.toJson(documentAst);
                 if (api.length > 0) {
                     if (isServer) {
+                        const content = graphql_1.print(res);
+                        fs_extra_1.writeFileSync(path_1.join(assets, `magnus.server.graphql`), content);
                         fs_extra_1.writeFileSync(path_1.join(assets, `magnus.server-api.graphql`), api);
                         const schema = graphql_1.buildASTSchema(res);
                         fs_extra_1.writeFileSync(path_1.join(assets, "magnus.server-schema.json"), JSON.stringify(graphql_1.introspectionFromSchema(schema), null, 2));
@@ -84,21 +86,15 @@ async function bootstrap(config) {
                         buildApi_1.buildReactApi(path_1.join(assets, "magnus.server-schema.json"), path_1.join(assets, `magnus.server-api.graphql`), path_1.join(dist, `magnus.server-react.v${config.version || `1.0.0`}.tsx`), config.name);
                     }
                     else {
+                        if (res.definitions.length > 0) {
+                            const content = graphql_1.print(res);
+                            fs_extra_1.writeFileSync(path_1.join(assets, `magnus.graphql`), content);
+                        }
                         fs_extra_1.writeFileSync(path_1.join(assets, `magnus.client-api.graphql`), api);
                         const schema = graphql_1.buildASTSchema(res);
                         fs_extra_1.writeFileSync(path_1.join(assets, "magnus.client-schema.json"), JSON.stringify(graphql_1.introspectionFromSchema(schema), null, 2));
                         buildApi_1.buildNgApi(path_1.join(assets, "magnus.client-schema.json"), path_1.join(assets, `magnus.client-api.graphql`), path_1.join(dist, `magnus.client-angular.v${config.version || `1.0.0`}.ts`), config.name);
                         buildApi_1.buildReactApi(path_1.join(assets, "magnus.client-schema.json"), path_1.join(assets, `magnus.client-api.graphql`), path_1.join(dist, `magnus.client-react.v${config.version || `1.0.0`}.tsx`), config.name);
-                    }
-                }
-                if (isServer) {
-                    const content = graphql_1.print(res);
-                    fs_extra_1.writeFileSync(path_1.join(assets, `magnus.server.graphql`), content);
-                }
-                else {
-                    if (res.definitions.length > 0) {
-                        const content = graphql_1.print(res);
-                        fs_extra_1.writeFileSync(path_1.join(assets, `magnus.graphql`), content);
                     }
                 }
                 // 搜集metadata entity数据库 类名 依赖名
@@ -263,7 +259,7 @@ function sendLocalFile(path, name, config) {
     if (fs_extra_1.existsSync(filePath)) {
         const context = fs_extra_1.readFileSync(path_1.join(path, name)).toString("utf8");
         // 广播文件内容
-        const isDist = (file) => file.endsWith('.ts') || file.endsWith('.tsx');
+        const isDist = (file) => file.endsWith(".ts") || file.endsWith(".tsx");
         config.broadcast(Buffer.from(JSON.stringify({
             name: config.name,
             type: isDist(name) ? "output" : "assets",
