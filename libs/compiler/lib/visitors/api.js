@@ -171,7 +171,7 @@ class ApiVisitor {
         if (args && args.length > 0) {
             let graphql = `${context.type} ${name.value}(${args
                 .map(arg => arg.visit(this, context))
-                .concat(...this.parameters.get(name.value))
+                .concat(...new Set(this.parameters.get(name.value)))
                 .join(",")}){\n`;
             graphql += `\t${name.value}(${args.map(arg => `${arg.name.value}: $${arg.name.value}`)})`;
             graphql += objectType;
@@ -182,7 +182,7 @@ class ApiVisitor {
             let graphql = `${context.type} ${name.value}{\n`;
             graphql += `\t${name.value}`;
             if (this.parameters.get(name.value).length > 0) {
-                graphql += `(${this.parameters.get(name.value).join(",")})`;
+                graphql += `(${[...new Set(this.parameters.get(name.value))].join(",")})`;
             }
             graphql += objectType;
             graphql += `}\n`;

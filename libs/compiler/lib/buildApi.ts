@@ -5,29 +5,34 @@ export async function buildNgApi(
     output: string,
     name: string
 ) {
-    await generate(
-        {
-            overwrite: true,
-            schema,
-            documents,
-            generates: {
-                [`${output}`]: {
-                    plugins: [
-                        { add: "/* tslint:disable */" },
-                        "typescript",
-                        "typescript-operations",
-                        {
-                            "typescript-apollo-angular": {
-                                namedClient: name
-                            }
-                        },
-                        "fragment-matcher"
-                    ]
+    try {
+        await generate(
+            {
+                overwrite: true,
+                schema,
+                documents,
+                generates: {
+                    [`${output}`]: {
+                        plugins: [
+                            { add: "/* tslint:disable */" },
+                            "typescript",
+                            "typescript-operations",
+                            {
+                                "typescript-apollo-angular": {
+                                    namedClient: name
+                                }
+                            },
+                            "fragment-matcher"
+                        ]
+                    }
                 }
-            }
-        },
-        true
-    );
+            },
+            true
+        ).catch((e: any) => {
+            throw e
+        });
+    } catch (e) { }
+
 }
 
 
@@ -37,27 +42,32 @@ export async function buildReactApi(
     output: string,
     name: string
 ) {
-    await generate(
-        {
-            overwrite: true,
-            schema,
-            documents,
-            generates: {
-                [`${output}`]: {
-                    plugins: [
-                        { add: "/* tslint:disable */" },
-                        "typescript",
-                        "typescript-operations",
-                        {
-                            "@graphql-codegen/typescript-react-apollo": {
-                                namedClient: name
-                            }
-                        },
-                        "fragment-matcher"
-                    ]
+    try {
+        await generate(
+            {
+                overwrite: true,
+                schema,
+                documents,
+                generates: {
+                    [`${output}`]: {
+                        plugins: [
+                            { add: "/* tslint:disable */" },
+                            "typescript",
+                            "typescript-operations",
+                            {
+                                "@graphql-codegen/typescript-react-apollo": {
+                                    namedClient: name
+                                }
+                            },
+                            "fragment-matcher"
+                        ]
+                    }
                 }
-            }
-        },
-        true
-    );
+            },
+            true
+        ).catch((e: any) => {
+            throw e
+        });
+    } catch (e) { }
+
 }

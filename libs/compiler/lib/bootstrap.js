@@ -80,8 +80,13 @@ async function bootstrap(config) {
                         const content = graphql_1.print(res);
                         fs_extra_1.writeFileSync(path_1.join(assets, `magnus.server.graphql`), content);
                         fs_extra_1.writeFileSync(path_1.join(assets, `magnus.server-api.graphql`), api);
-                        const schema = graphql_1.buildASTSchema(res);
-                        fs_extra_1.writeFileSync(path_1.join(assets, "magnus.server-schema.json"), JSON.stringify(graphql_1.introspectionFromSchema(schema), null, 2));
+                        try {
+                            const schema = graphql_1.buildASTSchema(res);
+                            fs_extra_1.writeFileSync(path_1.join(assets, "magnus.server-schema.json"), JSON.stringify(graphql_1.introspectionFromSchema(schema), null, 2));
+                        }
+                        catch (e) {
+                            console.log(e.message);
+                        }
                         buildApi_1.buildNgApi(path_1.join(assets, "magnus.server-schema.json"), path_1.join(assets, `magnus.server-api.graphql`), path_1.join(dist, `magnus.server-angular.v${config.version || `1.0.0`}.ts`), config.name);
                         buildApi_1.buildReactApi(path_1.join(assets, "magnus.server-schema.json"), path_1.join(assets, `magnus.server-api.graphql`), path_1.join(dist, `magnus.server-react.v${config.version || `1.0.0`}.tsx`), config.name);
                         // create ast
