@@ -36,49 +36,6 @@ scalar Timestamp
 
 scalar Date
 
-"域"
-type Domain {
-  id: Int
-  "域标题"
-  title: String
-  "域编号"
-  code: String
-  "域状态"
-  status: Int
-  "创建人"
-  createUser: Int
-  "创建时间"
-  createDate: Int
-  "部门"
-  departments: [Department]
-  getDepartments: [Department]
-}
-
-"部门表"
-type Department {
-  "部门编号"
-  id: Int
-  "部门名称"
-  title: String
-  "部门状态"
-  status: Int
-  "是否显示"
-  shown: Boolean
-  "上级部门"
-  parent: Department
-  "创建时间"
-  createDate: Int
-  "下级部门"
-  children: [Department]
-  getChildren: [Department]
-  "一个部门可以有多个岗位"
-  stations: [Station]
-  getStations: [Station]
-  "域"
-  domain: Domain
-  domainId: Int
-}
-
 type RoleGroup {
   id: Int
   "角色组名"
@@ -91,36 +48,6 @@ type RoleGroup {
   "用到此角色组的岗位"
   stations: [Station]
   getStations: [Station]
-}
-
-"岗位表"
-type Station {
-  "岗位序号"
-  id: Int
-  "岗位标题"
-  title: String
-  "岗位描述"
-  desc: String
-  "岗位标识码"
-  code: String
-  "岗位责任"
-  responsibilities: String
-  "岗位要求"
-  requirements: String
-  "岗位状态"
-  status: Int
-  "创建用户"
-  createUser: User
-  "创建日期"
-  createDate: String
-  "每个岗位有一个部门"
-  department: Department
-  "某个岗位可以被什么角色使用"
-  canUseRoles: [Role]
-  users: [User]
-  getUsers: [User]
-  "一个岗位有一个role group"
-  roleGroup: RoleGroup
 }
 
 "角色表"
@@ -1200,6 +1127,79 @@ type User {
   getSafetyScoreLogs(where: SafetyScoreLogInputWhere, order: SafetyScoreLogInputOrder, limit: PageLimitInput): [SafetyScoreLog]
   createStations: [Station]
   getCreateStations(where: StationInputWhere, order: StationInputOrder, limit: PageLimitInput): [Station]
+}
+
+"岗位表"
+type Station {
+  "岗位序号"
+  id: Int
+  "岗位标题"
+  title: String
+  "岗位描述"
+  desc: String
+  "岗位标识码"
+  code: String
+  "岗位责任"
+  responsibilities: String
+  "岗位要求"
+  requirements: String
+  "岗位状态"
+  status: Int
+  "创建用户"
+  createUser: User
+  "创建日期"
+  createDate: String
+  "每个岗位有一个部门"
+  department: Department
+  "某个岗位可以被什么角色使用"
+  canUseRoles: [Role]
+  users: [User]
+  getUsers: [User]
+  "一个岗位有一个role group"
+  roleGroup: RoleGroup
+}
+
+"域"
+type Domain {
+  id: Int
+  "域标题"
+  title: String
+  "域编号"
+  code: String
+  "域状态"
+  status: Int
+  "创建人"
+  createUser: Int
+  "创建时间"
+  createDate: Int
+  "部门"
+  departments: [Department]
+  getDepartments: [Department]
+}
+
+"部门表"
+type Department {
+  "部门编号"
+  id: Int
+  "部门名称"
+  title: String
+  "部门状态"
+  status: Int
+  "是否显示"
+  shown: Boolean
+  "上级部门"
+  parent: Department
+  "创建时间"
+  createDate: Int
+  "下级部门"
+  children: [Department]
+  getChildren: [Department]
+  "一个部门可以有多个岗位"
+  stations: [Station]
+  getStations: [Station]
+  "域"
+  domain: Domain
+  domainId: Int
 }
 
 "用户表"

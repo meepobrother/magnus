@@ -31,6 +31,7 @@ message SaveDomainInput{
 	string code = 1;
 	string title = 2;
 	string desc = 3;
+	string createUserId = 4;
 }
 message GetDoaminData{
 	int32 id = 0;
@@ -51,18 +52,23 @@ message GetDoaminInput{
 	int32 id = 0;
 }
 message FindDomainData{
-	int32 id = 0;
-	string title = 1;
-	string code = 2;
-	int32 status = 3;
-	string createDate = 4;
-	string createrUserName = 5;
-	string createUserId = 6;
+	string desc = 0;
+	int32 id = 1;
+	string title = 2;
+	string code = 3;
+	int32 status = 4;
+	string createDate = 5;
+	string createUserName = 6;
+	string createUserId = 7;
+}
+message FindDomainDataResult{
+	int32 count = 0;
+	repeated FindDomainData list = 1;
 }
 message FindDomainResult{
 	int32 code = 0;
 	string message = 1;
-	repeated FindDomainData data = 2;
+	FindDomainDataResult data = 2;
 }
 message FindDomainInput{
 	int32 page = 0;
@@ -77,40 +83,50 @@ message DeleteDomainResult{
 message DeleteDomainInput{
 	int32 id = 0;
 }
-message ForBidDomainResult{
+message ForbidDomainResult{
 	int32 code = 0;
 	string message = 1;
 }
-message ForBidDomainInput{
+message ForbidDomainInput{
 	int32 id = 0;
+	int32 status = 1;
+}
+message SaveMenuData{
+	int32 id = 0;
+	string title = 1;
+	string icon = 2;
+	int32 status = 3;
+	repeated SaveMenuData children = 4;
 }
 message SaveMenuResult{
 	int32 code = 0;
 	string message = 1;
+	SaveMenuData data = 2;
 }
 message SaveMenuInput{
-	int32 id = 0;
+	int32 menuId = 0;
 	int32 status = 1;
+	string icon = 2;
+	string title = 3;
 }
 message FindMenuResultData{
-	string title = 0;
-	repeated FindMenuResultData children = 1;
+	int32 id = 0;
+	string title = 1;
+	string icon = 2;
+	int32 status = 3;
+	repeated FindMenuResultData children = 4;
 }
 message FindMenuResult{
 	int32 code = 0;
 	string message = 1;
 	repeated FindMenuResultData data = 2;
 }
-message FindMenuInput{
-	string title = 0;
-	int32 status = 1;
-}
 service SystemService {
 	rpc SaveDomin(SaveDomainInput) returns(SaveDomainResult) {}
 	rpc GetDomain(GetDoaminInput) returns(GetDomainResult) {}
 	rpc FindDomain(FindDomainInput) returns(FindDomainResult) {}
 	rpc DeleteDomain(DeleteDomainInput) returns(DeleteDomainResult) {}
-	rpc ForbidDomain(ForBidDomainInput) returns(ForBidDomainResult) {}
+	rpc ForbidDomain(ForbidDomainInput) returns(ForbidDomainResult) {}
 	rpc SaveMenu(SaveMenuInput) returns(SaveMenuResult) {}
-	rpc FindMenu(FindMenuInput) returns(FindMenuResult) {}
+	rpc FindMenu(Empty) returns(FindMenuResult) {}
 }

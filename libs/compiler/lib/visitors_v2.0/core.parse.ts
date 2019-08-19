@@ -195,9 +195,9 @@ export class CoreParse implements ast.Visitor {
     visitExportSpecifier(node: ast.ExportSpecifier, context: any): any {
         const name = node.name.visit(this, context);
         const propertyName = node.propertyName && node.propertyName.visit(this, context);
-        Object.defineProperty(context,name,{
-            value: 
-        })
+        Object.defineProperty(context, name, {
+            value: undefined
+        });
         return {
             propertyName: node.propertyName && node.propertyName.visit(this, context),
             name: node.name.visit(this, context)

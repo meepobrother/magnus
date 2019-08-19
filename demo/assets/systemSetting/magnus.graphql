@@ -73,6 +73,8 @@ input SaveDomainInput {
   title: String
   "域简称"
   desc: String
+  "创建人id"
+  createUserId: String
 }
 
 type GetDoaminData {
@@ -109,20 +111,27 @@ input GetDoaminInput {
 }
 
 type FindDomainData {
+  "域简称"
+  desc: String!
   "域编号"
-  id: Int!
+  id: Int
   "域标题"
-  title: String!
+  title: String
   "域编号"
-  code: String!
+  code: String
   "域状态"
-  status: Int!
+  status: Int
   "创建日期"
-  createDate: String!
+  createDate: String
   "创建人"
-  createrUserName: String
+  createUserName: String
   "创建人Id"
-  createUserId: String!
+  createUserId: String
+}
+
+type FindDomainDataResult {
+  count: Int!
+  list: [FindDomainData]!
 }
 
 type FindDomainResult {
@@ -131,18 +140,18 @@ type FindDomainResult {
   "返回信息"
   message: String!
   "返回数据"
-  data: [FindDomainData]
+  data: FindDomainDataResult
 }
 
 input FindDomainInput {
   "页码"
-  page: Int!
+  page: Int
   "尺寸"
-  psize: Int!
+  psize: Int
   "标题"
-  title: String!
+  title: String
   "编号"
-  code: String!
+  code: String
 }
 
 "伪删除域"
@@ -158,16 +167,30 @@ input DeleteDomainInput {
 }
 
 "用户禁用"
-type ForBidDomainResult {
+type ForbidDomainResult {
   "状态码"
   code: Int!
   "返回信息"
   message: String!
 }
 
-input ForBidDomainInput {
+input ForbidDomainInput {
   "域id"
   id: Int!
+  status: Int!
+}
+
+type SaveMenuData {
+  "菜单id"
+  id: Int!
+  "菜单标题"
+  title: String!
+  "列表"
+  icon: String!
+  "状态"
+  status: Int!
+  "子级"
+  children: [SaveMenuData]
 }
 
 type SaveMenuResult {
@@ -175,18 +198,29 @@ type SaveMenuResult {
   code: Int!
   "返回信息"
   message: String!
+  data: SaveMenuData
 }
 
 input SaveMenuInput {
   "菜单id"
-  id: Int!
+  menuId: Int
   "状态"
   status: Int
+  "图标"
+  icon: String
+  "标题"
+  title: String
 }
 
 type FindMenuResultData {
+  "菜单id"
+  id: Int!
   "菜单标题"
   title: String!
+  "列表"
+  icon: String!
+  "状态"
+  status: Int!
   "子级"
   children: [FindMenuResultData]
 }
@@ -200,13 +234,6 @@ type FindMenuResult {
   data: [FindMenuResultData]
 }
 
-input FindMenuInput {
-  "菜单名称"
-  title: String!
-  "状态"
-  status: Int
-}
-
 type SystemSetting {
   set(item: SetInput!): SetResult
   get(item: GetInput!): GetResult
@@ -216,8 +243,16 @@ type SystemService {
   saveDomin(domin: SaveDomainInput!): SaveDomainResult
   getDomain(entity: GetDoaminInput!): GetDomainResult
   findDomain(entity: FindDomainInput!): FindDomainResult
-  deleteDomain(entity: DeleteDomainInput!): DeleteDomainResult
-  forbidDomain(entity: ForBidDomainInput!): ForBidDomainResult
+  "伪删除域管理 \nstatus -1 删除成功!"
+  deleteDomain(
+    "根据id删除啊"
+    entity: DeleteDomainInput!
+  ): DeleteDomainResult
+  "域禁用\nstatus 0为禁用 1启用成功"
+  forbidDomain(
+    ""
+    entity: ForbidDomainInput!
+  ): ForbidDomainResult
   saveMenu(menu: SaveMenuInput!): SaveMenuResult
-  findMenu(menu: FindMenuInput!): FindMenuResult
+  findMenu: FindMenuResult
 }

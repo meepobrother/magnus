@@ -18,47 +18,6 @@ import {
 } from '@notadd/magnus-core';
 import { Observable } from 'rxjs';
 
-/*域*/
-export interface Domain {
-	id?: number;
-	/*域标题*/
-	title?: string;
-	/*域编号*/
-	code?: string;
-	/*域状态*/
-	status?: number;
-	/*创建人*/
-	createUser?: number;
-	/*创建时间*/
-	createDate?: number;
-	/*部门*/
-	departments?: Department[];
-	getDepartments(__selection?: string): Department[];
-}
-/*部门表*/
-export interface Department {
-	/*部门编号*/
-	id?: number;
-	/*部门名称*/
-	title?: string;
-	/*部门状态*/
-	status?: number;
-	/*是否显示*/
-	shown?: boolean;
-	/*上级部门*/
-	parent?: Department;
-	/*创建时间*/
-	createDate?: number;
-	/*下级部门*/
-	children?: Department[];
-	getChildren(__selection?: string): Department[];
-	/*一个部门可以有多个岗位*/
-	stations?: Station[];
-	getStations(__selection?: string): Station[];
-	/*域*/
-	domain?: Domain;
-	domainId?: number;
-}
 export interface RoleGroup {
 	id?: number;
 	/*角色组名*/
@@ -71,35 +30,6 @@ export interface RoleGroup {
 	/*用到此角色组的岗位*/
 	stations?: Station[];
 	getStations(__selection?: string): Station[];
-}
-/*岗位表*/
-export interface Station {
-	/*岗位序号*/
-	id?: number;
-	/*岗位标题*/
-	title?: string;
-	/*岗位描述*/
-	desc?: string;
-	/*岗位标识码*/
-	code?: string;
-	/*岗位责任*/
-	responsibilities?: string;
-	/*岗位要求*/
-	requirements?: string;
-	/*岗位状态*/
-	status?: number;
-	/*创建用户*/
-	createUser?: User;
-	/*创建日期*/
-	createDate?: string;
-	/*每个岗位有一个部门*/
-	department?: Department;
-	/*某个岗位可以被什么角色使用*/
-	canUseRoles?: Role[];
-	users?: User[];
-	getUsers(__selection?: string): User[];
-	/*一个岗位有一个role group*/
-	roleGroup?: RoleGroup;
 }
 /*角色表*/
 export interface Role {
@@ -1163,6 +1093,76 @@ export interface User {
 	getSafetyScoreLogs(where?: SafetyScoreLogInputWhere, order?: SafetyScoreLogInputOrder, limit?: PageLimitInput, __selection?: string): SafetyScoreLog[];
 	createStations?: Station[];
 	getCreateStations(where?: StationInputWhere, order?: StationInputOrder, limit?: PageLimitInput, __selection?: string): Station[];
+}
+/*岗位表*/
+export interface Station {
+	/*岗位序号*/
+	id?: number;
+	/*岗位标题*/
+	title?: string;
+	/*岗位描述*/
+	desc?: string;
+	/*岗位标识码*/
+	code?: string;
+	/*岗位责任*/
+	responsibilities?: string;
+	/*岗位要求*/
+	requirements?: string;
+	/*岗位状态*/
+	status?: number;
+	/*创建用户*/
+	createUser?: User;
+	/*创建日期*/
+	createDate?: string;
+	/*每个岗位有一个部门*/
+	department?: Department;
+	/*某个岗位可以被什么角色使用*/
+	canUseRoles?: Role[];
+	users?: User[];
+	getUsers(__selection?: string): User[];
+	/*一个岗位有一个role group*/
+	roleGroup?: RoleGroup;
+}
+/*域*/
+export interface Domain {
+	id?: number;
+	/*域标题*/
+	title?: string;
+	/*域编号*/
+	code?: string;
+	/*域状态*/
+	status?: number;
+	/*创建人*/
+	createUser?: number;
+	/*创建时间*/
+	createDate?: number;
+	/*部门*/
+	departments?: Department[];
+	getDepartments(__selection?: string): Department[];
+}
+/*部门表*/
+export interface Department {
+	/*部门编号*/
+	id?: number;
+	/*部门名称*/
+	title?: string;
+	/*部门状态*/
+	status?: number;
+	/*是否显示*/
+	shown?: boolean;
+	/*上级部门*/
+	parent?: Department;
+	/*创建时间*/
+	createDate?: number;
+	/*下级部门*/
+	children?: Department[];
+	getChildren(__selection?: string): Department[];
+	/*一个部门可以有多个岗位*/
+	stations?: Station[];
+	getStations(__selection?: string): Station[];
+	/*域*/
+	domain?: Domain;
+	domainId?: number;
 }
 export interface UserInputWhere {
 	/*用户编号 不等于*/

@@ -1,0 +1,51 @@
+[
+    {
+        "name": "Basic1",
+        "documentation": "",
+        "type": "typeof Basic1",
+        "constructors": [
+            {
+                "parameters": [],
+                "returnType": "Basic1",
+                "documentation": ""
+            }
+        ],
+        "members": [
+            {
+                "parameters": [
+                    {
+                        "name": "a",
+                        "documentation": "",
+                        "type": "string"
+                    },
+                    {
+                        "name": "b",
+                        "documentation": "",
+                        "type": "string"
+                    }
+                ],
+                "returnType": "Promise<string>",
+                "documentation": "",
+                "name": "add"
+            }
+        ]
+    },
+    {
+        "name": "Basic2",
+        "documentation": "",
+        "type": "typeof Basic2",
+        "constructors": [
+            {
+                "parameters": [],
+                "returnType": "Basic2",
+                "documentation": ""
+            }
+        ],
+        "members": [
+            {
+                "type": "string",
+                "name": "title"
+            }
+        ]
+    }
+]

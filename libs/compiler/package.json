@@ -1,6 +1,6 @@
 {
 	"name": "@notadd/magnus",
-	"version": "3.0.6",
+	"version": "3.3.7",
 	"description": "> TODO: description",
 	"author": "imeepos <1037483576@qq.com>",
 	"homepage": "https://github.com/notadd/magnus/tree/master/libs/compiler#readme",
@@ -29,12 +29,20 @@
 	"bugs": {
 		"url": "https://github.com/notadd/magnus/issues"
 	},
-	"gitHead": "3cdb10e40f409d0acd323e2b31297e40e747a8db",
+	"gitHead": "acbf551528e935fe60bc728c46992f3671bfe140",
 	"dependencies": {
+		"@graphql-codegen/add": "^1.5.0",
+		"@graphql-codegen/cli": "^1.5.0",
+		"@graphql-codegen/core": "^1.6.1",
+		"@graphql-codegen/fragment-matcher": "^1.5.0",
+		"@graphql-codegen/typescript": "^1.5.0",
+		"@graphql-codegen/typescript-apollo-angular": "^1.5.0",
+		"@graphql-codegen/typescript-operations": "^1.5.0",
+		"@graphql-codegen/typescript-react-apollo": "^1.6.1",
 		"@nodeutils/defaults-deep": "^1.1.0",
-		"@notadd/magnus-core": "^3.0.1",
-		"@notadd/magnus-graphql": "^3.0.3",
-		"@notadd/magnus-grpc": "^3.0.1",
+		"@notadd/magnus-core": "^3.3.7",
+		"@notadd/magnus-graphql": "^3.3.7",
+		"@notadd/magnus-grpc": "^3.3.7",
 		"chokidar": "^3.0.2",
 		"commander": "^2.20.0",
 		"fs-extra": "^8.0.1",

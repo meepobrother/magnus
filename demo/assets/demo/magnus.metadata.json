@@ -1,14 +1,19 @@
 {
-  "Role": [
-    [
-      "getSystemRights",
-      "Role",
-      "Role",
-      "getSystemRights",
-      []
-    ]
-  ],
   "Department": [
+    [
+      "getChildren",
+      "Department",
+      "Department",
+      "getChildren",
+      []
+    ],
+    [
+      "getStations",
+      "Department",
+      "Department",
+      "getStations",
+      []
+    ],
     [
       "getChildren",
       "Department",
@@ -24,25 +29,37 @@
       []
     ]
   ],
-  "Domain": [
+  "Role": [
     [
-      "getDepartments",
-      "Domain",
-      "Domain",
-      "getDepartments",
+      "getSystemRights",
+      "Role",
+      "Role",
+      "getSystemRights",
       []
-    ]
-  ],
-  "Station": [
+    ],
     [
-      "getUsers",
-      "Station",
-      "Station",
-      "getUsers",
+      "getSystemRights",
+      "Role",
+      "Role",
+      "getSystemRights",
       []
     ]
   ],
   "RoleGroup": [
+    [
+      "getRoles",
+      "RoleGroup",
+      "RoleGroup",
+      "getRoles",
+      []
+    ],
+    [
+      "getStations",
+      "RoleGroup",
+      "RoleGroup",
+      "getStations",
+      []
+    ],
     [
       "getRoles",
       "RoleGroup",
@@ -79,9 +96,37 @@
       "System",
       "getToDoItems",
       []
+    ],
+    [
+      "getSystemRights",
+      "System",
+      "System",
+      "getSystemRights",
+      []
+    ],
+    [
+      "getSystemEvents",
+      "System",
+      "System",
+      "getSystemEvents",
+      []
+    ],
+    [
+      "getToDoItems",
+      "System",
+      "System",
+      "getToDoItems",
+      []
     ]
   ],
   "SystemEvent": [
+    [
+      "getToDoItems",
+      "SystemEvent",
+      "SystemEvent",
+      "getToDoItems",
+      []
+    ],
     [
       "getToDoItems",
       "SystemEvent",
@@ -101,22 +146,27 @@
           "name": "selection",
           "type": "Json!",
           "index": 0,
-          "decorator": "Selection"
+          "decorator": [
+            "Selection"
+          ]
         },
         {
           "name": "where",
           "type": "ToDoItemInputWhere",
-          "index": 1
+          "index": 1,
+          "decorator": []
         },
         {
           "name": "order",
           "type": "ToDoItemInputOrder",
-          "index": 2
+          "index": 2,
+          "decorator": []
         },
         {
           "name": "limit",
           "type": "PageLimitInput",
-          "index": 3
+          "index": 3,
+          "decorator": []
         }
       ]
     ],
@@ -129,17 +179,20 @@
         {
           "name": "where",
           "type": "StationInputWhere",
-          "index": 0
+          "index": 0,
+          "decorator": []
         },
         {
           "name": "order",
           "type": "StationInputOrder",
-          "index": 1
+          "index": 1,
+          "decorator": []
         },
         {
           "name": "limit",
           "type": "PageLimitInput",
-          "index": 2
+          "index": 2,
+          "decorator": []
         }
       ]
     ],
@@ -152,17 +205,20 @@
         {
           "name": "where",
           "type": "UserLoginLogInputWhere",
-          "index": 0
+          "index": 0,
+          "decorator": []
         },
         {
           "name": "order",
           "type": "UserLoginLogInputOrder",
-          "index": 1
+          "index": 1,
+          "decorator": []
         },
         {
           "name": "limit",
           "type": "PageLimitInput",
-          "index": 2
+          "index": 2,
+          "decorator": []
         }
       ]
     ],
@@ -175,17 +231,20 @@
         {
           "name": "where",
           "type": "SafetyScoreLogInputWhere",
-          "index": 0
+          "index": 0,
+          "decorator": []
         },
         {
           "name": "order",
           "type": "SafetyScoreLogInputOrder",
-          "index": 1
+          "index": 1,
+          "decorator": []
         },
         {
           "name": "limit",
           "type": "PageLimitInput",
-          "index": 2
+          "index": 2,
+          "decorator": []
         }
       ]
     ],
@@ -198,17 +257,158 @@
         {
           "name": "where",
           "type": "StationInputWhere",
-          "index": 0
+          "index": 0,
+          "decorator": []
         },
         {
           "name": "order",
           "type": "StationInputOrder",
-          "index": 1
+          "index": 1,
+          "decorator": []
         },
         {
           "name": "limit",
           "type": "PageLimitInput",
-          "index": 2
+          "index": 2,
+          "decorator": []
+        }
+      ]
+    ],
+    [
+      "getToDoItems",
+      "User",
+      "User",
+      "getToDoItems",
+      [
+        {
+          "name": "selection",
+          "type": "Json!",
+          "index": 0,
+          "decorator": [
+            "Selection"
+          ]
+        },
+        {
+          "name": "where",
+          "type": "ToDoItemInputWhere",
+          "index": 1,
+          "decorator": []
+        },
+        {
+          "name": "order",
+          "type": "ToDoItemInputOrder",
+          "index": 2,
+          "decorator": []
+        },
+        {
+          "name": "limit",
+          "type": "PageLimitInput",
+          "index": 3,
+          "decorator": []
+        }
+      ]
+    ],
+    [
+      "getStations",
+      "User",
+      "User",
+      "getStations",
+      [
+        {
+          "name": "where",
+          "type": "StationInputWhere",
+          "index": 0,
+          "decorator": []
+        },
+        {
+          "name": "order",
+          "type": "StationInputOrder",
+          "index": 1,
+          "decorator": []
+        },
+        {
+          "name": "limit",
+          "type": "PageLimitInput",
+          "index": 2,
+          "decorator": []
+        }
+      ]
+    ],
+    [
+      "getUserLoginLogs",
+      "User",
+      "User",
+      "getUserLoginLogs",
+      [
+        {
+          "name": "where",
+          "type": "UserLoginLogInputWhere",
+          "index": 0,
+          "decorator": []
+        },
+        {
+          "name": "order",
+          "type": "UserLoginLogInputOrder",
+          "index": 1,
+          "decorator": []
+        },
+        {
+          "name": "limit",
+          "type": "PageLimitInput",
+          "index": 2,
+          "decorator": []
+        }
+      ]
+    ],
+    [
+      "getSafetyScoreLogs",
+      "User",
+      "User",
+      "getSafetyScoreLogs",
+      [
+        {
+          "name": "where",
+          "type": "SafetyScoreLogInputWhere",
+          "index": 0,
+          "decorator": []
+        },
+        {
+          "name": "order",
+          "type": "SafetyScoreLogInputOrder",
+          "index": 1,
+          "decorator": []
+        },
+        {
+          "name": "limit",
+          "type": "PageLimitInput",
+          "index": 2,
+          "decorator": []
+        }
+      ]
+    ],
+    [
+      "getCreateStations",
+      "User",
+      "User",
+      "getCreateStations",
+      [
+        {
+          "name": "where",
+          "type": "StationInputWhere",
+          "index": 0,
+          "decorator": []
+        },
+        {
+          "name": "order",
+          "type": "StationInputOrder",
+          "index": 1,
+          "decorator": []
+        },
+        {
+          "name": "limit",
+          "type": "PageLimitInput",
+          "index": 2,
+          "decorator": []
         }
       ]
     ]
@@ -219,6 +419,45 @@
       "SafetyScoreRule",
       "SafetyScoreRule",
       "getSafetyScoreLogs",
+      []
+    ],
+    [
+      "getSafetyScoreLogs",
+      "SafetyScoreRule",
+      "SafetyScoreRule",
+      "getSafetyScoreLogs",
+      []
+    ]
+  ],
+  "Station": [
+    [
+      "getUsers",
+      "Station",
+      "Station",
+      "getUsers",
+      []
+    ],
+    [
+      "getUsers",
+      "Station",
+      "Station",
+      "getUsers",
+      []
+    ]
+  ],
+  "Domain": [
+    [
+      "getDepartments",
+      "Domain",
+      "Domain",
+      "getDepartments",
+      []
+    ],
+    [
+      "getDepartments",
+      "Domain",
+      "Domain",
+      "getDepartments",
       []
     ]
   ],
@@ -232,7 +471,8 @@
         {
           "name": "entity",
           "type": "UserInputWhere!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         }
       ]
     ],
@@ -245,7 +485,8 @@
         {
           "name": "entity",
           "type": "SystemInputWhere!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         }
       ]
     ],
@@ -258,7 +499,8 @@
         {
           "name": "entity",
           "type": "SystemEventInputWhere!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         }
       ]
     ],
@@ -271,7 +513,8 @@
         {
           "name": "entity",
           "type": "SystemRightInputWhere!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         }
       ]
     ],
@@ -284,7 +527,8 @@
         {
           "name": "entity",
           "type": "DepartmentInputWhere!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         }
       ]
     ],
@@ -297,7 +541,8 @@
         {
           "name": "entity",
           "type": "RoleInputWhere!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         }
       ]
     ],
@@ -310,7 +555,8 @@
         {
           "name": "entity",
           "type": "StationInputWhere!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         }
       ]
     ],
@@ -323,7 +569,8 @@
         {
           "name": "entity",
           "type": "ToDoItemInputWhere!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         }
       ]
     ],
@@ -336,7 +583,8 @@
         {
           "name": "entity",
           "type": "RoleGroupInputWhere!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         }
       ]
     ],
@@ -349,7 +597,8 @@
         {
           "name": "entity",
           "type": "UserLoginLogInputWhere!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         }
       ]
     ],
@@ -362,7 +611,8 @@
         {
           "name": "entity",
           "type": "SafetyScoreLogInputWhere!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         }
       ]
     ],
@@ -375,7 +625,8 @@
         {
           "name": "entity",
           "type": "SafetyScoreRuleInputWhere!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         }
       ]
     ],
@@ -388,17 +639,20 @@
         {
           "name": "entity",
           "type": "UserInputWhere!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         },
         {
           "name": "order",
           "type": "UserInputOrder!",
-          "index": 1
+          "index": 1,
+          "decorator": []
         },
         {
           "name": "limit",
           "type": "PageLimitInput",
-          "index": 2
+          "index": 2,
+          "decorator": []
         }
       ]
     ],
@@ -411,17 +665,20 @@
         {
           "name": "entity",
           "type": "SystemInputWhere!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         },
         {
           "name": "order",
           "type": "SystemInputOrder!",
-          "index": 1
+          "index": 1,
+          "decorator": []
         },
         {
           "name": "limit",
           "type": "PageLimitInput",
-          "index": 2
+          "index": 2,
+          "decorator": []
         }
       ]
     ],
@@ -434,17 +691,20 @@
         {
           "name": "entity",
           "type": "SystemEventInputWhere!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         },
         {
           "name": "order",
           "type": "SystemEventInputOrder!",
-          "index": 1
+          "index": 1,
+          "decorator": []
         },
         {
           "name": "limit",
           "type": "PageLimitInput",
-          "index": 2
+          "index": 2,
+          "decorator": []
         }
       ]
     ],
@@ -457,17 +717,20 @@
         {
           "name": "entity",
           "type": "SystemRightInputWhere!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         },
         {
           "name": "order",
           "type": "SystemRightInputOrder!",
-          "index": 1
+          "index": 1,
+          "decorator": []
         },
         {
           "name": "limit",
           "type": "PageLimitInput",
-          "index": 2
+          "index": 2,
+          "decorator": []
         }
       ]
     ],
@@ -480,17 +743,20 @@
         {
           "name": "entity",
           "type": "DepartmentInputWhere!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         },
         {
           "name": "order",
           "type": "DepartmentInputOrder!",
-          "index": 1
+          "index": 1,
+          "decorator": []
         },
         {
           "name": "limit",
           "type": "PageLimitInput",
-          "index": 2
+          "index": 2,
+          "decorator": []
         }
       ]
     ],
@@ -503,17 +769,20 @@
         {
           "name": "entity",
           "type": "RoleInputWhere!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         },
         {
           "name": "order",
           "type": "RoleInputOrder!",
-          "index": 1
+          "index": 1,
+          "decorator": []
         },
         {
           "name": "limit",
           "type": "PageLimitInput",
-          "index": 2
+          "index": 2,
+          "decorator": []
         }
       ]
     ],
@@ -526,17 +795,20 @@
         {
           "name": "entity",
           "type": "StationInputWhere!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         },
         {
           "name": "order",
           "type": "StationInputOrder!",
-          "index": 1
+          "index": 1,
+          "decorator": []
         },
         {
           "name": "limit",
           "type": "PageLimitInput",
-          "index": 2
+          "index": 2,
+          "decorator": []
         }
       ]
     ],
@@ -549,17 +821,20 @@
         {
           "name": "entity",
           "type": "ToDoItemInputWhere!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         },
         {
           "name": "order",
           "type": "ToDoItemInputOrder!",
-          "index": 1
+          "index": 1,
+          "decorator": []
         },
         {
           "name": "limit",
           "type": "PageLimitInput",
-          "index": 2
+          "index": 2,
+          "decorator": []
         }
       ]
     ],
@@ -572,17 +847,20 @@
         {
           "name": "entity",
           "type": "RoleGroupInputWhere!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         },
         {
           "name": "order",
           "type": "RoleGroupInputOrder!",
-          "index": 1
+          "index": 1,
+          "decorator": []
         },
         {
           "name": "limit",
           "type": "PageLimitInput",
-          "index": 2
+          "index": 2,
+          "decorator": []
         }
       ]
     ],
@@ -595,17 +873,20 @@
         {
           "name": "entity",
           "type": "UserLoginLogInputWhere!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         },
         {
           "name": "order",
           "type": "UserLoginLogInputOrder!",
-          "index": 1
+          "index": 1,
+          "decorator": []
         },
         {
           "name": "limit",
           "type": "PageLimitInput",
-          "index": 2
+          "index": 2,
+          "decorator": []
         }
       ]
     ],
@@ -618,17 +899,20 @@
         {
           "name": "entity",
           "type": "SafetyScoreLogInputWhere!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         },
         {
           "name": "order",
           "type": "SafetyScoreLogInputOrder!",
-          "index": 1
+          "index": 1,
+          "decorator": []
         },
         {
           "name": "limit",
           "type": "PageLimitInput",
-          "index": 2
+          "index": 2,
+          "decorator": []
         }
       ]
     ],
@@ -641,17 +925,20 @@
         {
           "name": "entity",
           "type": "SafetyScoreRuleInputWhere!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         },
         {
           "name": "order",
           "type": "SafetyScoreRuleInputOrder!",
-          "index": 1
+          "index": 1,
+          "decorator": []
         },
         {
           "name": "limit",
           "type": "PageLimitInput",
-          "index": 2
+          "index": 2,
+          "decorator": []
         }
       ]
     ],
@@ -664,7 +951,8 @@
         {
           "name": "id",
           "type": "Int!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         }
       ]
     ],
@@ -677,7 +965,8 @@
         {
           "name": "id",
           "type": "Int!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         }
       ]
     ],
@@ -690,7 +979,8 @@
         {
           "name": "id",
           "type": "Int!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         }
       ]
     ],
@@ -703,7 +993,8 @@
         {
           "name": "id",
           "type": "Int!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         }
       ]
     ],
@@ -716,7 +1007,8 @@
         {
           "name": "id",
           "type": "Int!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         }
       ]
     ],
@@ -729,7 +1021,8 @@
         {
           "name": "id",
           "type": "Int!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         }
       ]
     ],
@@ -742,7 +1035,8 @@
         {
           "name": "id",
           "type": "Int!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         }
       ]
     ],
@@ -755,7 +1049,8 @@
         {
           "name": "id",
           "type": "Int!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         }
       ]
     ],
@@ -768,7 +1063,8 @@
         {
           "name": "id",
           "type": "Int!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         }
       ]
     ],
@@ -781,7 +1077,8 @@
         {
           "name": "id",
           "type": "Int!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         }
       ]
     ],
@@ -794,7 +1091,8 @@
         {
           "name": "id",
           "type": "Int!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         }
       ]
     ],
@@ -807,7 +1105,8 @@
         {
           "name": "id",
           "type": "Int!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         }
       ]
     ]
@@ -822,7 +1121,8 @@
         {
           "name": "entity",
           "type": "UserInput!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         }
       ]
     ],
@@ -835,7 +1135,8 @@
         {
           "name": "entity",
           "type": "SystemInput!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         }
       ]
     ],
@@ -848,7 +1149,8 @@
         {
           "name": "entity",
           "type": "SystemEventInput!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         }
       ]
     ],
@@ -861,7 +1163,8 @@
         {
           "name": "entity",
           "type": "SystemRightInput!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         }
       ]
     ],
@@ -874,7 +1177,8 @@
         {
           "name": "entity",
           "type": "DepartmentInput!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         }
       ]
     ],
@@ -887,7 +1191,8 @@
         {
           "name": "entity",
           "type": "RoleInput!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         }
       ]
     ],
@@ -900,7 +1205,8 @@
         {
           "name": "entity",
           "type": "StationInput!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         }
       ]
     ],
@@ -913,7 +1219,8 @@
         {
           "name": "entity",
           "type": "ToDoItemInput!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         }
       ]
     ],
@@ -926,7 +1233,8 @@
         {
           "name": "entity",
           "type": "RoleGroupInput!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         }
       ]
     ],
@@ -939,7 +1247,8 @@
         {
           "name": "entity",
           "type": "UserLoginLogInput!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         }
       ]
     ],
@@ -952,7 +1261,8 @@
         {
           "name": "entity",
           "type": "SafetyScoreLogInput!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         }
       ]
     ],
@@ -965,7 +1275,8 @@
         {
           "name": "entity",
           "type": "SafetyScoreRuleInput!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         }
       ]
     ],
@@ -978,7 +1289,8 @@
         {
           "name": "entity",
           "type": "UserInput!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         }
       ]
     ],
@@ -991,7 +1303,8 @@
         {
           "name": "entity",
           "type": "SystemInput!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         }
       ]
     ],
@@ -1004,7 +1317,8 @@
         {
           "name": "entity",
           "type": "SystemEventInput!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         }
       ]
     ],
@@ -1017,7 +1331,8 @@
         {
           "name": "entity",
           "type": "SystemRightInput!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         }
       ]
     ],
@@ -1030,7 +1345,8 @@
         {
           "name": "entity",
           "type": "DepartmentInput!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         }
       ]
     ],
@@ -1043,7 +1359,8 @@
         {
           "name": "entity",
           "type": "RoleInput!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         }
       ]
     ],
@@ -1056,7 +1373,8 @@
         {
           "name": "entity",
           "type": "StationInput!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         }
       ]
     ],
@@ -1069,7 +1387,8 @@
         {
           "name": "entity",
           "type": "ToDoItemInput!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         }
       ]
     ],
@@ -1082,7 +1401,8 @@
         {
           "name": "entity",
           "type": "RoleGroupInput!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         }
       ]
     ],
@@ -1095,7 +1415,8 @@
         {
           "name": "entity",
           "type": "UserLoginLogInput!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         }
       ]
     ],
@@ -1108,7 +1429,8 @@
         {
           "name": "entity",
           "type": "SafetyScoreLogInput!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         }
       ]
     ],
@@ -1121,7 +1443,8 @@
         {
           "name": "entity",
           "type": "SafetyScoreRuleInput!",
-          "index": 0
+          "index": 0,
+          "decorator": []
         }
       ]
     ]

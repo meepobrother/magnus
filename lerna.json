@@ -2,5 +2,20 @@
 	"packages": [
 		"libs/*"
 	],
-	"version": "3.0.6"
+	"npmClient": "yarn",
+	"publish": {
+		"ignoreChanges": [
+			"ignored-file",
+			"*.ts",
+			"*.md"
+		],
+		"message": "chore(release): publish"
+	},
+	"bootstrap": {
+		"ignore": "component-*",
+		"npmClientArgs": [
+			"--no-package-lock"
+		]
+	},
+	"version": "3.3.7"
 }
