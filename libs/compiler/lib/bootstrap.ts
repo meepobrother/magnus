@@ -1,5 +1,5 @@
 import { MagnusConfig } from "@notadd/magnus-core";
-import { toJson } from "@notadd/magnus-graphql";
+import { toJson, parse } from "@notadd/magnus-graphql";
 import { ast as grpcAst } from "@notadd/magnus-grpc";
 import { bootstrapClient } from "./client";
 import * as morph from "ts-morph";
@@ -115,35 +115,17 @@ export async function bootstrap(config: MagnusConfig) {
               ),
               config.name
             );
-          } else {
-            if (res.definitions.length > 0) {
-              const content = print(res);
-              writeFileSync(join(assets, `magnus.graphql`), content);
-            }
-            writeFileSync(join(assets, `magnus.client-api.graphql`), api);
-            const schema = buildASTSchema(res);
-            writeFileSync(
-              join(assets, "magnus.client-schema.json"),
-              JSON.stringify(introspectionFromSchema(schema), null, 2)
+            // create ast
+            const parseGraphqlAst = parse(api);
+            const astToProtoVisitor = new AstToProtoVisitor();
+            astToProtoVisitor.config = config;
+            const proto = parseGraphqlAst.visit(
+              astToProtoVisitor,
+              collectionContext
             );
-            buildNgApi(
-              join(assets, "magnus.client-schema.json"),
-              join(assets, `magnus.client-api.graphql`),
-              join(
-                dist,
-                `magnus.client-angular.v${config.version || `1.0.0`}.ts`
-              ),
-              config.name
-            );
-            buildReactApi(
-              join(assets, "magnus.client-schema.json"),
-              join(assets, `magnus.client-api.graphql`),
-              join(
-                dist,
-                `magnus.client-react.v${config.version || `1.0.0`}.tsx`
-              ),
-              config.name
-            );
+            const protoAst = new grpcAst.ParseVisitor();
+            const protoStr = proto.visit(protoAst, ``);
+            writeFileSync(join(assets, `magnus.server.proto`), protoStr);
           }
         }
         // 搜集metadata entity数据库 类名 依赖名

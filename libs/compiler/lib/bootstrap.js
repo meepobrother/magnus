@@ -84,17 +84,14 @@ async function bootstrap(config) {
                         fs_extra_1.writeFileSync(path_1.join(assets, "magnus.server-schema.json"), JSON.stringify(graphql_1.introspectionFromSchema(schema), null, 2));
                         buildApi_1.buildNgApi(path_1.join(assets, "magnus.server-schema.json"), path_1.join(assets, `magnus.server-api.graphql`), path_1.join(dist, `magnus.server-angular.v${config.version || `1.0.0`}.ts`), config.name);
                         buildApi_1.buildReactApi(path_1.join(assets, "magnus.server-schema.json"), path_1.join(assets, `magnus.server-api.graphql`), path_1.join(dist, `magnus.server-react.v${config.version || `1.0.0`}.tsx`), config.name);
-                    }
-                    else {
-                        if (res.definitions.length > 0) {
-                            const content = graphql_1.print(res);
-                            fs_extra_1.writeFileSync(path_1.join(assets, `magnus.graphql`), content);
-                        }
-                        fs_extra_1.writeFileSync(path_1.join(assets, `magnus.client-api.graphql`), api);
-                        const schema = graphql_1.buildASTSchema(res);
-                        fs_extra_1.writeFileSync(path_1.join(assets, "magnus.client-schema.json"), JSON.stringify(graphql_1.introspectionFromSchema(schema), null, 2));
-                        buildApi_1.buildNgApi(path_1.join(assets, "magnus.client-schema.json"), path_1.join(assets, `magnus.client-api.graphql`), path_1.join(dist, `magnus.client-angular.v${config.version || `1.0.0`}.ts`), config.name);
-                        buildApi_1.buildReactApi(path_1.join(assets, "magnus.client-schema.json"), path_1.join(assets, `magnus.client-api.graphql`), path_1.join(dist, `magnus.client-react.v${config.version || `1.0.0`}.tsx`), config.name);
+                        // create ast
+                        const parseGraphqlAst = magnus_graphql_1.parse(api);
+                        const astToProtoVisitor = new astToProto_1.AstToProtoVisitor();
+                        astToProtoVisitor.config = config;
+                        const proto = parseGraphqlAst.visit(astToProtoVisitor, collectionContext);
+                        const protoAst = new magnus_grpc_1.ast.ParseVisitor();
+                        const protoStr = proto.visit(protoAst, ``);
+                        fs_extra_1.writeFileSync(path_1.join(assets, `magnus.server.proto`), protoStr);
                     }
                 }
                 // 搜集metadata entity数据库 类名 依赖名

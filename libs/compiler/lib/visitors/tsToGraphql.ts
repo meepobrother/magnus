@@ -476,8 +476,8 @@ export class TsToGraphqlVisitor implements ast.Visitor {
     if (entity !== null) {
       // 搜集字段
       this.isEntity = true;
-      const name = node.name.visit(expressionVisitor, ``);
-      this.entities[name] = node.members.map((member: any) => {
+      const name = node.name && node.name.visit(expressionVisitor, ``);
+      this.entities[name] = (node.members || []).map((member: any) => {
         const name = (member as ast.PropertyDeclaration).name.visit(
           expressionVisitor,
           ``
@@ -490,12 +490,13 @@ export class TsToGraphqlVisitor implements ast.Visitor {
           expressionVisitor
         );
 
-        const type = member.type.visit(expressionVisitor, ``);
+        const type = member.type && member.type.visit(expressionVisitor, ``);
         let entity = ``;
         if (typeof type === "string") {
           entity = type;
-        } else {
+        } else if (entity) {
           entity = type.elementType;
+        } else {
         }
         return {
           name,
@@ -775,7 +776,9 @@ export class TsToGraphqlVisitor implements ast.Visitor {
       // 完善信息
       return undefined;
     }
-    const proto = node.getDecorator<string>(`GrpcMethod`)(expressionVisitor);
+    const proto =
+      node.getDecorator<string>(`GrpcMethod`)(expressionVisitor) ||
+      node.getDecorator(`Proto`)(expressionVisitor);
     const permission = node.getDecorator<PermissionOptions>(`Permission`)(
       expressionVisitor
     );
