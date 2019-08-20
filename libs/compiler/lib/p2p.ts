@@ -31,7 +31,10 @@ const defaults = {
 };
 export class MyBundle extends libp2p {
   constructor(_options: any) {
-    super(defaultsDeep(_options, defaults));
+    super({
+      ...defaults,
+      ..._options
+    });
   }
 }
 export const set: Set<string> = new Set();

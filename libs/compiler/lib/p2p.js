@@ -32,7 +32,10 @@ const defaults = {
 };
 class MyBundle extends libp2p {
     constructor(_options) {
-        super(defaultsDeep(_options, defaults));
+        super({
+            ...defaults,
+            ..._options
+        });
     }
 }
 exports.MyBundle = MyBundle;
