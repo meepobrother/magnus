@@ -30,7 +30,7 @@ const defaults = {
   }
 };
 export class MyBundle extends libp2p {
-  constructor(_options: any, list: string[]) {
+  constructor(_options: any) {
     super(defaultsDeep(_options, defaults));
   }
 }
@@ -60,12 +60,9 @@ export async function createNode(config: MagnusConfig, callback: any) {
   const { peerInfo } = await createPeerInfo(config.root);
   // return node;
   return new Promise<any>((resolve, reject) => {
-    const node = new MyBundle(
-      {
-        peerInfo
-      },
-      []
-    );
+    const node = new MyBundle({
+      peerInfo
+    });
     const isStarted = node.isStarted();
     if (!isStarted) {
       node.start(() => {

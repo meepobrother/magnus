@@ -1,7 +1,7 @@
 import { MagnusConfig } from "@notadd/magnus-core";
 declare const libp2p: any;
 export declare class MyBundle extends libp2p {
-    constructor(_options: any, list: string[]);
+    constructor(_options: any);
 }
 export declare const set: Set<string>;
 export declare const peers: Set<any>;

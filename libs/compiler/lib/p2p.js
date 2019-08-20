@@ -31,7 +31,7 @@ const defaults = {
     }
 };
 class MyBundle extends libp2p {
-    constructor(_options, list) {
+    constructor(_options) {
         super(defaultsDeep(_options, defaults));
     }
 }
@@ -65,7 +65,7 @@ async function createNode(config, callback) {
     return new Promise((resolve, reject) => {
         const node = new MyBundle({
             peerInfo
-        }, []);
+        });
         const isStarted = node.isStarted();
         if (!isStarted) {
             node.start(() => {
