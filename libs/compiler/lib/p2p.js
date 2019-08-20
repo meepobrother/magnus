@@ -12,27 +12,27 @@ const PeerId = require("peer-id");
 const pack = require("../package.json");
 const WS = require("libp2p-websockets");
 const SPDY = require("libp2p-spdy");
+const defaults = {
+    modules: {
+        transport: [TCP, new WS()],
+        streamMuxer: [SPDY, Mplex],
+        peerDiscovery: [MulticastDNS]
+    },
+    config: {
+        peerDiscovery: {
+            autoDial: true,
+            mdns: {
+                interval: 2000,
+                enabled: true
+            }
+        },
+        EXPERIMENTAL: {
+            pubsub: true
+        }
+    }
+};
 class MyBundle extends libp2p {
     constructor(_options, list) {
-        const defaults = {
-            modules: {
-                transport: [TCP, new WS()],
-                streamMuxer: [SPDY, Mplex],
-                peerDiscovery: [MulticastDNS]
-            },
-            config: {
-                peerDiscovery: {
-                    autoDial: true,
-                    mdns: {
-                        interval: 2000,
-                        enabled: true
-                    }
-                },
-                EXPERIMENTAL: {
-                    pubsub: true
-                }
-            }
-        };
         super(defaultsDeep(_options, defaults));
     }
 }
