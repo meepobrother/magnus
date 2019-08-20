@@ -6,7 +6,6 @@ const TCP = require("libp2p-tcp");
 const Mplex = require("libp2p-mplex");
 const PeerInfo = require("peer-info");
 const MulticastDNS = require("libp2p-mdns");
-const defaultsDeep = require("@nodeutils/defaults-deep");
 const PeerId = require("peer-id");
 const pack = require("../package.json");
 const SPDY = require("libp2p-spdy");
