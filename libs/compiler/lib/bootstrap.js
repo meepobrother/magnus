@@ -201,7 +201,6 @@ export const ${lodash_1.camelCase(config.name)}Options: any = {
                 else {
                     const filePath = path_1.dirname(path);
                     const fileName = path.replace(filePath, "");
-                    console.log("send local file " + fileName);
                     sendLocalFile(filePath, fileName, config);
                 }
                 client_1.bootstrapClient(config);
@@ -241,13 +240,28 @@ export const ${lodash_1.camelCase(config.name)}Options: any = {
         }
     }
     else {
-        inputs.filter(it => {
-            if (it.endsWith(".json")) {
-                const filePath = path_1.dirname(it);
-                const fileName = it.replace(filePath, ``);
+        if (config.debug) {
+            chokidar_1.watch(inputs)
+                .on("add", (path) => {
+                const filePath = path_1.dirname(path);
+                const fileName = path.replace(filePath, "");
                 sendLocalFile(filePath, fileName, config);
-            }
-        });
+            })
+                .on("change", (path) => {
+                const filePath = path_1.dirname(path);
+                const fileName = path.replace(filePath, "");
+                sendLocalFile(filePath, fileName, config);
+            });
+        }
+        else {
+            inputs.filter(it => {
+                if (it.endsWith(".json")) {
+                    const filePath = path_1.dirname(it);
+                    const fileName = it.replace(filePath, ``);
+                    sendLocalFile(filePath, fileName, config);
+                }
+            });
+        }
         // 解析navigation
         const file = path_1.join(config.root, config.navigation);
         const filePath = path_1.dirname(file);
