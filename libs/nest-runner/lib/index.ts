@@ -5,7 +5,7 @@ export class Query<A, B> {
   document: any;
   client: string;
   constructor(@Inject(MAGNUS_NEST_CLIENTS) public clients: any) {}
-  run(variables: A): Promise<B> {
+  run(variables: B): Promise<A> {
     return this.clients[this.client](this.document, variables);
   }
 }
@@ -15,7 +15,7 @@ export class Mutation<A, B> {
   document: any;
   client: string;
   constructor(@Inject(MAGNUS_NEST_CLIENTS) public clients: any) {}
-  run(variables: A): Promise<B> {
+  run(variables: B): Promise<A> {
     return this.clients[this.client](this.document, variables);
   }
 }
@@ -25,7 +25,7 @@ export class Subscription<A, B> {
   document: any;
   client: string;
   constructor(@Inject(MAGNUS_NEST_CLIENTS) public clients: any) {}
-  run(variables: A): Promise<B> {
+  run(variables: B): Promise<A> {
     return this.clients[this.client](this.document, variables);
   }
 }
