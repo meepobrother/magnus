@@ -152,9 +152,7 @@ export function createGraphql(
   }
   return str;
 }
-interface IError {
-  errors: any[];
-}
+
 interface IRunner {
   <T>(source: string, variableValues?: any): Promise<T>;
   [key: string]: any;

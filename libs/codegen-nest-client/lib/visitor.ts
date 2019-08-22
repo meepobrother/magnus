@@ -44,8 +44,8 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
     }
 
     const imports = [
-      `import { Injectable } from '@angular/core';`,
-      `import * as Apollo from 'apollo-angular';`
+      `import { Injectable } from '@nestjs/common';`,
+      `import * as Apollo from '@notadd/magnus-runner';`
     ];
 
     const defs: Record<string, { path: string; module: string }> = {};
@@ -188,16 +188,13 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
     operationVariablesTypes: string
   ): string {
     const content = `
-  @Injectable({
-    providedIn: ${this._providedIn(node)}
-  })
+  @Injectable()
   export class ${this.convertName(
     node
   )}GQL extends Apollo.${operationType}<${operationResultType}, ${operationVariablesTypes}> {
     document = ${documentVariableName};
     ${this._namedClient(node)}
   }`;
-
     return content;
   }
 }
