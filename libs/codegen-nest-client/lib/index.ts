@@ -16,7 +16,6 @@ import {
   LoadedFragment
 } from "@graphql-codegen/visitor-plugin-common";
 import { ApolloAngularVisitor } from "./visitor";
-import { extname } from "path";
 import gql from "graphql-tag";
 
 export interface ApolloAngularRawPluginConfig

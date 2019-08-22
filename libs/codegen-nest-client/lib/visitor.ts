@@ -45,7 +45,7 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
 
     const imports = [
       `import { Injectable } from '@nestjs/common';`,
-      `import * as Apollo from '@notadd/magnus-runner';`
+      `import * as Apollo from '@notadd/magnus-nest-runner';`
     ];
 
     const defs: Record<string, { path: string; module: string }> = {};
