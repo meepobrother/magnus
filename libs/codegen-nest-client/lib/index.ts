@@ -99,9 +99,7 @@ export const validate: PluginValidateFn<any> = async (
   config,
   outputFile: string
 ) => {
-  if (extname(outputFile) !== ".ts") {
-    throw new Error(`Plugin "apollo-angular" requires extension to be ".ts"!`);
-  }
+  return;
 };
 
 export { ApolloAngularVisitor };

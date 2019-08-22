@@ -4,7 +4,6 @@ const tslib_1 = require("tslib");
 const graphql_1 = require("graphql");
 const visitor_1 = require("./visitor");
 exports.ApolloAngularVisitor = visitor_1.ApolloAngularVisitor;
-const path_1 = require("path");
 const graphql_tag_1 = tslib_1.__importDefault(require("graphql-tag"));
 exports.plugin = (schema, documents, config) => {
     const allAst = graphql_1.concatAST(documents.reduce((prev, v) => {
@@ -35,8 +34,6 @@ exports.addToSchema = graphql_tag_1.default `
   directive @namedClient(name: String!) on OBJECT | FIELD
 `;
 exports.validate = async (schema, documents, config, outputFile) => {
-    if (path_1.extname(outputFile) !== ".ts") {
-        throw new Error(`Plugin "apollo-angular" requires extension to be ".ts"!`);
-    }
+    return;
 };
 //# sourceMappingURL=index.js.map
