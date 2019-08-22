@@ -84,6 +84,7 @@ async function bootstrap(config) {
                         fs_extra_1.writeFileSync(path_1.join(assets, "magnus.server-schema.json"), JSON.stringify(graphql_1.introspectionFromSchema(schema), null, 2));
                         buildApi_1.buildNgApi(path_1.join(assets, "magnus.server-schema.json"), path_1.join(assets, `magnus.server-api.graphql`), path_1.join(dist, `magnus.server-angular.v${config.version || `1.0.0`}.ts`), config.name);
                         buildApi_1.buildReactApi(path_1.join(assets, "magnus.server-schema.json"), path_1.join(assets, `magnus.server-api.graphql`), path_1.join(dist, `magnus.server-react.v${config.version || `1.0.0`}.tsx`), config.name);
+                        buildApi_1.buildMagnusApi(path_1.join(assets, "magnus.server-schema.json"), path_1.join(assets, `magnus.server-api.graphql`), path_1.join(dist, `magnus.server-magnus.v${config.version || `1.0.0`}.tsx`), config.name);
                         // create ast
                         const parseGraphqlAst = magnus_graphql_1.parse(api);
                         const astToProtoVisitor = new astToProto_1.AstToProtoVisitor();

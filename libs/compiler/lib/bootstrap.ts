@@ -22,7 +22,7 @@ import globby = require("globby");
 import { GraphqlToTs } from "./visitors/graphqlToTs";
 import { camelCase } from "lodash";
 import { ApiVisitor } from "./visitors/api";
-import { buildNgApi, buildReactApi } from "./buildApi";
+import { buildNgApi, buildReactApi, buildMagnusApi } from "./buildApi";
 export async function bootstrap(config: MagnusConfig) {
   const target = config.target || "magnus";
   const sources = config.inputs.map(input => join(config.root, input));
@@ -113,6 +113,15 @@ export async function bootstrap(config: MagnusConfig) {
               join(
                 dist,
                 `magnus.server-react.v${config.version || `1.0.0`}.tsx`
+              ),
+              config.name
+            );
+            buildMagnusApi(
+              join(assets, "magnus.server-schema.json"),
+              join(assets, `magnus.server-api.graphql`),
+              join(
+                dist,
+                `magnus.server-magnus.v${config.version || `1.0.0`}.tsx`
               ),
               config.name
             );

@@ -1,0 +1,26 @@
+{
+  "name": "@notadd/magnus-context",
+  "version": "3.3.18",
+  "description": "> TODO: description",
+  "author": "meepo <1037483576@qq.com>",
+  "homepage": "https://github.com/notadd/magnus/tree/master/libs/context#readme",
+  "license": "ISC",
+  "main": "lib/context.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/meepobrother/magnus.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "bugs": {
+    "url": "https://github.com/meepobrother/magnus/issues"
+  }
+}
