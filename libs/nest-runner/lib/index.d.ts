@@ -1,3 +1,4 @@
+import { DynamicModule } from "@nestjs/common";
 export declare class Query<A, B> {
     clients: any;
     document: any;
@@ -18,4 +19,7 @@ export declare class Subscription<A, B> {
     client: string;
     constructor(clients: any);
     run(variables: A): Promise<B>;
+}
+export declare class NestRunnerModule {
+    static forRoot(clients: any): DynamicModule;
 }
