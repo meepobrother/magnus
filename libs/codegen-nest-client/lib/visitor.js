@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const visitor_plugin_common_1 = require("@graphql-codegen/visitor-plugin-common");
-const autoBind = tslib_1.__importStar(require("auto-bind"));
+const auto_bind_1 = tslib_1.__importDefault(require("auto-bind"));
 const graphql_1 = require("graphql");
 const R_MOD = /module\:\s*"([^"]+)"/; // matches: module: "..."
 const R_NAME = /name\:\s*"([^"]+)"/; // matches: name: "..."
@@ -16,7 +16,7 @@ class ApolloAngularVisitor extends visitor_plugin_common_1.ClientSideBaseVisitor
             namedClient: rawConfig.namedClient
         });
         this._allOperations = _allOperations;
-        autoBind(this);
+        auto_bind_1.default(this);
     }
     getImports() {
         const baseImports = super.getImports();

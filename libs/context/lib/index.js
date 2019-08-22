@@ -1,8 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const tslib_1 = require("tslib");
-const typescript_1 = tslib_1.__importDefault(require("typescript"));
-typescript_1.default.resolveModuleName("@notadd/magnus-core");
 /**
  * ast 运行上下文
  */

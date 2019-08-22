@@ -26,7 +26,7 @@ exports.plugin = (schema, documents, config) => {
         prepend: visitor.getImports(),
         content: [
             visitor.fragments,
-            ...visitorResult.definitions.filter(t => typeof t === "string")
+            ...visitorResult.definitions.filter((t) => typeof t === "string")
         ].join("\n")
     };
 };

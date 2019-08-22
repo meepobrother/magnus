@@ -3,7 +3,7 @@ import {
   ClientSideBasePluginConfig,
   LoadedFragment
 } from "@graphql-codegen/visitor-plugin-common";
-import * as autoBind from "auto-bind";
+import autoBind from "auto-bind";
 import { OperationDefinitionNode, print, visit } from "graphql";
 import { ApolloAngularRawPluginConfig } from "./index";
 
@@ -32,8 +32,7 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
       ngModule: rawConfig.ngModule,
       namedClient: rawConfig.namedClient
     });
-
-    autoBind(this);
+    autoBind(this as any);
   }
 
   public getImports(): string[] {
@@ -59,7 +58,7 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
       .forEach(op => {
         const def = this._operationHasDirective(op, "NgModule")
           ? this._extractNgModule(op)
-          : this._parseNgModule(this.config.ngModule);
+          : this._parseNgModule(this.config.ngModule as string);
 
         // by setting key as link we easily get rid of duplicated imports
         // every path should be relative to the output file
@@ -79,7 +78,7 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
   }
 
   private _extractNgModule(operation: OperationDefinitionNode) {
-    const [, link] = print(operation).match(R_MOD);
+    const [, link] = print(operation).match(R_MOD)!;
     return this._parseNgModule(link);
   }
 
@@ -135,7 +134,7 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
   ) {
     const directives = print(operation).match(R_DEF(directive));
 
-    if (directives.length > 1) {
+    if (directives!.length > 1) {
       throw new Error(
         `The ${directive} directive used multiple times in '${
           operation.name
@@ -143,7 +142,7 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
       );
     }
 
-    return directives[0];
+    return directives![0];
   }
 
   protected _prepareDocument(documentStr: string): string {
@@ -159,14 +158,14 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
       name = this.config.namedClient;
     }
 
-    return name ? `client = '${name}';` : "";
+    return name! ? `client = '${name!}';` : "";
   }
 
   // tries to find namedClient directive and extract {name}
   private _extractNamedClient(operation: OperationDefinitionNode): string {
     const [, name] = this._extractDirective(operation, "namedClient").match(
       R_NAME
-    );
+    )!;
 
     return name;
   }

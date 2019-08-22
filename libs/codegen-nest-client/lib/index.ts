@@ -53,7 +53,7 @@ export const plugin: PluginFunction<ApolloAngularRawPluginConfig> = (
   config
 ) => {
   const allAst = concatAST(
-    documents.reduce((prev, v) => {
+    documents.reduce((prev: any, v: any) => {
       return [...prev, v.content];
     }, [])
   );
@@ -83,7 +83,7 @@ export const plugin: PluginFunction<ApolloAngularRawPluginConfig> = (
     prepend: visitor.getImports(),
     content: [
       visitor.fragments,
-      ...visitorResult.definitions.filter(t => typeof t === "string")
+      ...visitorResult.definitions.filter((t: any) => typeof t === "string")
     ].join("\n")
   };
 };

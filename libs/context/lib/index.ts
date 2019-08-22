@@ -1,5 +1,3 @@
-import ts from "typescript";
-ts.resolveModuleName("@notadd/magnus-core");
 /**
  * ast 运行上下文
  */
