@@ -93,15 +93,11 @@ export async function bootstrap(config: MagnusConfig) {
             const content = print(res);
             writeFileSync(join(assets, `magnus.server.graphql`), content);
             writeFileSync(join(assets, `magnus.server-api.graphql`), api);
-            try {
-              const schema = buildASTSchema(res);
-              writeFileSync(
-                join(assets, "magnus.server-schema.json"),
-                JSON.stringify(introspectionFromSchema(schema), null, 2)
-              );
-            } catch (e) {
-              console.log(e.message);
-            }
+            const schema = buildASTSchema(res);
+            writeFileSync(
+              join(assets, "magnus.server-schema.json"),
+              JSON.stringify(introspectionFromSchema(schema), null, 2)
+            );
             buildNgApi(
               join(assets, "magnus.server-schema.json"),
               join(assets, `magnus.server-api.graphql`),

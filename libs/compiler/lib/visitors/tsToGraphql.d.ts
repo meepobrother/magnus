@@ -51,10 +51,9 @@ export declare class TsToGraphqlVisitor implements ast.Visitor {
     constructor();
     createIdentifier(text: string): ast.Identifier;
     isUndefined(val: any): boolean;
-    visitClassDeclaration(node: ast.ClassDeclaration, context: MagnusContext): graphql.InterfaceTypeDefinitionAst | graphql.InputObjectTypeDefinitionAst | graphql.ScalarTypeDefinitionAst | undefined;
     visitMethodSignature(node: ast.MethodSignature, context: MagnusContext): graphql.FieldDefinitionAst | undefined;
     visitPropertySignature(node: ast.PropertySignature, context: MagnusContext): graphql.FieldDefinitionAst<any, any> | graphql.InputValueDefinitionAst<any, any>;
-    visitPropertyDeclaration(node: ast.PropertyDeclaration, context: MagnusContext): graphql.FieldDefinitionAst<any, any>;
+    visitPropertyDeclaration(node: ast.PropertyDeclaration, context: MagnusContext): graphql.FieldDefinitionAst<any, any> | undefined;
     /**
      * 是否非必填项目
      */
@@ -67,7 +66,10 @@ export declare class TsToGraphqlVisitor implements ast.Visitor {
     visitTypeNode(node: ast.TypeNode, context: MagnusContext): graphql.TypeAst;
     set: Set<string>;
     addType(name: string, context: MagnusContext): any;
+    currentEntity: string;
+    lastCurrentEntity: string;
     visitTypeReferenceNode(node: ast.TypeReferenceNode, context: MagnusContext): graphql.TypeAst;
+    visitClassDeclaration(node: ast.ClassDeclaration, context: MagnusContext): graphql.InterfaceTypeDefinitionAst | graphql.InputObjectTypeDefinitionAst | graphql.ScalarTypeDefinitionAst | undefined;
     visitInterfaceDeclaration(node: ast.InterfaceDeclaration, context: MagnusContext): graphql.ObjectTypeDefinitionAst<any, any> | graphql.InputObjectTypeDefinitionAst<any, any> | undefined;
     createNamedTypeAst(name: string): graphql.NamedTypeAst<any, any>;
     createListTypeAst(type: any): graphql.ListTypeAst<any, any>;
