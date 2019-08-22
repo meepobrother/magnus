@@ -121,7 +121,7 @@ export async function bootstrap(config: MagnusConfig) {
               join(assets, `magnus.server-api.graphql`),
               join(
                 dist,
-                `magnus.server-magnus.v${config.version || `1.0.0`}.tsx`
+                `magnus.server-magnus.v${config.version || `1.0.0`}.ts`
               ),
               config.name
             );
