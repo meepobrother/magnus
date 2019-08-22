@@ -18,6 +18,5 @@ export declare class ApolloAngularVisitor extends ClientSideBaseVisitor<ApolloAn
     protected _prepareDocument(documentStr: string): string;
     private _namedClient;
     private _extractNamedClient;
-    private _providedIn;
     protected buildOperation(node: OperationDefinitionNode, documentVariableName: string, operationType: string, operationResultType: string, operationVariablesTypes: string): string;
 }

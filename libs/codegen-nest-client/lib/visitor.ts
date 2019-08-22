@@ -170,16 +170,6 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
     return name;
   }
 
-  private _providedIn(operation: OperationDefinitionNode): string {
-    if (this._operationHasDirective(operation, "NgModule")) {
-      return this._extractNgModule(operation).module;
-    } else if (this.config.ngModule) {
-      return this._parseNgModule(this.config.ngModule).module;
-    }
-
-    return `'root'`;
-  }
-
   protected buildOperation(
     node: OperationDefinitionNode,
     documentVariableName: string,

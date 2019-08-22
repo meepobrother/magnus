@@ -1,12 +1,9 @@
-import { Injectable, Module } from "@nestjs/common";
-
 const clients: Map<string, any> = new Map();
 
 export function setClient(name: string, runner: any) {
   clients.set(name, runner);
 }
 
-@Injectable()
 export class Query<A, B> {
   document: any;
   client: string;
@@ -15,7 +12,6 @@ export class Query<A, B> {
   }
 }
 
-@Injectable()
 export class Mutation<A, B> {
   document: any;
   client: string;
@@ -24,7 +20,6 @@ export class Mutation<A, B> {
   }
 }
 
-@Injectable()
 export class Subscription<A, B> {
   document: any;
   client: string;
@@ -32,6 +27,3 @@ export class Subscription<A, B> {
     return clients.get(this.client)(this.document, variables);
   }
 }
-
-@Module({})
-export class NestRunnerModule {}

@@ -14,5 +14,3 @@ export declare class Subscription<A, B> {
     client: string;
     run(variables: B): Promise<A>;
 }
-export declare class NestRunnerModule {
-}

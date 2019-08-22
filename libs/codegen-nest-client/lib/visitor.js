@@ -109,15 +109,6 @@ class ApolloAngularVisitor extends visitor_plugin_common_1.ClientSideBaseVisitor
         const [, name] = this._extractDirective(operation, "namedClient").match(R_NAME);
         return name;
     }
-    _providedIn(operation) {
-        if (this._operationHasDirective(operation, "NgModule")) {
-            return this._extractNgModule(operation).module;
-        }
-        else if (this.config.ngModule) {
-            return this._parseNgModule(this.config.ngModule).module;
-        }
-        return `'root'`;
-    }
     buildOperation(node, documentVariableName, operationType, operationResultType, operationVariablesTypes) {
         const content = `
   @Injectable()
