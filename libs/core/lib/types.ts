@@ -22,4 +22,4 @@ export type Where<T> = {
   [key: string]: any;
 };
 
-export type Id = string | number;
+export type ID = string | number;
