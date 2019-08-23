@@ -19,6 +19,7 @@ const graphqlToTs_1 = require("./visitors/graphqlToTs");
 const lodash_1 = require("lodash");
 const api_1 = require("./visitors/api");
 const buildApi_1 = require("./buildApi");
+const apiToGraphql_1 = require("./visitors/apiToGraphql");
 async function bootstrap(config) {
     const target = config.target || "magnus";
     const sources = config.inputs.map(input => path_1.join(config.root, input));
@@ -87,9 +88,10 @@ async function bootstrap(config) {
                         buildApi_1.buildMagnusApi(path_1.join(assets, "magnus.server-schema.json"), path_1.join(assets, `magnus.server-api.graphql`), path_1.join(dist, `magnus.server-magnus.v${config.version || `1.0.0`}.ts`), config.name);
                         // create ast
                         const parseGraphqlAst = magnus_graphql_1.parse(api);
-                        const astToProtoVisitor = new astToProto_1.AstToProtoVisitor();
-                        astToProtoVisitor.config = config;
-                        const proto = parseGraphqlAst.visit(astToProtoVisitor, collectionContext);
+                        const apiToProto = new apiToGraphql_1.ApiToProto();
+                        apiToProto.schema = magnus_graphql_1.parse(content);
+                        apiToProto.config = config;
+                        const proto = parseGraphqlAst.visit(apiToProto, collectionContext);
                         const protoAst = new magnus_grpc_1.ast.ParseVisitor();
                         const protoStr = proto.visit(protoAst, ``);
                         fs_extra_1.writeFileSync(path_1.join(assets, `magnus.server.proto`), protoStr);

@@ -31,7 +31,7 @@ export declare function createFactoryByMap(map: HandlerDefMap, injectDef: Inject
 export declare function createFactory(handlerDef: HandlerDefMap, injectDef: InjectMap, entityDef: ClassDef, entities: InjectMap): (operation: string, name: string, args: any, selectionSet: any) => any;
 export declare function createResolver(handlerDef: HandlerDefMap, injectDef: InjectMap, entityDef: ClassDef, entities: InjectMap): any;
 export declare function createGraphql(item: HandlerDef, operation: string, selection: string): string;
-interface IRunner {
+export interface IRunner {
     <T>(source: string, variableValues?: any): Promise<T>;
     [key: string]: any;
 }

@@ -20,9 +20,6 @@ export class UserLoginLog {
 	@PrimaryGeneratedColumn()
 	id?: number;
 
-	@ManyToOne(() => User, type => type.loginLogs)
-	user?: User;
-
 	/**
 	 * ip地址编号
 	 */
@@ -40,10 +37,4 @@ export class UserLoginLog {
 	 */
 	@CreateDateColumn()
 	createDate?: number;
-
-	/**
-	 * 一条登录日志有一个扣分日志
-	 */
-	@OneToOne(() => SafetyScoreLog, type => type.loginLog)
-	scoreLog: SafetyScoreLog;
 }

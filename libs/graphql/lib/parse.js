@@ -190,32 +190,34 @@ class ParseVisitor {
         return node;
     }
     visitValueAst(node, context) {
-        if (context.kind === 'Variable') {
-            return this.visitVariableAst(new ast.VariableAst(), context);
-        }
-        else if (context.kind === 'IntValue') {
-            return this.visitIntValueAst(new ast.IntValueAst(), context);
-        }
-        else if (context.kind === 'FloatValue') {
-            return this.visitFloatValueAst(new ast.FloatValueAst(), context);
-        }
-        else if (context.kind === 'StringValue') {
-            return this.visitStringValueAst(new ast.StringValueAst(), context);
-        }
-        else if (context.kind === 'BooleanValue') {
-            return this.visitBooleanValueAst(new ast.BooleanValueAst(), context);
-        }
-        else if (context.kind === 'EnumValue') {
-            return this.visitEnumValueAst(new ast.EnumValueAst(), context);
-        }
-        else if (context.kind === 'ListValue') {
-            return this.visitListValueAst(new ast.ListValueAst(), context);
-        }
-        else if (context.kind === 'ObjectValue') {
-            return this.visitObjectValueAst(new ast.ObjectValueAst(), context);
-        }
-        else {
-            return this.visitNullValueAst(new ast.NullValueAst(), context);
+        if (context) {
+            if (context.kind === 'Variable') {
+                return this.visitVariableAst(new ast.VariableAst(), context);
+            }
+            else if (context.kind === 'IntValue') {
+                return this.visitIntValueAst(new ast.IntValueAst(), context);
+            }
+            else if (context.kind === 'FloatValue') {
+                return this.visitFloatValueAst(new ast.FloatValueAst(), context);
+            }
+            else if (context.kind === 'StringValue') {
+                return this.visitStringValueAst(new ast.StringValueAst(), context);
+            }
+            else if (context.kind === 'BooleanValue') {
+                return this.visitBooleanValueAst(new ast.BooleanValueAst(), context);
+            }
+            else if (context.kind === 'EnumValue') {
+                return this.visitEnumValueAst(new ast.EnumValueAst(), context);
+            }
+            else if (context.kind === 'ListValue') {
+                return this.visitListValueAst(new ast.ListValueAst(), context);
+            }
+            else if (context.kind === 'ObjectValue') {
+                return this.visitObjectValueAst(new ast.ObjectValueAst(), context);
+            }
+            else {
+                return this.visitNullValueAst(new ast.NullValueAst(), context);
+            }
         }
     }
     visitEnumValueAst(node, context) {
@@ -403,10 +405,14 @@ class ParseVisitor {
         return node;
     }
     visitStringValueAst(node, context) {
-        node.value = context.value;
+        node.value = context && context.value;
         return node;
     }
     visitInputValueDefinitionAst(node, context) {
+        node.description = this.visitStringValueAst(new ast.StringValueAst(), context.description);
+        node.name = this.visitNameAst(new ast.NameAst(), context.name);
+        node.type = this.visitTypeAst(undefined, context.type);
+        node.defaultValue = this.visitValueAst(undefined, context.defaultValue);
         return node;
     }
     visitListTypeAst(node, context) {

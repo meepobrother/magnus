@@ -26,23 +26,6 @@ export class SafetyScoreLog {
 	@Column()
 	score: number;
 
-	/**
-	 * 一个安全积分记录有一条用户登录日志
-	 */
-	@OneToOne(() => UserLoginLog, type => type.scoreLog)
-	loginLog: UserLoginLog;
-
-	/**
-	 * 对应规则
-	 */
-	@ManyToOne(() => SafetyScoreRule, type => type.logs)
-	rule: SafetyScoreRule;
-
-	/**
-	 * 用户
-	 */
-	@ManyToOne(() => User, type => type.safetyScoreLogs)
-	user: User;
 
 	/**
 	 * 时间

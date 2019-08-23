@@ -43,6 +43,7 @@ export declare class Message extends Ast {
     name: string;
     fields: Field[];
     children: Child[];
+    index: number;
     visit(visitor: Visitor, context: any): any;
 }
 export declare class Field extends Ast {

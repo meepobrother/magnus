@@ -1,469 +1,7 @@
 {
-  "Department": [
-    [
-      "getChildren",
-      "Department",
-      "Department",
-      "getChildren",
-      []
-    ],
-    [
-      "getStations",
-      "Department",
-      "Department",
-      "getStations",
-      []
-    ],
-    [
-      "getChildren",
-      "Department",
-      "Department",
-      "getChildren",
-      []
-    ],
-    [
-      "getStations",
-      "Department",
-      "Department",
-      "getStations",
-      []
-    ]
-  ],
-  "Role": [
-    [
-      "getSystemRights",
-      "Role",
-      "Role",
-      "getSystemRights",
-      []
-    ],
-    [
-      "getSystemRights",
-      "Role",
-      "Role",
-      "getSystemRights",
-      []
-    ]
-  ],
-  "RoleGroup": [
-    [
-      "getRoles",
-      "RoleGroup",
-      "RoleGroup",
-      "getRoles",
-      []
-    ],
-    [
-      "getStations",
-      "RoleGroup",
-      "RoleGroup",
-      "getStations",
-      []
-    ],
-    [
-      "getRoles",
-      "RoleGroup",
-      "RoleGroup",
-      "getRoles",
-      []
-    ],
-    [
-      "getStations",
-      "RoleGroup",
-      "RoleGroup",
-      "getStations",
-      []
-    ]
-  ],
-  "System": [
-    [
-      "getSystemRights",
-      "System",
-      "System",
-      "getSystemRights",
-      []
-    ],
-    [
-      "getSystemEvents",
-      "System",
-      "System",
-      "getSystemEvents",
-      []
-    ],
-    [
-      "getToDoItems",
-      "System",
-      "System",
-      "getToDoItems",
-      []
-    ],
-    [
-      "getSystemRights",
-      "System",
-      "System",
-      "getSystemRights",
-      []
-    ],
-    [
-      "getSystemEvents",
-      "System",
-      "System",
-      "getSystemEvents",
-      []
-    ],
-    [
-      "getToDoItems",
-      "System",
-      "System",
-      "getToDoItems",
-      []
-    ]
-  ],
-  "SystemEvent": [
-    [
-      "getToDoItems",
-      "SystemEvent",
-      "SystemEvent",
-      "getToDoItems",
-      []
-    ],
-    [
-      "getToDoItems",
-      "SystemEvent",
-      "SystemEvent",
-      "getToDoItems",
-      []
-    ]
-  ],
-  "User": [
-    [
-      "getToDoItems",
-      "User",
-      "User",
-      "getToDoItems",
-      [
-        {
-          "name": "selection",
-          "type": "Json!",
-          "index": 0,
-          "decorator": [
-            "Selection"
-          ]
-        },
-        {
-          "name": "where",
-          "type": "ToDoItemInputWhere",
-          "index": 1,
-          "decorator": []
-        },
-        {
-          "name": "order",
-          "type": "ToDoItemInputOrder",
-          "index": 2,
-          "decorator": []
-        },
-        {
-          "name": "limit",
-          "type": "PageLimitInput",
-          "index": 3,
-          "decorator": []
-        }
-      ]
-    ],
-    [
-      "getStations",
-      "User",
-      "User",
-      "getStations",
-      [
-        {
-          "name": "where",
-          "type": "StationInputWhere",
-          "index": 0,
-          "decorator": []
-        },
-        {
-          "name": "order",
-          "type": "StationInputOrder",
-          "index": 1,
-          "decorator": []
-        },
-        {
-          "name": "limit",
-          "type": "PageLimitInput",
-          "index": 2,
-          "decorator": []
-        }
-      ]
-    ],
-    [
-      "getUserLoginLogs",
-      "User",
-      "User",
-      "getUserLoginLogs",
-      [
-        {
-          "name": "where",
-          "type": "UserLoginLogInputWhere",
-          "index": 0,
-          "decorator": []
-        },
-        {
-          "name": "order",
-          "type": "UserLoginLogInputOrder",
-          "index": 1,
-          "decorator": []
-        },
-        {
-          "name": "limit",
-          "type": "PageLimitInput",
-          "index": 2,
-          "decorator": []
-        }
-      ]
-    ],
-    [
-      "getSafetyScoreLogs",
-      "User",
-      "User",
-      "getSafetyScoreLogs",
-      [
-        {
-          "name": "where",
-          "type": "SafetyScoreLogInputWhere",
-          "index": 0,
-          "decorator": []
-        },
-        {
-          "name": "order",
-          "type": "SafetyScoreLogInputOrder",
-          "index": 1,
-          "decorator": []
-        },
-        {
-          "name": "limit",
-          "type": "PageLimitInput",
-          "index": 2,
-          "decorator": []
-        }
-      ]
-    ],
-    [
-      "getCreateStations",
-      "User",
-      "User",
-      "getCreateStations",
-      [
-        {
-          "name": "where",
-          "type": "StationInputWhere",
-          "index": 0,
-          "decorator": []
-        },
-        {
-          "name": "order",
-          "type": "StationInputOrder",
-          "index": 1,
-          "decorator": []
-        },
-        {
-          "name": "limit",
-          "type": "PageLimitInput",
-          "index": 2,
-          "decorator": []
-        }
-      ]
-    ],
-    [
-      "getToDoItems",
-      "User",
-      "User",
-      "getToDoItems",
-      [
-        {
-          "name": "selection",
-          "type": "Json!",
-          "index": 0,
-          "decorator": [
-            "Selection"
-          ]
-        },
-        {
-          "name": "where",
-          "type": "ToDoItemInputWhere",
-          "index": 1,
-          "decorator": []
-        },
-        {
-          "name": "order",
-          "type": "ToDoItemInputOrder",
-          "index": 2,
-          "decorator": []
-        },
-        {
-          "name": "limit",
-          "type": "PageLimitInput",
-          "index": 3,
-          "decorator": []
-        }
-      ]
-    ],
-    [
-      "getStations",
-      "User",
-      "User",
-      "getStations",
-      [
-        {
-          "name": "where",
-          "type": "StationInputWhere",
-          "index": 0,
-          "decorator": []
-        },
-        {
-          "name": "order",
-          "type": "StationInputOrder",
-          "index": 1,
-          "decorator": []
-        },
-        {
-          "name": "limit",
-          "type": "PageLimitInput",
-          "index": 2,
-          "decorator": []
-        }
-      ]
-    ],
-    [
-      "getUserLoginLogs",
-      "User",
-      "User",
-      "getUserLoginLogs",
-      [
-        {
-          "name": "where",
-          "type": "UserLoginLogInputWhere",
-          "index": 0,
-          "decorator": []
-        },
-        {
-          "name": "order",
-          "type": "UserLoginLogInputOrder",
-          "index": 1,
-          "decorator": []
-        },
-        {
-          "name": "limit",
-          "type": "PageLimitInput",
-          "index": 2,
-          "decorator": []
-        }
-      ]
-    ],
-    [
-      "getSafetyScoreLogs",
-      "User",
-      "User",
-      "getSafetyScoreLogs",
-      [
-        {
-          "name": "where",
-          "type": "SafetyScoreLogInputWhere",
-          "index": 0,
-          "decorator": []
-        },
-        {
-          "name": "order",
-          "type": "SafetyScoreLogInputOrder",
-          "index": 1,
-          "decorator": []
-        },
-        {
-          "name": "limit",
-          "type": "PageLimitInput",
-          "index": 2,
-          "decorator": []
-        }
-      ]
-    ],
-    [
-      "getCreateStations",
-      "User",
-      "User",
-      "getCreateStations",
-      [
-        {
-          "name": "where",
-          "type": "StationInputWhere",
-          "index": 0,
-          "decorator": []
-        },
-        {
-          "name": "order",
-          "type": "StationInputOrder",
-          "index": 1,
-          "decorator": []
-        },
-        {
-          "name": "limit",
-          "type": "PageLimitInput",
-          "index": 2,
-          "decorator": []
-        }
-      ]
-    ]
-  ],
-  "SafetyScoreRule": [
-    [
-      "getSafetyScoreLogs",
-      "SafetyScoreRule",
-      "SafetyScoreRule",
-      "getSafetyScoreLogs",
-      []
-    ],
-    [
-      "getSafetyScoreLogs",
-      "SafetyScoreRule",
-      "SafetyScoreRule",
-      "getSafetyScoreLogs",
-      []
-    ]
-  ],
-  "Station": [
-    [
-      "getUsers",
-      "Station",
-      "Station",
-      "getUsers",
-      []
-    ],
-    [
-      "getUsers",
-      "Station",
-      "Station",
-      "getUsers",
-      []
-    ]
-  ],
-  "Domain": [
-    [
-      "getDepartments",
-      "Domain",
-      "Domain",
-      "getDepartments",
-      []
-    ],
-    [
-      "getDepartments",
-      "Domain",
-      "Domain",
-      "getDepartments",
-      []
-    ]
-  ],
   "query": [
     [
-      "getUser",
+      "userGet",
       "Controller",
       "User",
       "get",
@@ -477,7 +15,7 @@
       ]
     ],
     [
-      "getSystem",
+      "systemGet",
       "Controller",
       "System",
       "get",
@@ -491,7 +29,7 @@
       ]
     ],
     [
-      "getSystemEvent",
+      "systemEventGet",
       "Controller",
       "SystemEvent",
       "get",
@@ -505,7 +43,7 @@
       ]
     ],
     [
-      "getSystemRight",
+      "systemRightGet",
       "Controller",
       "SystemRight",
       "get",
@@ -519,7 +57,7 @@
       ]
     ],
     [
-      "getDepartment",
+      "departmentGet",
       "Controller",
       "Department",
       "get",
@@ -533,7 +71,7 @@
       ]
     ],
     [
-      "getRole",
+      "roleGet",
       "Controller",
       "Role",
       "get",
@@ -547,7 +85,7 @@
       ]
     ],
     [
-      "getStation",
+      "stationGet",
       "Controller",
       "Station",
       "get",
@@ -561,7 +99,7 @@
       ]
     ],
     [
-      "getToDoItem",
+      "toDoItemGet",
       "Controller",
       "ToDoItem",
       "get",
@@ -575,7 +113,7 @@
       ]
     ],
     [
-      "getRoleGroup",
+      "roleGroupGet",
       "Controller",
       "RoleGroup",
       "get",
@@ -589,7 +127,7 @@
       ]
     ],
     [
-      "getUserLoginLog",
+      "userLoginLogGet",
       "Controller",
       "UserLoginLog",
       "get",
@@ -603,7 +141,7 @@
       ]
     ],
     [
-      "getSafetyScoreLog",
+      "safetyScoreLogGet",
       "Controller",
       "SafetyScoreLog",
       "get",
@@ -617,7 +155,7 @@
       ]
     ],
     [
-      "getSafetyScoreRule",
+      "safetyScoreRuleGet",
       "Controller",
       "SafetyScoreRule",
       "get",
@@ -631,7 +169,7 @@
       ]
     ],
     [
-      "findUser",
+      "userFind",
       "Controller",
       "User",
       "find",
@@ -657,7 +195,7 @@
       ]
     ],
     [
-      "findSystem",
+      "systemFind",
       "Controller",
       "System",
       "find",
@@ -683,7 +221,7 @@
       ]
     ],
     [
-      "findSystemEvent",
+      "systemEventFind",
       "Controller",
       "SystemEvent",
       "find",
@@ -709,7 +247,7 @@
       ]
     ],
     [
-      "findSystemRight",
+      "systemRightFind",
       "Controller",
       "SystemRight",
       "find",
@@ -735,7 +273,7 @@
       ]
     ],
     [
-      "findDepartment",
+      "departmentFind",
       "Controller",
       "Department",
       "find",
@@ -761,7 +299,7 @@
       ]
     ],
     [
-      "findRole",
+      "roleFind",
       "Controller",
       "Role",
       "find",
@@ -787,7 +325,7 @@
       ]
     ],
     [
-      "findStation",
+      "stationFind",
       "Controller",
       "Station",
       "find",
@@ -813,7 +351,7 @@
       ]
     ],
     [
-      "findToDoItem",
+      "toDoItemFind",
       "Controller",
       "ToDoItem",
       "find",
@@ -839,7 +377,7 @@
       ]
     ],
     [
-      "findRoleGroup",
+      "roleGroupFind",
       "Controller",
       "RoleGroup",
       "find",
@@ -865,7 +403,7 @@
       ]
     ],
     [
-      "findUserLoginLog",
+      "userLoginLogFind",
       "Controller",
       "UserLoginLog",
       "find",
@@ -891,7 +429,7 @@
       ]
     ],
     [
-      "findSafetyScoreLog",
+      "safetyScoreLogFind",
       "Controller",
       "SafetyScoreLog",
       "find",
@@ -917,7 +455,7 @@
       ]
     ],
     [
-      "findSafetyScoreRule",
+      "safetyScoreRuleFind",
       "Controller",
       "SafetyScoreRule",
       "find",
@@ -943,7 +481,7 @@
       ]
     ],
     [
-      "deleteUser",
+      "userDelete",
       "Controller",
       "User",
       "delete",
@@ -957,7 +495,7 @@
       ]
     ],
     [
-      "deleteSystem",
+      "systemDelete",
       "Controller",
       "System",
       "delete",
@@ -971,7 +509,7 @@
       ]
     ],
     [
-      "deleteSystemEvent",
+      "systemEventDelete",
       "Controller",
       "SystemEvent",
       "delete",
@@ -985,7 +523,7 @@
       ]
     ],
     [
-      "deleteSystemRight",
+      "systemRightDelete",
       "Controller",
       "SystemRight",
       "delete",
@@ -999,7 +537,7 @@
       ]
     ],
     [
-      "deleteDepartment",
+      "departmentDelete",
       "Controller",
       "Department",
       "delete",
@@ -1013,7 +551,7 @@
       ]
     ],
     [
-      "deleteRole",
+      "roleDelete",
       "Controller",
       "Role",
       "delete",
@@ -1027,7 +565,7 @@
       ]
     ],
     [
-      "deleteStation",
+      "stationDelete",
       "Controller",
       "Station",
       "delete",
@@ -1041,7 +579,7 @@
       ]
     ],
     [
-      "deleteToDoItem",
+      "toDoItemDelete",
       "Controller",
       "ToDoItem",
       "delete",
@@ -1055,7 +593,7 @@
       ]
     ],
     [
-      "deleteRoleGroup",
+      "roleGroupDelete",
       "Controller",
       "RoleGroup",
       "delete",
@@ -1069,7 +607,7 @@
       ]
     ],
     [
-      "deleteUserLoginLog",
+      "userLoginLogDelete",
       "Controller",
       "UserLoginLog",
       "delete",
@@ -1083,7 +621,7 @@
       ]
     ],
     [
-      "deleteSafetyScoreLog",
+      "safetyScoreLogDelete",
       "Controller",
       "SafetyScoreLog",
       "delete",
@@ -1097,7 +635,7 @@
       ]
     ],
     [
-      "deleteSafetyScoreRule",
+      "safetyScoreRuleDelete",
       "Controller",
       "SafetyScoreRule",
       "delete",
@@ -1113,7 +651,7 @@
   ],
   "mutation": [
     [
-      "saveUser",
+      "userSave",
       "Controller",
       "User",
       "save",
@@ -1127,7 +665,7 @@
       ]
     ],
     [
-      "saveSystem",
+      "systemSave",
       "Controller",
       "System",
       "save",
@@ -1141,7 +679,7 @@
       ]
     ],
     [
-      "saveSystemEvent",
+      "systemEventSave",
       "Controller",
       "SystemEvent",
       "save",
@@ -1155,7 +693,7 @@
       ]
     ],
     [
-      "saveSystemRight",
+      "systemRightSave",
       "Controller",
       "SystemRight",
       "save",
@@ -1169,7 +707,7 @@
       ]
     ],
     [
-      "saveDepartment",
+      "departmentSave",
       "Controller",
       "Department",
       "save",
@@ -1183,7 +721,7 @@
       ]
     ],
     [
-      "saveRole",
+      "roleSave",
       "Controller",
       "Role",
       "save",
@@ -1197,7 +735,7 @@
       ]
     ],
     [
-      "saveStation",
+      "stationSave",
       "Controller",
       "Station",
       "save",
@@ -1211,7 +749,7 @@
       ]
     ],
     [
-      "saveToDoItem",
+      "toDoItemSave",
       "Controller",
       "ToDoItem",
       "save",
@@ -1225,7 +763,7 @@
       ]
     ],
     [
-      "saveRoleGroup",
+      "roleGroupSave",
       "Controller",
       "RoleGroup",
       "save",
@@ -1239,7 +777,7 @@
       ]
     ],
     [
-      "saveUserLoginLog",
+      "userLoginLogSave",
       "Controller",
       "UserLoginLog",
       "save",
@@ -1253,7 +791,7 @@
       ]
     ],
     [
-      "saveSafetyScoreLog",
+      "safetyScoreLogSave",
       "Controller",
       "SafetyScoreLog",
       "save",
@@ -1267,7 +805,7 @@
       ]
     ],
     [
-      "saveSafetyScoreRule",
+      "safetyScoreRuleSave",
       "Controller",
       "SafetyScoreRule",
       "save",
@@ -1281,7 +819,7 @@
       ]
     ],
     [
-      "insertUser",
+      "userInsert",
       "Controller",
       "User",
       "insert",
@@ -1295,7 +833,7 @@
       ]
     ],
     [
-      "insertSystem",
+      "systemInsert",
       "Controller",
       "System",
       "insert",
@@ -1309,7 +847,7 @@
       ]
     ],
     [
-      "insertSystemEvent",
+      "systemEventInsert",
       "Controller",
       "SystemEvent",
       "insert",
@@ -1323,7 +861,7 @@
       ]
     ],
     [
-      "insertSystemRight",
+      "systemRightInsert",
       "Controller",
       "SystemRight",
       "insert",
@@ -1337,7 +875,7 @@
       ]
     ],
     [
-      "insertDepartment",
+      "departmentInsert",
       "Controller",
       "Department",
       "insert",
@@ -1351,7 +889,7 @@
       ]
     ],
     [
-      "insertRole",
+      "roleInsert",
       "Controller",
       "Role",
       "insert",
@@ -1365,7 +903,7 @@
       ]
     ],
     [
-      "insertStation",
+      "stationInsert",
       "Controller",
       "Station",
       "insert",
@@ -1379,7 +917,7 @@
       ]
     ],
     [
-      "insertToDoItem",
+      "toDoItemInsert",
       "Controller",
       "ToDoItem",
       "insert",
@@ -1393,7 +931,7 @@
       ]
     ],
     [
-      "insertRoleGroup",
+      "roleGroupInsert",
       "Controller",
       "RoleGroup",
       "insert",
@@ -1407,7 +945,7 @@
       ]
     ],
     [
-      "insertUserLoginLog",
+      "userLoginLogInsert",
       "Controller",
       "UserLoginLog",
       "insert",
@@ -1421,7 +959,7 @@
       ]
     ],
     [
-      "insertSafetyScoreLog",
+      "safetyScoreLogInsert",
       "Controller",
       "SafetyScoreLog",
       "insert",
@@ -1435,7 +973,7 @@
       ]
     ],
     [
-      "insertSafetyScoreRule",
+      "safetyScoreRuleInsert",
       "Controller",
       "SafetyScoreRule",
       "insert",

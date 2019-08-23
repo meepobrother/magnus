@@ -34,15 +34,6 @@ export class SafetyScoreRule {
     isReplace?: boolean;
 
 	/**
-	 * 记录
-	 */
-    @OneToMany(() => SafetyScoreLog, type => type.rule)
-    logs?: SafetyScoreLog[];
-    @ResolveProperty()
-    async getSafetyScoreLogs(): Promise<SafetyScoreLog[]> {
-        return [];
-    }
-	/**
 	 * 时间
 	 */
     @CreateDateColumn({

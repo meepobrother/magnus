@@ -14,21 +14,4 @@ export class SystemEvent {
 	 */
     @Column()
     title: string;
-	/**
-	 * 来源模块
-	 */
-    @ManyToOne(() => System, type => type.rights)
-    fromSystem?: System;
-
-	/**
-	 * 代办事项
-	 */
-    @OneToMany(() => ToDoItem, type => type.fromEvent, {
-        cascade: ['insert', 'remove', 'update']
-    })
-    toDoItems?: ToDoItem[];
-    @ResolveProperty()
-    async getToDoItems(): Promise<ToDoItem[]> {
-        return [];
-    }
 }

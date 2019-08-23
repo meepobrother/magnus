@@ -19,6 +19,7 @@ export class Package extends Ast {
     hasChild(name: string) {
         return !!this.children.find(child => child.name === name);
     }
+
 }
 export class Identifier extends Ast {
     name: string;
@@ -65,6 +66,9 @@ export class Message extends Ast {
     name: string;
     fields: Field[] = [];
     children: Child[] = [];
+
+    // 传递
+    index: number;
     visit(visitor: Visitor, context: any) {
         return visitor.visitMessage(this, context)
     }
