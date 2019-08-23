@@ -23,3 +23,4 @@ export declare type Order<T> = {
 export declare type Where<T> = {
     [key: string]: any;
 };
+export declare type Id = string | number;

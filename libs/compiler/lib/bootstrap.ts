@@ -43,7 +43,6 @@ export async function bootstrap(config: MagnusConfig) {
     const assets = join(config.root, config.assets, config.name);
     ensureDirSync(dist);
     ensureDirSync(assets);
-
     async function compile(isServer: boolean = false) {
       const project = new morph.Project();
       project.addSourceFilesFromTsConfig(join(process.cwd(), "tsconfig.json"));

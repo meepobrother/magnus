@@ -547,7 +547,7 @@ export class TsToGraphqlVisitor implements ast.Visitor {
     // context.name = node.name.visit(expressionVisitor, context);
     const name = node.name.visit(expressionVisitor, ``);
     const modifiers = node.modifiers.map(mod => mod.visit(this, context));
-    if (modifiers.some(mod => mod.name === "static")) {
+    if (modifiers.some(mod => mod && mod.name === "static")) {
       return;
     }
     const res = new graphql.FieldDefinitionAst();
@@ -1202,19 +1202,15 @@ export class TsToGraphqlVisitor implements ast.Visitor {
         const name =
           context.currentName || `${context.currentEntity}_${node.text}`;
         if (context.isUpperFirst) {
-          // return this.createNameAst(upperFirst(camelCase(name)))
           return this.createNameAst(name);
         }
-        // return this.createNameAst(camelCase(name))
         return this.createNameAst(name);
       } else {
         const name =
           context.currentName || `${node.text}_${context.currentEntity}`;
         if (context.isUpperFirst) {
-          // return this.createNameAst(upperFirst(camelCase(name)))
           return this.createNameAst(name);
         }
-        // return this.createNameAst(camelCase(name))
         return this.createNameAst(name);
       }
     }
