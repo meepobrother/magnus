@@ -96,7 +96,7 @@ async function bootstrap(config) {
                         const proto = parseGraphqlAst.visit(astToProtoVisitor, collectionContext);
                         const protoAst = new magnus_grpc_1.ast.ParseVisitor();
                         const protoStr = proto.visit(protoAst, ``);
-                        fs_extra_1.writeFileSync(path_1.join(assets, `magnus.server.proto`), protoStr);
+                        fs_extra_1.writeFileSync(path_1.join(assets, `magnus.proto`), protoStr);
                     }
                 }
                 // 搜集metadata entity数据库 类名 依赖名

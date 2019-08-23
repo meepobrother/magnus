@@ -22,6 +22,7 @@
 	"homepage": "https://github.com/notadd/magnus#readme",
 	"dependencies": {
 		"@angular/core": "^8.1.0",
+		"@graphql-codegen/cli": "^1.6.1",
 		"@graphql-codegen/core": "^1.6.1",
 		"@graphql-codegen/typescript-react-apollo": "^1.6.1",
 		"@grpc/proto-loader": "^0.5.1",
