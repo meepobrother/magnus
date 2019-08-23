@@ -158,6 +158,9 @@ export declare class Expression extends Node<ts.Expression> {
 export declare class NonNullExpression extends Expression {
     visit(visitor: Visitor, context: any): any;
 }
+export declare class DeleteExpression extends Expression {
+    visit(visitor: Visitor, context: any): any;
+}
 export declare class MethodDeclaration extends Node<ts.MethodDeclaration> {
     body: FunctionBody;
     name: PropertyName;
@@ -662,6 +665,7 @@ export declare class OtherStatement extends Node<ts.Node> {
 }
 export interface Visitor<C = any, O = any> {
     name: string;
+    visitDeleteExpression?(node: DeleteExpression, context: C): O;
     visitNonNullExpression?(node: NonNullExpression, context: C): O;
     visitOtherStatement?(node: OtherStatement, context: C): O;
     visitJSDocNullableType?(node: JSDocNullableType, context: C): O;
@@ -997,6 +1001,7 @@ export declare class TsVisitor implements Visitor {
      */
     visitModifier(node: Modifier, context: ts.Modifier): Modifier;
     visitExpression(node: Expression, context: ts.Expression): any;
+    visitDeleteExpression(node: DeleteExpression, context: any): DeleteExpression;
     visitNonNullExpression(node: NonNullExpression, context: ts.NonNullExpression): void;
     visitSpreadElement(node: SpreadElement, context: any): SpreadElement;
     visitNoSubstitutionTemplateLiteral(node: NoSubstitutionTemplateLiteral, context: ts.NoSubstitutionTemplateLiteral): NoSubstitutionTemplateLiteral;

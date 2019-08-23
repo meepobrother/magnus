@@ -243,6 +243,8 @@ class AstToGraphqlVisitor {
         }
         if (entity !== null) {
             const ctx = new magnus_1.MagnusContext();
+            ctx.name = node.name.visit(expression_1.expressionVisitor, ``);
+            ctx.typeParameters = new Set(node.typeParameters.map(t => t.visit(expression_1.expressionVisitor, ``)));
             this.tsToGraphqlVisitor.visitClassDeclaration(node, ctx);
         }
     }

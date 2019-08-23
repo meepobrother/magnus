@@ -22,7 +22,7 @@ import globby = require("globby");
 import { GraphqlToTs } from "./visitors/graphqlToTs";
 import { camelCase } from "lodash";
 import { ApiVisitor } from "./visitors/api";
-import { buildNgApi, buildReactApi } from "./buildApi";
+import { buildNgApi, buildReactApi, buildMagnusApi } from "./buildApi";
 export async function bootstrap(config: MagnusConfig) {
   const target = config.target || "magnus";
   const sources = config.inputs.map(input => join(config.root, input));
@@ -43,7 +43,6 @@ export async function bootstrap(config: MagnusConfig) {
     const assets = join(config.root, config.assets, config.name);
     ensureDirSync(dist);
     ensureDirSync(assets);
-
     async function compile(isServer: boolean = false) {
       const project = new morph.Project();
       project.addSourceFilesFromTsConfig(join(process.cwd(), "tsconfig.json"));
@@ -93,15 +92,11 @@ export async function bootstrap(config: MagnusConfig) {
             const content = print(res);
             writeFileSync(join(assets, `magnus.server.graphql`), content);
             writeFileSync(join(assets, `magnus.server-api.graphql`), api);
-            try {
-              const schema = buildASTSchema(res);
-              writeFileSync(
-                join(assets, "magnus.server-schema.json"),
-                JSON.stringify(introspectionFromSchema(schema), null, 2)
-              );
-            } catch (e) {
-              console.log(e.message);
-            }
+            const schema = buildASTSchema(res);
+            writeFileSync(
+              join(assets, "magnus.server-schema.json"),
+              JSON.stringify(introspectionFromSchema(schema), null, 2)
+            );
             buildNgApi(
               join(assets, "magnus.server-schema.json"),
               join(assets, `magnus.server-api.graphql`),
@@ -117,6 +112,15 @@ export async function bootstrap(config: MagnusConfig) {
               join(
                 dist,
                 `magnus.server-react.v${config.version || `1.0.0`}.tsx`
+              ),
+              config.name
+            );
+            buildMagnusApi(
+              join(assets, "magnus.server-schema.json"),
+              join(assets, `magnus.server-api.graphql`),
+              join(
+                dist,
+                `magnus.server-magnus.v${config.version || `1.0.0`}.ts`
               ),
               config.name
             );

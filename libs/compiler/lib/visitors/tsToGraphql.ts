@@ -436,7 +436,11 @@ export class TsToGraphqlVisitor implements ast.Visitor {
   // entity
   isEntity: boolean = false;
   entities: {
-    [key: string]: { name: string; decorators: string[]; entity: string }[];
+    [key: string]: {
+      name: string;
+      decorators: string[];
+      entity: string;
+    }[];
   } = {};
   handler: Handler;
   constructor() {
@@ -454,155 +458,7 @@ export class TsToGraphqlVisitor implements ast.Visitor {
   isUndefined(val: any) {
     return typeof val === "undefined";
   }
-  visitClassDeclaration(
-    node: ast.ClassDeclaration,
-    context: MagnusContext
-  ):
-    | graphql.InterfaceTypeDefinitionAst
-    | graphql.InputObjectTypeDefinitionAst
-    | graphql.ScalarTypeDefinitionAst
-    | undefined {
-    const top = new MagnusTopContext();
-    top.name = node.name.visit(expressionVisitor, ``);
-    context = context || new MagnusContext();
-    context.parent = context.parent || top;
-    const scalar = node.getDecorator(`Scalar`)(expressionVisitor);
-    const directive = node.getDecorator<DirectiveOptions>(`Directive`)(
-      expressionVisitor
-    );
-    const resolver = node.getDecorator(`Resolver`)(expressionVisitor);
-    const entity = node.getDecorator(`Entity`)(expressionVisitor);
-    this.isEntity = false;
-    if (entity !== null) {
-      // 搜集字段
-      this.isEntity = true;
-      const name = node.name && node.name.visit(expressionVisitor, ``);
-      this.entities[name] = (node.members || []).map((member: any) => {
-        const name = (member as ast.PropertyDeclaration).name.visit(
-          expressionVisitor,
-          ``
-        );
-        const manyToOne = member.getDecorator(`ManyToOne`)(expressionVisitor);
-        const oneToMany = member.getDecorator(`OneToMany`)(expressionVisitor);
-        const oneToOne = member.getDecorator(`OneToOne`)(expressionVisitor);
-        const manyToMany = member.getDecorator(`ManyToMany`)(expressionVisitor);
-        const decorators = (member as ast.PropertyDeclaration).getDecorators()(
-          expressionVisitor
-        );
 
-        const type = member.type && member.type.visit(expressionVisitor, ``);
-        let entity = ``;
-        if (typeof type === "string") {
-          entity = type;
-        } else if (entity) {
-          entity = type.elementType;
-        } else {
-        }
-        return {
-          name,
-          decorators,
-          entity
-        };
-      });
-    }
-    if (context.isInput) {
-      // debugger;
-    }
-    const members = node.members
-      .filter(member => {
-        return (
-          !(member instanceof ast.MethodDeclaration) ||
-          member.getDecorator(`ResolveProperty`)(expressionVisitor) !== null
-        );
-      })
-      .map(member => {
-        (member as any).questionToken = true;
-        return member;
-      });
-    if (resolver && typeof resolver === "string") {
-      const resolverCls = this.collection.findByName(resolver);
-      const members = node.members.filter(
-        member => member instanceof ast.MethodDeclaration
-      ) as ast.MethodDeclaration[];
-      if (resolverCls instanceof ast.InterfaceDeclaration) {
-        const interfaceMembers = members
-          .map((member: ast.MethodDeclaration) => {
-            const isResolveProperty = member.getDecorator(`ResolveProperty`)(
-              expressionVisitor
-            );
-            if (isResolveProperty !== null) {
-              const node = new ast.MethodSignature();
-              node.name = new ast.Identifier();
-              node.name.text = member.name.visit(expressionVisitor, ``);
-              node.type = member.type;
-              node.docs = member.docs;
-              node.questionToken = new ast.QuestionToken();
-              return node;
-            }
-          })
-          .filter(node => !!node) as ast.MethodSignature[];
-        resolverCls.members.push(...interfaceMembers);
-        return resolverCls.visit(this, context);
-      } else if (resolverCls instanceof ast.ClassDeclaration) {
-        const interfaceMembers = members
-          .map((member: ast.MethodDeclaration) => {
-            const isResolveProperty = member.getDecorator(`ResolveProperty`)(
-              expressionVisitor
-            );
-            if (isResolveProperty !== null) return member;
-          })
-          .filter(node => !!node) as ast.MethodDeclaration[];
-        resolverCls.members.push(...interfaceMembers);
-        const res = resolverCls.visit(this, context);
-        return res;
-      }
-      return;
-    }
-    if (scalar !== null) {
-      const ast = new graphql.ScalarTypeDefinitionAst();
-      ast.name = node.name.visit(this, context);
-      ast.directives = [];
-      const description = this.createStringValue(
-        node.docs.map(doc => this.visitJSDoc(doc, context))
-      );
-      if (description) ast.description = description;
-      return ast;
-    }
-    if (directive !== null) {
-      // 记录
-      return;
-    }
-    if (context.isInput) {
-      const ast = new graphql.InputObjectTypeDefinitionAst();
-      const ctx = context || new MagnusContext();
-      // ctx.contextParent = context;
-      ctx.isUpperFirst = true;
-      ctx.isInput = true;
-      ast.name = node.name.visit(this, ctx);
-      ast.fields = members
-        .map(member => member.visit(this, ctx))
-        .filter(item => !!item);
-      const description = this.createStringValue(
-        node.docs.map(doc => this.visitJSDoc(doc, context))
-      );
-      if (description) ast.description = description;
-      if (ast.fields.length > 0) return ast;
-    }
-    const _ast = new graphql.ObjectTypeDefinitionAst();
-    const description = this.createStringValue(
-      node.docs.map(doc => this.visitJSDoc(doc, context))
-    );
-    if (description) _ast.description = description;
-    const ctx = context || new MagnusContext();
-    // ctx.contextParent = context;
-    ctx.isUpperFirst = true;
-    // ctx.isInput = false;
-    _ast.name = node.name.visit(this, ctx);
-    _ast.fields = members
-      .map(member => member.visit(this, ctx))
-      .filter(item => !!item);
-    if (_ast.fields.length > 0) return _ast as any;
-  }
   visitMethodSignature(
     node: ast.MethodSignature,
     context: MagnusContext
@@ -691,6 +547,9 @@ export class TsToGraphqlVisitor implements ast.Visitor {
     // context.name = node.name.visit(expressionVisitor, context);
     const name = node.name.visit(expressionVisitor, ``);
     const modifiers = node.modifiers.map(mod => mod.visit(this, context));
+    if (modifiers.some(mod => mod && mod.name === "static")) {
+      return;
+    }
     const res = new graphql.FieldDefinitionAst();
     const description = this.createStringValue(
       node.docs.map(doc => this.visitJSDoc(doc, context))
@@ -997,11 +856,24 @@ export class TsToGraphqlVisitor implements ast.Visitor {
       }
     }
   }
+  currentEntity: string;
+  lastCurrentEntity: string;
   visitTypeReferenceNode(
     node: ast.TypeReferenceNode,
     context: MagnusContext
   ): graphql.TypeAst {
     const typeName = expressionVisitor.visitTypeReferenceNode(node, ``);
+    if (typeName === "ListMessages") {
+      if (context.currentEntity === this.currentEntity) {
+        // 没变
+      } else {
+        this.lastCurrentEntity = this.currentEntity;
+        this.currentEntity = context.currentEntity;
+      }
+    }
+    if (context.currentEntity === "T") {
+      context.currentEntity = this.currentEntity;
+    }
     const typeArguments = node.typeArguments.map(t =>
       t.visit(expressionVisitor, ``)
     );
@@ -1018,7 +890,10 @@ export class TsToGraphqlVisitor implements ast.Visitor {
     /**
      * 如果有
      */
-    if (context.hasTypeParameter(typeName)) {
+    if (
+      context.hasTypeParameter(typeName) ||
+      (typeName.length === 1 && context.currentEntity)
+    ) {
       // 添加一个type
       ctx.currentName = context.currentEntity;
       context._needChangeName = true;
@@ -1059,7 +934,150 @@ export class TsToGraphqlVisitor implements ast.Visitor {
     this.addType(`${typeName}`, ctx);
     return this.createNamedTypeAst(ctx.currentName);
   }
+  visitClassDeclaration(
+    node: ast.ClassDeclaration,
+    context: MagnusContext
+  ):
+    | graphql.InterfaceTypeDefinitionAst
+    | graphql.InputObjectTypeDefinitionAst
+    | graphql.ScalarTypeDefinitionAst
+    | undefined {
+    const top = new MagnusTopContext();
+    top.name = node.name.visit(expressionVisitor, ``);
+    context = context || new MagnusContext();
+    context.parent = context.parent || top;
+    context.isProperty = true;
+    context.isUpperFirst = true;
+    const scalar = node.getDecorator(`Scalar`)(expressionVisitor);
+    const directive = node.getDecorator<DirectiveOptions>(`Directive`)(
+      expressionVisitor
+    );
+    const resolver = node.getDecorator(`Resolver`)(expressionVisitor);
+    const entity = node.getDecorator(`Entity`)(expressionVisitor);
+    this.isEntity = false;
+    if (entity !== null) {
+      // 搜集字段
+      this.isEntity = true;
+      const name = node.name && node.name.visit(expressionVisitor, ``);
+      this.entities[name] = (node.members || []).map((member: any) => {
+        const name = (member as ast.PropertyDeclaration).name.visit(
+          expressionVisitor,
+          ``
+        );
+        const decorators = (member as ast.PropertyDeclaration).getDecorators()(
+          expressionVisitor
+        );
 
+        const type = member.type && member.type.visit(expressionVisitor, ``);
+        let entity = ``;
+        if (typeof type === "string") {
+          entity = type;
+        } else if (entity) {
+          entity = type.elementType;
+        } else {
+        }
+        return {
+          name,
+          decorators,
+          entity
+        };
+      });
+    }
+    const members = node.members
+      .filter(member => {
+        return (
+          !(member instanceof ast.MethodDeclaration) ||
+          member.getDecorator(`ResolveProperty`)(expressionVisitor) !== null
+        );
+      })
+      .map(member => {
+        (member as any).questionToken = true;
+        return member;
+      });
+    if (resolver && typeof resolver === "string") {
+      const resolverCls = this.collection.findByName(resolver);
+      const members = node.members.filter(
+        member => member instanceof ast.MethodDeclaration
+      ) as ast.MethodDeclaration[];
+      if (resolverCls instanceof ast.InterfaceDeclaration) {
+        const interfaceMembers = members
+          .map((member: ast.MethodDeclaration) => {
+            const isResolveProperty = member.getDecorator(`ResolveProperty`)(
+              expressionVisitor
+            );
+            if (isResolveProperty !== null) {
+              const node = new ast.MethodSignature();
+              node.name = new ast.Identifier();
+              node.name.text = member.name.visit(expressionVisitor, ``);
+              node.type = member.type;
+              node.docs = member.docs;
+              node.questionToken = new ast.QuestionToken();
+              return node;
+            }
+          })
+          .filter(node => !!node) as ast.MethodSignature[];
+        resolverCls.members.push(...interfaceMembers);
+        return resolverCls.visit(this, context);
+      } else if (resolverCls instanceof ast.ClassDeclaration) {
+        const interfaceMembers = members
+          .map((member: ast.MethodDeclaration) => {
+            const isResolveProperty = member.getDecorator(`ResolveProperty`)(
+              expressionVisitor
+            );
+            if (isResolveProperty !== null) return member;
+          })
+          .filter(node => !!node) as ast.MethodDeclaration[];
+        resolverCls.members.push(...interfaceMembers);
+        const res = resolverCls.visit(this, context);
+        return res;
+      }
+      return;
+    }
+    if (scalar !== null) {
+      const ast = new graphql.ScalarTypeDefinitionAst();
+      ast.name = node.name.visit(this, context);
+      ast.directives = [];
+      const description = this.createStringValue(
+        node.docs.map(doc => this.visitJSDoc(doc, context))
+      );
+      if (description) ast.description = description;
+      return ast;
+    }
+    if (directive !== null) {
+      // 记录
+      return;
+    }
+    if (context.isInput) {
+      const ast = new graphql.InputObjectTypeDefinitionAst();
+      const ctx = context || new MagnusContext();
+      // ctx.contextParent = context;
+      ctx.isUpperFirst = true;
+      ctx.isInput = true;
+      ast.name = node.name.visit(this, ctx);
+      ast.fields = members
+        .map(member => member.visit(this, ctx))
+        .filter(item => !!item);
+      const description = this.createStringValue(
+        node.docs.map(doc => this.visitJSDoc(doc, context))
+      );
+      if (description) ast.description = description;
+      if (ast.fields.length > 0) return ast;
+    }
+    const _ast = new graphql.ObjectTypeDefinitionAst();
+    const description = this.createStringValue(
+      node.docs.map(doc => this.visitJSDoc(doc, context))
+    );
+    if (description) _ast.description = description;
+    const ctx = context || new MagnusContext();
+    // ctx.contextParent = context;
+    ctx.isUpperFirst = true;
+    // ctx.isInput = false;
+    _ast.name = node.name.visit(this, ctx);
+    _ast.fields = members
+      .map(member => member.visit(this, ctx))
+      .filter(item => !!item);
+    if (_ast.fields.length > 0) return _ast as any;
+  }
   visitInterfaceDeclaration(
     node: ast.InterfaceDeclaration,
     context: MagnusContext
@@ -1184,19 +1202,15 @@ export class TsToGraphqlVisitor implements ast.Visitor {
         const name =
           context.currentName || `${context.currentEntity}_${node.text}`;
         if (context.isUpperFirst) {
-          // return this.createNameAst(upperFirst(camelCase(name)))
           return this.createNameAst(name);
         }
-        // return this.createNameAst(camelCase(name))
         return this.createNameAst(name);
       } else {
         const name =
           context.currentName || `${node.text}_${context.currentEntity}`;
         if (context.isUpperFirst) {
-          // return this.createNameAst(upperFirst(camelCase(name)))
           return this.createNameAst(name);
         }
-        // return this.createNameAst(camelCase(name))
         return this.createNameAst(name);
       }
     }

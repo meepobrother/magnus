@@ -283,6 +283,10 @@ export class AstToGraphqlVisitor implements ast.Visitor {
     }
     if (entity !== null) {
       const ctx = new MagnusContext();
+      ctx.name = node.name.visit(expressionVisitor, ``);
+      ctx.typeParameters = new Set(
+        node.typeParameters.map(t => t.visit(expressionVisitor, ``))
+      );
       this.tsToGraphqlVisitor.visitClassDeclaration(node, ctx);
     }
   }

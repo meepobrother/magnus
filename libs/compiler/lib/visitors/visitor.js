@@ -394,6 +394,17 @@ class NonNullExpression extends Expression {
     }
 }
 exports.NonNullExpression = NonNullExpression;
+class DeleteExpression extends Expression {
+    visit(visitor, context) {
+        if (visitor.visitDeleteExpression) {
+            return visitor.visitDeleteExpression(this, context);
+        }
+        else {
+            throw new Error(`${visitor.name} 没有 visitDeleteExpression 方法`);
+        }
+    }
+}
+exports.DeleteExpression = DeleteExpression;
 class MethodDeclaration extends Node {
     constructor() {
         super(...arguments);
@@ -2826,9 +2837,15 @@ class TsVisitor {
         else if (ts.isNonNullExpression(context)) {
             return this.visitNonNullExpression(new NonNullExpression(), context);
         }
+        else if (ts.isDeleteExpression(context)) {
+            return this.visitDeleteExpression(new DeleteExpression(), context);
+        }
         else {
             console.log(`visitExpression Error! ${context.kind}`);
         }
+        return node;
+    }
+    visitDeleteExpression(node, context) {
         return node;
     }
     visitNonNullExpression(node, context) { }

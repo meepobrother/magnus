@@ -116,10 +116,5 @@ async function start() {
     };
     await bootstrap_1.bootstrap(config);
 }
-try {
-    start();
-}
-catch (e) {
-    console.log(e.message);
-}
+start();
 //# sourceMappingURL=bin.js.map

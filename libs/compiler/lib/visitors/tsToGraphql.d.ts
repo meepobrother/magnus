@@ -13,8 +13,8 @@ export declare class Handler {
     private __order;
     private __where;
     constructor(visitor: TsToGraphqlVisitor);
-    Promise(node: ast.TypeReferenceNode | ast.TypeAliasDeclaration, context: any): graphql.NamedTypeAst<any, any> | graphql.ListTypeAst<any, any> | graphql.NonNullTypeAst<any, any> | undefined;
-    Observable(node: ast.TypeReferenceNode | ast.TypeAliasDeclaration, context: any): graphql.NamedTypeAst<any, any> | graphql.ListTypeAst<any, any> | graphql.NonNullTypeAst<any, any> | undefined;
+    Promise(node: ast.TypeReferenceNode | ast.TypeAliasDeclaration, context: any): graphql.NonNullTypeAst<any, any> | graphql.NamedTypeAst<any, any> | graphql.ListTypeAst<any, any> | undefined;
+    Observable(node: ast.TypeReferenceNode | ast.TypeAliasDeclaration, context: any): graphql.NonNullTypeAst<any, any> | graphql.NamedTypeAst<any, any> | graphql.ListTypeAst<any, any> | undefined;
     Order(node: ast.TypeReferenceNode | ast.TypeAliasDeclaration, context: any): graphql.NamedTypeAst<any, any> | undefined;
     DeepPartial(node: ast.TypeReferenceNode | ast.TypeAliasDeclaration, context: any): graphql.NamedTypeAst<any, any> | undefined;
     Partial(node: ast.TypeReferenceNode | ast.TypeAliasDeclaration, context: any): graphql.NamedTypeAst<any, any> | undefined;
@@ -51,10 +51,16 @@ export declare class TsToGraphqlVisitor implements ast.Visitor {
     constructor();
     createIdentifier(text: string): ast.Identifier;
     isUndefined(val: any): boolean;
+<<<<<<< HEAD
     visitClassDeclaration(node: ast.ClassDeclaration, context: MagnusContext): graphql.InterfaceTypeDefinitionAst | graphql.InputObjectTypeDefinitionAst | graphql.ScalarTypeDefinitionAst | undefined;
     visitMethodSignature(node: ast.MethodSignature, context: MagnusContext): graphql.FieldDefinitionAst | undefined;
     visitPropertySignature(node: ast.PropertySignature, context: MagnusContext): graphql.FieldDefinitionAst<any, any> | graphql.InputValueDefinitionAst<any, any>;
     visitPropertyDeclaration(node: ast.PropertyDeclaration, context: MagnusContext): graphql.FieldDefinitionAst<any, any>;
+=======
+    visitMethodSignature(node: ast.MethodSignature, context: MagnusContext): graphql.FieldDefinitionAst | undefined;
+    visitPropertySignature(node: ast.PropertySignature, context: MagnusContext): graphql.FieldDefinitionAst<any, any> | graphql.InputValueDefinitionAst<any, any>;
+    visitPropertyDeclaration(node: ast.PropertyDeclaration, context: MagnusContext): graphql.FieldDefinitionAst<any, any> | undefined;
+>>>>>>> 37ae5fba251f82cb44db9142a138c92fb2e15526
     /**
      * 是否非必填项目
      */
@@ -67,7 +73,14 @@ export declare class TsToGraphqlVisitor implements ast.Visitor {
     visitTypeNode(node: ast.TypeNode, context: MagnusContext): graphql.TypeAst;
     set: Set<string>;
     addType(name: string, context: MagnusContext): any;
+<<<<<<< HEAD
     visitTypeReferenceNode(node: ast.TypeReferenceNode, context: MagnusContext): graphql.TypeAst;
+=======
+    currentEntity: string;
+    lastCurrentEntity: string;
+    visitTypeReferenceNode(node: ast.TypeReferenceNode, context: MagnusContext): graphql.TypeAst;
+    visitClassDeclaration(node: ast.ClassDeclaration, context: MagnusContext): graphql.InterfaceTypeDefinitionAst | graphql.InputObjectTypeDefinitionAst | graphql.ScalarTypeDefinitionAst | undefined;
+>>>>>>> 37ae5fba251f82cb44db9142a138c92fb2e15526
     visitInterfaceDeclaration(node: ast.InterfaceDeclaration, context: MagnusContext): graphql.ObjectTypeDefinitionAst<any, any> | graphql.InputObjectTypeDefinitionAst<any, any> | undefined;
     createNamedTypeAst(name: string): graphql.NamedTypeAst<any, any>;
     createListTypeAst(type: any): graphql.ListTypeAst<any, any>;

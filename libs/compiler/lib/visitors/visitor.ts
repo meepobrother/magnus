@@ -475,6 +475,15 @@ export class NonNullExpression extends Expression {
     }
   }
 }
+export class DeleteExpression extends Expression {
+  visit(visitor: Visitor, context: any) {
+    if (visitor.visitDeleteExpression) {
+      return visitor.visitDeleteExpression(this, context);
+    } else {
+      throw new Error(`${visitor.name} 没有 visitDeleteExpression 方法`);
+    }
+  }
+}
 export class MethodDeclaration extends Node<ts.MethodDeclaration> {
   body: FunctionBody;
   name: PropertyName;
@@ -1790,6 +1799,7 @@ export class OtherStatement extends Node<ts.Node> {
 }
 export interface Visitor<C = any, O = any> {
   name: string;
+  visitDeleteExpression?(node: DeleteExpression, context: C): O;
   visitNonNullExpression?(node: NonNullExpression, context: C): O;
   visitOtherStatement?(node: OtherStatement, context: C): O;
   visitJSDocNullableType?(node: JSDocNullableType, context: C): O;
@@ -3370,9 +3380,14 @@ export class TsVisitor implements Visitor {
       );
     } else if (ts.isNonNullExpression(context)) {
       return this.visitNonNullExpression(new NonNullExpression(), context);
+    } else if (ts.isDeleteExpression(context)) {
+      return this.visitDeleteExpression(new DeleteExpression(), context);
     } else {
       console.log(`visitExpression Error! ${context.kind}`);
     }
+    return node;
+  }
+  visitDeleteExpression(node: DeleteExpression, context: any) {
     return node;
   }
 
