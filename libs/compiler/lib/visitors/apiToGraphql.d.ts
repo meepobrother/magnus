@@ -15,6 +15,7 @@ export declare class ApiToProto implements graphql.Visitor {
     messages: ast.Message[];
     constructor();
     visitOperationDefinitionAst(node: graphql.OperationDefinitionAst, context: ast.Package): void;
+    _messages: Set<string>;
     visitObjectTypeDefinitionAst(node: graphql.ObjectTypeDefinitionAst, context: ast.Message): void;
     visitFieldDefinitionAst(node: graphql.FieldDefinitionAst, context: ast.Message): void;
     visitSelectionSetAst(node: graphql.SelectionSetAst, contedxt: ast.Package): void;

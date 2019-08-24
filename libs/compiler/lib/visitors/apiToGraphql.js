@@ -10,6 +10,7 @@ class ApiToProto {
         this.mutation = new magnus_grpc_1.ast.Service();
         this.subscription = new magnus_grpc_1.ast.Service();
         this.messages = [];
+        this._messages = new Set();
         this.query.name = `Query`;
         this.mutation.name = `Mutation`;
         this.subscription.name = `Subscription`;
@@ -72,8 +73,12 @@ class ApiToProto {
     }
     visitObjectTypeDefinitionAst(node, context) {
         const name = node.name.visit(this, context);
+        if (this._messages.has(name)) {
+            return;
+        }
         const message = new magnus_grpc_1.ast.Message();
         message.name = name;
+        this._messages.add(name);
         node.fields.map((field, index) => {
             field.index = index;
             field.visit(this, message);
