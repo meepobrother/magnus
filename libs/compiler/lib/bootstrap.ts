@@ -367,6 +367,7 @@ export function sendFile(config: MagnusConfig) {
   const assets = join(config.root, config.assets, config.name);
   if (target === "magnus") {
     sendLocalFile(dist, `${config.name}.ts`, config);
+    sendLocalFile(dist, `${config.name}.server.ts`, config);
     sendLocalFile(dist, "magnus.ts", config);
     sendLocalFile(dist, "magnus.server.ts", config);
     sendLocalFile(

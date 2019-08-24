@@ -308,6 +308,7 @@ function sendFile(config) {
     const assets = path_1.join(config.root, config.assets, config.name);
     if (target === "magnus") {
         sendLocalFile(dist, `${config.name}.ts`, config);
+        sendLocalFile(dist, `${config.name}.server.ts`, config);
         sendLocalFile(dist, "magnus.ts", config);
         sendLocalFile(dist, "magnus.server.ts", config);
         sendLocalFile(dist, `magnus.server-angular.v${config.version || "1.0.0"}.ts`, config);
