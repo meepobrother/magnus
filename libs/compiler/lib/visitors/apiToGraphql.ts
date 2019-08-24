@@ -75,14 +75,18 @@ export class ApiToProto implements graphql.Visitor {
       this.subscription.methods.push(mth);
     }
   }
-
+  _messages: Set<string> = new Set();
   visitObjectTypeDefinitionAst(
     node: graphql.ObjectTypeDefinitionAst,
     context: ast.Message
   ) {
     const name = node.name.visit(this, context);
+    if (this._messages.has(name)) {
+      return;
+    }
     const message = new ast.Message();
     message.name = name;
+    this._messages.add(name);
     node.fields.map((field, index) => {
       field.index = index;
       field.visit(this, message);

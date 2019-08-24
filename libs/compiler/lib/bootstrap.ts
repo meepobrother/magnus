@@ -210,6 +210,24 @@ export const ${camelCase(config.name)}Options: any = {
 };
 `;
           writeFileSync(join(dist, `${config.name}.ts`), index);
+
+          const path23 = join(assets, `magnus.server.proto`);
+          const relativePath3 = relative(dist, path23);
+          const indexServer = `import { Transport } from '@nestjs/microservices';
+import { join } from 'path';
+export const ${camelCase(config.name)}Options: any = {
+    transport: Transport.GRPC,
+    options: {
+        url: \`\${process.env.${config.hostEnv ||
+          "COMMON_HOST"} || '0.0.0.0'}:\${process.env.${config.portEnv ||
+            "COMMON_PORT"}||'9001'}\`,
+        package: '${config.name || "magnus"}',
+        protoPath: join(__dirname, '${relativePath3}'),
+    },
+    name: "${config.name || "magnus"}"
+};
+`;
+          writeFileSync(join(dist, `${config.name}.server.ts`), indexServer);
         }
         if (isServer) {
           const entities = astToGraphqlVisitor.tsToGraphqlVisitor.entities;

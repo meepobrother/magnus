@@ -170,6 +170,23 @@ export const ${lodash_1.camelCase(config.name)}Options: any = {
 };
 `;
                     fs_extra_1.writeFileSync(path_1.join(dist, `${config.name}.ts`), index);
+                    const path23 = path_1.join(assets, `magnus.server.proto`);
+                    const relativePath3 = path_1.relative(dist, path23);
+                    const indexServer = `import { Transport } from '@nestjs/microservices';
+import { join } from 'path';
+export const ${lodash_1.camelCase(config.name)}Options: any = {
+    transport: Transport.GRPC,
+    options: {
+        url: \`\${process.env.${config.hostEnv ||
+                        "COMMON_HOST"} || '0.0.0.0'}:\${process.env.${config.portEnv ||
+                        "COMMON_PORT"}||'9001'}\`,
+        package: '${config.name || "magnus"}',
+        protoPath: join(__dirname, '${relativePath3}'),
+    },
+    name: "${config.name || "magnus"}"
+};
+`;
+                    fs_extra_1.writeFileSync(path_1.join(dist, `${config.name}.server.ts`), indexServer);
                 }
                 if (isServer) {
                     const entities = astToGraphqlVisitor.tsToGraphqlVisitor.entities;
