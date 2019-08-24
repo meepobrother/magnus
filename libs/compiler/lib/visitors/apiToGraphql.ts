@@ -110,7 +110,7 @@ export class ApiToProto implements graphql.Visitor {
         context.fields.push(field);
     }
 
-    visitVariableAst(node: VariableAst, contedxt: ast.Package): any {
+    visitVariableAst(node: VariableAst, context: ast.Package): any {
         return node.name.visit(this, context)
     }
 

@@ -101,7 +101,7 @@ class ApiToProto {
         field.index = context.index;
         context.fields.push(field);
     }
-    visitVariableAst(node, contedxt) {
+    visitVariableAst(node, context) {
         return node.name.visit(this, context);
     }
     visitNameAst(node, context) {

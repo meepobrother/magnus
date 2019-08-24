@@ -20,7 +20,7 @@ export declare class ApiToProto implements graphql.Visitor {
     visitSelectionSetAst(node: graphql.SelectionSetAst, contedxt: ast.Package): void;
     visitFieldAst(node: graphql.FieldAst, context: ast.Package): void;
     visitVariableDefinitionAst(node: graphql.VariableDefinitionAst, context: ast.Message): any;
-    visitVariableAst(node: VariableAst, contedxt: ast.Package): any;
+    visitVariableAst(node: VariableAst, context: ast.Package): any;
     visitNameAst(node: graphql.NameAst, context: ast.Package): string;
     visitInputObjectTypeDefinitionAst(node: graphql.InputObjectTypeDefinitionAst, context: any): void;
     addMessage(msg: ast.Message): void;
