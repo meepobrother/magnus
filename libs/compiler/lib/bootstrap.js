@@ -138,7 +138,8 @@ async function bootstrap(config) {
     Bool,
     String,
     Bytes,
-    Empty
+    Empty,
+    ID
 } from '@notadd/magnus-core';
 import { Observable } from 'rxjs';
 `;
