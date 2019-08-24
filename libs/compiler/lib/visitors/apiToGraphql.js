@@ -21,9 +21,15 @@ class ApiToProto {
         pkg.name = this.config.name;
         pkg.syntax = `proto3`;
         node.definitions.map(def => def.visit(this, pkg));
-        pkg.children.push(this.query);
-        pkg.children.push(this.mutation);
-        pkg.children.push(this.subscription);
+        if (this.query.methods.length > 0) {
+            pkg.children.push(this.query);
+        }
+        if (this.mutation.methods.length > 0) {
+            pkg.children.push(this.mutation);
+        }
+        if (this.subscription.methods.length > 0) {
+            pkg.children.push(this.subscription);
+        }
         this.messages.map(msg => pkg.children.push(msg));
         root.packages.push(pkg);
         this.root = root;
@@ -32,7 +38,7 @@ class ApiToProto {
     visitOperationDefinitionAst(node, context) {
         const name = node.name.visit(this, context);
         const mth = new magnus_grpc_1.ast.Method();
-        mth.decorator.unshift('rpc');
+        mth.decorator.unshift("rpc");
         mth.name = name;
         mth.parameter = `Grpc${lodash_1.upperFirst(mth.name)}Input`;
         const msg = new magnus_grpc_1.ast.Message();
@@ -54,10 +60,10 @@ class ApiToProto {
         else {
             throw new Error(`can not found def`);
         }
-        if (node.operation === 'query') {
+        if (node.operation === "query") {
             this.query.methods.push(mth);
         }
-        else if (node.operation === 'mutation') {
+        else if (node.operation === "mutation") {
             this.mutation.methods.push(mth);
         }
         else {
@@ -79,6 +85,9 @@ class ApiToProto {
         field.index = node.index;
         field.name = node.name.visit(this, ``);
         field.type = node.type.visit(this, field);
+        const def = this.schema.hasDefinitionAst(field.type);
+        if (def)
+            def.visit(this, context);
         context.fields.push(field);
     }
     visitSelectionSetAst(node, contedxt) {
@@ -90,12 +99,12 @@ class ApiToProto {
         const selectionSet = node.selectionSet && node.selectionSet.visit(this, context);
     }
     visitVariableDefinitionAst(node, context) {
-        const type = node.type.visit(this, context);
-        const variable = node.variable.visit(this, context);
+        const field = new magnus_grpc_1.ast.Field();
+        const variable = node.variable.visit(this, field);
+        const type = node.type.visit(this, field);
         const def = this.schema.hasDefinitionAst(type);
         if (def)
-            def.visit(this, context);
-        const field = new magnus_grpc_1.ast.Field();
+            def.visit(this, field);
         field.name = variable;
         field.type = type;
         field.index = context.index;
@@ -103,9 +112,6 @@ class ApiToProto {
     }
     visitVariableAst(node, context) {
         return node.name.visit(this, context);
-    }
-    visitNameAst(node, context) {
-        return node.value;
     }
     visitInputObjectTypeDefinitionAst(node, context) {
         const message = new magnus_grpc_1.ast.Message();
@@ -129,6 +135,7 @@ class ApiToProto {
         context.fields.push(field);
     }
     visitListTypeAst(node, context) {
+        console.log(context);
         context.decorator.unshift("repeated");
         const type = node.type.visit(this, context);
         return type;
@@ -139,6 +146,47 @@ class ApiToProto {
         }
         else {
             return node.type.visit(this, context);
+        }
+    }
+    visitNameAst(node, context) {
+        switch (node.value) {
+            case "String":
+            case "string":
+                return `string`;
+            case "Double":
+                return "double";
+            case "Float":
+                return "float";
+            case "Int":
+            case "Int32":
+                return `int32`;
+            case "Uint32":
+                return `uint32`;
+            case "Sint32":
+                return `sint32`;
+            case "fixed32":
+                return `fixed32`;
+            case "Sfixed32":
+                return `sfixed32`;
+            case "Int64":
+                return `int64`;
+            case "Uint64":
+                return `uint64`;
+            case "Sint64":
+                return `sint64`;
+            case "Fixed64":
+                return `fixed64`;
+            case "Sfixed64":
+                return `sfixed64`;
+            case "Bool":
+            case "Boolean":
+                return `bool`;
+            case "ID":
+                return `int32`;
+            case "Bytes":
+                return `bytes`;
+            default:
+                return node.value;
         }
     }
     visitNamedTypeAst(node, context) {

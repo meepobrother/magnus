@@ -9128,6 +9128,11 @@ tslint@^5.18.0:
     tslib "^1.8.0"
     tsutils "^2.29.0"
 
+tstypes@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/tstypes/-/tstypes-2.0.0.tgz#264022fffa3c9a28ee74413f7cfba08589bdde52"
+  integrity sha512-DwU2ayq2jKCsjUU0MJXqGqq7gf8r+utRghtc8jCWmXCcegF9L8vRorHhVHrUZaL+G00G0UVzXJ0sghcW1ocEyg==
+
 tsutils@^2.29.0:
   version "2.29.0"
   resolved "https://registry.yarnpkg.com/tsutils/-/tsutils-2.29.0.tgz#32b488501467acbedd4b85498673a0812aca0b99"
