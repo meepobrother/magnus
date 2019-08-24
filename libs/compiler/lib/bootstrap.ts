@@ -10,7 +10,7 @@ import {
   existsSync,
   readFileSync
 } from "fs-extra";
-
+import { ApiToProtoVisitor } from "./visitors/apiToProto";
 import * as ast from "./visitors/visitor";
 import { collectionVisitor, CollectionContext } from "./visitors/collection";
 import { MangusContextManager, MagnusVisitor } from "./visitors/magnus";
@@ -92,6 +92,7 @@ export async function bootstrap(config: MagnusConfig) {
             const content = print(res);
             writeFileSync(join(assets, `magnus.server.graphql`), content);
             writeFileSync(join(assets, `magnus.server-api.graphql`), api);
+            parse();
             const schema = buildASTSchema(res);
             writeFileSync(
               join(assets, "magnus.server-schema.json"),
@@ -134,7 +135,7 @@ export async function bootstrap(config: MagnusConfig) {
             );
             const protoAst = new grpcAst.ParseVisitor();
             const protoStr = proto.visit(protoAst, ``);
-            writeFileSync(join(assets, `magnus.server.proto`), protoStr);
+            writeFileSync(join(assets, `magnus.proto`), protoStr);
           }
         }
         // 搜集metadata entity数据库 类名 依赖名

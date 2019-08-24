@@ -2428,206 +2428,206 @@ input SafetyScoreRuleInputOrder {
 
 type Query {
   "通过指定条件获取一条数据"
-  getUser(
+  userGet(
     "条件"
     entity: UserInputWhere!
   ): User
   "通过指定条件获取一条数据"
-  getSystem(
+  systemGet(
     "条件"
     entity: SystemInputWhere!
   ): System
   "通过指定条件获取一条数据"
-  getSystemEvent(
+  systemEventGet(
     "条件"
     entity: SystemEventInputWhere!
   ): SystemEvent
   "通过指定条件获取一条数据"
-  getSystemRight(
+  systemRightGet(
     "条件"
     entity: SystemRightInputWhere!
   ): SystemRight
   "通过指定条件获取一条数据"
-  getDepartment(
+  departmentGet(
     "条件"
     entity: DepartmentInputWhere!
   ): Department
   "通过指定条件获取一条数据"
-  getRole(
+  roleGet(
     "条件"
     entity: RoleInputWhere!
   ): Role
   "通过指定条件获取一条数据"
-  getStation(
+  stationGet(
     "条件"
     entity: StationInputWhere!
   ): Station
   "通过指定条件获取一条数据"
-  getToDoItem(
+  toDoItemGet(
     "条件"
     entity: ToDoItemInputWhere!
   ): ToDoItem
   "通过指定条件获取一条数据"
-  getRoleGroup(
+  roleGroupGet(
     "条件"
     entity: RoleGroupInputWhere!
   ): RoleGroup
   "通过指定条件获取一条数据"
-  getUserLoginLog(
+  userLoginLogGet(
     "条件"
     entity: UserLoginLogInputWhere!
   ): UserLoginLog
   "通过指定条件获取一条数据"
-  getSafetyScoreLog(
+  safetyScoreLogGet(
     "条件"
     entity: SafetyScoreLogInputWhere!
   ): SafetyScoreLog
   "通过指定条件获取一条数据"
-  getSafetyScoreRule(
+  safetyScoreRuleGet(
     "条件"
     entity: SafetyScoreRuleInputWhere!
   ): SafetyScoreRule
   "通过制定条件获取一组数据"
-  findUser(
+  userFind(
     "条件"
     entity: UserInputWhere!
     order: UserInputOrder!
     limit: PageLimitInput
   ): [User]
   "通过制定条件获取一组数据"
-  findSystem(
+  systemFind(
     "条件"
     entity: SystemInputWhere!
     order: SystemInputOrder!
     limit: PageLimitInput
   ): [System]
   "通过制定条件获取一组数据"
-  findSystemEvent(
+  systemEventFind(
     "条件"
     entity: SystemEventInputWhere!
     order: SystemEventInputOrder!
     limit: PageLimitInput
   ): [SystemEvent]
   "通过制定条件获取一组数据"
-  findSystemRight(
+  systemRightFind(
     "条件"
     entity: SystemRightInputWhere!
     order: SystemRightInputOrder!
     limit: PageLimitInput
   ): [SystemRight]
   "通过制定条件获取一组数据"
-  findDepartment(
+  departmentFind(
     "条件"
     entity: DepartmentInputWhere!
     order: DepartmentInputOrder!
     limit: PageLimitInput
   ): [Department]
   "通过制定条件获取一组数据"
-  findRole(
+  roleFind(
     "条件"
     entity: RoleInputWhere!
     order: RoleInputOrder!
     limit: PageLimitInput
   ): [Role]
   "通过制定条件获取一组数据"
-  findStation(
+  stationFind(
     "条件"
     entity: StationInputWhere!
     order: StationInputOrder!
     limit: PageLimitInput
   ): [Station]
   "通过制定条件获取一组数据"
-  findToDoItem(
+  toDoItemFind(
     "条件"
     entity: ToDoItemInputWhere!
     order: ToDoItemInputOrder!
     limit: PageLimitInput
   ): [ToDoItem]
   "通过制定条件获取一组数据"
-  findRoleGroup(
+  roleGroupFind(
     "条件"
     entity: RoleGroupInputWhere!
     order: RoleGroupInputOrder!
     limit: PageLimitInput
   ): [RoleGroup]
   "通过制定条件获取一组数据"
-  findUserLoginLog(
+  userLoginLogFind(
     "条件"
     entity: UserLoginLogInputWhere!
     order: UserLoginLogInputOrder!
     limit: PageLimitInput
   ): [UserLoginLog]
   "通过制定条件获取一组数据"
-  findSafetyScoreLog(
+  safetyScoreLogFind(
     "条件"
     entity: SafetyScoreLogInputWhere!
     order: SafetyScoreLogInputOrder!
     limit: PageLimitInput
   ): [SafetyScoreLog]
   "通过制定条件获取一组数据"
-  findSafetyScoreRule(
+  safetyScoreRuleFind(
     "条件"
     entity: SafetyScoreRuleInputWhere!
     order: SafetyScoreRuleInputOrder!
     limit: PageLimitInput
   ): [SafetyScoreRule]
   "删除"
-  deleteUser(
+  userDelete(
     "根据id删除"
     id: Int!
   ): Boolean
   "删除"
-  deleteSystem(
+  systemDelete(
     "根据id删除"
     id: Int!
   ): Boolean
   "删除"
-  deleteSystemEvent(
+  systemEventDelete(
     "根据id删除"
     id: Int!
   ): Boolean
   "删除"
-  deleteSystemRight(
+  systemRightDelete(
     "根据id删除"
     id: Int!
   ): Boolean
   "删除"
-  deleteDepartment(
+  departmentDelete(
     "根据id删除"
     id: Int!
   ): Boolean
   "删除"
-  deleteRole(
+  roleDelete(
     "根据id删除"
     id: Int!
   ): Boolean
   "删除"
-  deleteStation(
+  stationDelete(
     "根据id删除"
     id: Int!
   ): Boolean
   "删除"
-  deleteToDoItem(
+  toDoItemDelete(
     "根据id删除"
     id: Int!
   ): Boolean
   "删除"
-  deleteRoleGroup(
+  roleGroupDelete(
     "根据id删除"
     id: Int!
   ): Boolean
   "删除"
-  deleteUserLoginLog(
+  userLoginLogDelete(
     "根据id删除"
     id: Int!
   ): Boolean
   "删除"
-  deleteSafetyScoreLog(
+  safetyScoreLogDelete(
     "根据id删除"
     id: Int!
   ): Boolean
   "删除"
-  deleteSafetyScoreRule(
+  safetyScoreRuleDelete(
     "根据id删除"
     id: Int!
   ): Boolean
@@ -2635,122 +2635,122 @@ type Query {
 
 type Mutation {
   "没有就插入，有就更新"
-  saveUser(
+  userSave(
     "要保存的数据"
     entity: UserInput!
   ): User
   "没有就插入，有就更新"
-  saveSystem(
+  systemSave(
     "要保存的数据"
     entity: SystemInput!
   ): System
   "没有就插入，有就更新"
-  saveSystemEvent(
+  systemEventSave(
     "要保存的数据"
     entity: SystemEventInput!
   ): SystemEvent
   "没有就插入，有就更新"
-  saveSystemRight(
+  systemRightSave(
     "要保存的数据"
     entity: SystemRightInput!
   ): SystemRight
   "没有就插入，有就更新"
-  saveDepartment(
+  departmentSave(
     "要保存的数据"
     entity: DepartmentInput!
   ): Department
   "没有就插入，有就更新"
-  saveRole(
+  roleSave(
     "要保存的数据"
     entity: RoleInput!
   ): Role
   "没有就插入，有就更新"
-  saveStation(
+  stationSave(
     "要保存的数据"
     entity: StationInput!
   ): Station
   "没有就插入，有就更新"
-  saveToDoItem(
+  toDoItemSave(
     "要保存的数据"
     entity: ToDoItemInput!
   ): ToDoItem
   "没有就插入，有就更新"
-  saveRoleGroup(
+  roleGroupSave(
     "要保存的数据"
     entity: RoleGroupInput!
   ): RoleGroup
   "没有就插入，有就更新"
-  saveUserLoginLog(
+  userLoginLogSave(
     "要保存的数据"
     entity: UserLoginLogInput!
   ): UserLoginLog
   "没有就插入，有就更新"
-  saveSafetyScoreLog(
+  safetyScoreLogSave(
     "要保存的数据"
     entity: SafetyScoreLogInput!
   ): SafetyScoreLog
   "没有就插入，有就更新"
-  saveSafetyScoreRule(
+  safetyScoreRuleSave(
     "要保存的数据"
     entity: SafetyScoreRuleInput!
   ): SafetyScoreRule
   "插入数据"
-  insertUser(
+  userInsert(
     "要插入的数据"
     entity: UserInput!
   ): User
   "插入数据"
-  insertSystem(
+  systemInsert(
     "要插入的数据"
     entity: SystemInput!
   ): System
   "插入数据"
-  insertSystemEvent(
+  systemEventInsert(
     "要插入的数据"
     entity: SystemEventInput!
   ): SystemEvent
   "插入数据"
-  insertSystemRight(
+  systemRightInsert(
     "要插入的数据"
     entity: SystemRightInput!
   ): SystemRight
   "插入数据"
-  insertDepartment(
+  departmentInsert(
     "要插入的数据"
     entity: DepartmentInput!
   ): Department
   "插入数据"
-  insertRole(
+  roleInsert(
     "要插入的数据"
     entity: RoleInput!
   ): Role
   "插入数据"
-  insertStation(
+  stationInsert(
     "要插入的数据"
     entity: StationInput!
   ): Station
   "插入数据"
-  insertToDoItem(
+  toDoItemInsert(
     "要插入的数据"
     entity: ToDoItemInput!
   ): ToDoItem
   "插入数据"
-  insertRoleGroup(
+  roleGroupInsert(
     "要插入的数据"
     entity: RoleGroupInput!
   ): RoleGroup
   "插入数据"
-  insertUserLoginLog(
+  userLoginLogInsert(
     "要插入的数据"
     entity: UserLoginLogInput!
   ): UserLoginLog
   "插入数据"
-  insertSafetyScoreLog(
+  safetyScoreLogInsert(
     "要插入的数据"
     entity: SafetyScoreLogInput!
   ): SafetyScoreLog
   "插入数据"
-  insertSafetyScoreRule(
+  safetyScoreRuleInsert(
     "要插入的数据"
     entity: SafetyScoreRuleInput!
   ): SafetyScoreRule

@@ -2442,125 +2442,125 @@ export interface SafetyScoreRuleInputOrder {
 }
 export interface Query {
 	/*通过指定条件获取一条数据*/
-	getUser<T>(/*条件*/entity: UserInputWhere, __selection?: string): Promise<T & User>;
+	userGet<T>(/*条件*/entity: UserInputWhere, __selection?: string): Promise<T & User>;
 	/*通过指定条件获取一条数据*/
-	getSystem<T>(/*条件*/entity: SystemInputWhere, __selection?: string): Promise<T & System>;
+	systemGet<T>(/*条件*/entity: SystemInputWhere, __selection?: string): Promise<T & System>;
 	/*通过指定条件获取一条数据*/
-	getSystemEvent<T>(/*条件*/entity: SystemEventInputWhere, __selection?: string): Promise<T & SystemEvent>;
+	systemEventGet<T>(/*条件*/entity: SystemEventInputWhere, __selection?: string): Promise<T & SystemEvent>;
 	/*通过指定条件获取一条数据*/
-	getSystemRight<T>(/*条件*/entity: SystemRightInputWhere, __selection?: string): Promise<T & SystemRight>;
+	systemRightGet<T>(/*条件*/entity: SystemRightInputWhere, __selection?: string): Promise<T & SystemRight>;
 	/*通过指定条件获取一条数据*/
-	getDepartment<T>(/*条件*/entity: DepartmentInputWhere, __selection?: string): Promise<T & Department>;
+	departmentGet<T>(/*条件*/entity: DepartmentInputWhere, __selection?: string): Promise<T & Department>;
 	/*通过指定条件获取一条数据*/
-	getRole<T>(/*条件*/entity: RoleInputWhere, __selection?: string): Promise<T & Role>;
+	roleGet<T>(/*条件*/entity: RoleInputWhere, __selection?: string): Promise<T & Role>;
 	/*通过指定条件获取一条数据*/
-	getStation<T>(/*条件*/entity: StationInputWhere, __selection?: string): Promise<T & Station>;
+	stationGet<T>(/*条件*/entity: StationInputWhere, __selection?: string): Promise<T & Station>;
 	/*通过指定条件获取一条数据*/
-	getToDoItem<T>(/*条件*/entity: ToDoItemInputWhere, __selection?: string): Promise<T & ToDoItem>;
+	toDoItemGet<T>(/*条件*/entity: ToDoItemInputWhere, __selection?: string): Promise<T & ToDoItem>;
 	/*通过指定条件获取一条数据*/
-	getRoleGroup<T>(/*条件*/entity: RoleGroupInputWhere, __selection?: string): Promise<T & RoleGroup>;
+	roleGroupGet<T>(/*条件*/entity: RoleGroupInputWhere, __selection?: string): Promise<T & RoleGroup>;
 	/*通过指定条件获取一条数据*/
-	getUserLoginLog<T>(/*条件*/entity: UserLoginLogInputWhere, __selection?: string): Promise<T & UserLoginLog>;
+	userLoginLogGet<T>(/*条件*/entity: UserLoginLogInputWhere, __selection?: string): Promise<T & UserLoginLog>;
 	/*通过指定条件获取一条数据*/
-	getSafetyScoreLog<T>(/*条件*/entity: SafetyScoreLogInputWhere, __selection?: string): Promise<T & SafetyScoreLog>;
+	safetyScoreLogGet<T>(/*条件*/entity: SafetyScoreLogInputWhere, __selection?: string): Promise<T & SafetyScoreLog>;
 	/*通过指定条件获取一条数据*/
-	getSafetyScoreRule<T>(/*条件*/entity: SafetyScoreRuleInputWhere, __selection?: string): Promise<T & SafetyScoreRule>;
+	safetyScoreRuleGet<T>(/*条件*/entity: SafetyScoreRuleInputWhere, __selection?: string): Promise<T & SafetyScoreRule>;
 	/*通过制定条件获取一组数据*/
-	findUser<T>(/*条件*/entity: UserInputWhere, order: UserInputOrder, limit?: PageLimitInput, __selection?: string): Promise<T & User[]>;
+	userFind<T>(/*条件*/entity: UserInputWhere, order: UserInputOrder, limit?: PageLimitInput, __selection?: string): Promise<T & User[]>;
 	/*通过制定条件获取一组数据*/
-	findSystem<T>(/*条件*/entity: SystemInputWhere, order: SystemInputOrder, limit?: PageLimitInput, __selection?: string): Promise<T & System[]>;
+	systemFind<T>(/*条件*/entity: SystemInputWhere, order: SystemInputOrder, limit?: PageLimitInput, __selection?: string): Promise<T & System[]>;
 	/*通过制定条件获取一组数据*/
-	findSystemEvent<T>(/*条件*/entity: SystemEventInputWhere, order: SystemEventInputOrder, limit?: PageLimitInput, __selection?: string): Promise<T & SystemEvent[]>;
+	systemEventFind<T>(/*条件*/entity: SystemEventInputWhere, order: SystemEventInputOrder, limit?: PageLimitInput, __selection?: string): Promise<T & SystemEvent[]>;
 	/*通过制定条件获取一组数据*/
-	findSystemRight<T>(/*条件*/entity: SystemRightInputWhere, order: SystemRightInputOrder, limit?: PageLimitInput, __selection?: string): Promise<T & SystemRight[]>;
+	systemRightFind<T>(/*条件*/entity: SystemRightInputWhere, order: SystemRightInputOrder, limit?: PageLimitInput, __selection?: string): Promise<T & SystemRight[]>;
 	/*通过制定条件获取一组数据*/
-	findDepartment<T>(/*条件*/entity: DepartmentInputWhere, order: DepartmentInputOrder, limit?: PageLimitInput, __selection?: string): Promise<T & Department[]>;
+	departmentFind<T>(/*条件*/entity: DepartmentInputWhere, order: DepartmentInputOrder, limit?: PageLimitInput, __selection?: string): Promise<T & Department[]>;
 	/*通过制定条件获取一组数据*/
-	findRole<T>(/*条件*/entity: RoleInputWhere, order: RoleInputOrder, limit?: PageLimitInput, __selection?: string): Promise<T & Role[]>;
+	roleFind<T>(/*条件*/entity: RoleInputWhere, order: RoleInputOrder, limit?: PageLimitInput, __selection?: string): Promise<T & Role[]>;
 	/*通过制定条件获取一组数据*/
-	findStation<T>(/*条件*/entity: StationInputWhere, order: StationInputOrder, limit?: PageLimitInput, __selection?: string): Promise<T & Station[]>;
+	stationFind<T>(/*条件*/entity: StationInputWhere, order: StationInputOrder, limit?: PageLimitInput, __selection?: string): Promise<T & Station[]>;
 	/*通过制定条件获取一组数据*/
-	findToDoItem<T>(/*条件*/entity: ToDoItemInputWhere, order: ToDoItemInputOrder, limit?: PageLimitInput, __selection?: string): Promise<T & ToDoItem[]>;
+	toDoItemFind<T>(/*条件*/entity: ToDoItemInputWhere, order: ToDoItemInputOrder, limit?: PageLimitInput, __selection?: string): Promise<T & ToDoItem[]>;
 	/*通过制定条件获取一组数据*/
-	findRoleGroup<T>(/*条件*/entity: RoleGroupInputWhere, order: RoleGroupInputOrder, limit?: PageLimitInput, __selection?: string): Promise<T & RoleGroup[]>;
+	roleGroupFind<T>(/*条件*/entity: RoleGroupInputWhere, order: RoleGroupInputOrder, limit?: PageLimitInput, __selection?: string): Promise<T & RoleGroup[]>;
 	/*通过制定条件获取一组数据*/
-	findUserLoginLog<T>(/*条件*/entity: UserLoginLogInputWhere, order: UserLoginLogInputOrder, limit?: PageLimitInput, __selection?: string): Promise<T & UserLoginLog[]>;
+	userLoginLogFind<T>(/*条件*/entity: UserLoginLogInputWhere, order: UserLoginLogInputOrder, limit?: PageLimitInput, __selection?: string): Promise<T & UserLoginLog[]>;
 	/*通过制定条件获取一组数据*/
-	findSafetyScoreLog<T>(/*条件*/entity: SafetyScoreLogInputWhere, order: SafetyScoreLogInputOrder, limit?: PageLimitInput, __selection?: string): Promise<T & SafetyScoreLog[]>;
+	safetyScoreLogFind<T>(/*条件*/entity: SafetyScoreLogInputWhere, order: SafetyScoreLogInputOrder, limit?: PageLimitInput, __selection?: string): Promise<T & SafetyScoreLog[]>;
 	/*通过制定条件获取一组数据*/
-	findSafetyScoreRule<T>(/*条件*/entity: SafetyScoreRuleInputWhere, order: SafetyScoreRuleInputOrder, limit?: PageLimitInput, __selection?: string): Promise<T & SafetyScoreRule[]>;
+	safetyScoreRuleFind<T>(/*条件*/entity: SafetyScoreRuleInputWhere, order: SafetyScoreRuleInputOrder, limit?: PageLimitInput, __selection?: string): Promise<T & SafetyScoreRule[]>;
 	/*删除*/
-	deleteUser<T>(/*根据id删除*/id: number, __selection?: string): Promise<T & boolean>;
+	userDelete<T>(/*根据id删除*/id: number, __selection?: string): Promise<T & boolean>;
 	/*删除*/
-	deleteSystem<T>(/*根据id删除*/id: number, __selection?: string): Promise<T & boolean>;
+	systemDelete<T>(/*根据id删除*/id: number, __selection?: string): Promise<T & boolean>;
 	/*删除*/
-	deleteSystemEvent<T>(/*根据id删除*/id: number, __selection?: string): Promise<T & boolean>;
+	systemEventDelete<T>(/*根据id删除*/id: number, __selection?: string): Promise<T & boolean>;
 	/*删除*/
-	deleteSystemRight<T>(/*根据id删除*/id: number, __selection?: string): Promise<T & boolean>;
+	systemRightDelete<T>(/*根据id删除*/id: number, __selection?: string): Promise<T & boolean>;
 	/*删除*/
-	deleteDepartment<T>(/*根据id删除*/id: number, __selection?: string): Promise<T & boolean>;
+	departmentDelete<T>(/*根据id删除*/id: number, __selection?: string): Promise<T & boolean>;
 	/*删除*/
-	deleteRole<T>(/*根据id删除*/id: number, __selection?: string): Promise<T & boolean>;
+	roleDelete<T>(/*根据id删除*/id: number, __selection?: string): Promise<T & boolean>;
 	/*删除*/
-	deleteStation<T>(/*根据id删除*/id: number, __selection?: string): Promise<T & boolean>;
+	stationDelete<T>(/*根据id删除*/id: number, __selection?: string): Promise<T & boolean>;
 	/*删除*/
-	deleteToDoItem<T>(/*根据id删除*/id: number, __selection?: string): Promise<T & boolean>;
+	toDoItemDelete<T>(/*根据id删除*/id: number, __selection?: string): Promise<T & boolean>;
 	/*删除*/
-	deleteRoleGroup<T>(/*根据id删除*/id: number, __selection?: string): Promise<T & boolean>;
+	roleGroupDelete<T>(/*根据id删除*/id: number, __selection?: string): Promise<T & boolean>;
 	/*删除*/
-	deleteUserLoginLog<T>(/*根据id删除*/id: number, __selection?: string): Promise<T & boolean>;
+	userLoginLogDelete<T>(/*根据id删除*/id: number, __selection?: string): Promise<T & boolean>;
 	/*删除*/
-	deleteSafetyScoreLog<T>(/*根据id删除*/id: number, __selection?: string): Promise<T & boolean>;
+	safetyScoreLogDelete<T>(/*根据id删除*/id: number, __selection?: string): Promise<T & boolean>;
 	/*删除*/
-	deleteSafetyScoreRule<T>(/*根据id删除*/id: number, __selection?: string): Promise<T & boolean>;
+	safetyScoreRuleDelete<T>(/*根据id删除*/id: number, __selection?: string): Promise<T & boolean>;
 }
 export interface Mutation {
 	/*没有就插入，有就更新*/
-	saveUser<T>(/*要保存的数据*/entity: UserInput, __selection?: string): Promise<T & User>;
+	userSave<T>(/*要保存的数据*/entity: UserInput, __selection?: string): Promise<T & User>;
 	/*没有就插入，有就更新*/
-	saveSystem<T>(/*要保存的数据*/entity: SystemInput, __selection?: string): Promise<T & System>;
+	systemSave<T>(/*要保存的数据*/entity: SystemInput, __selection?: string): Promise<T & System>;
 	/*没有就插入，有就更新*/
-	saveSystemEvent<T>(/*要保存的数据*/entity: SystemEventInput, __selection?: string): Promise<T & SystemEvent>;
+	systemEventSave<T>(/*要保存的数据*/entity: SystemEventInput, __selection?: string): Promise<T & SystemEvent>;
 	/*没有就插入，有就更新*/
-	saveSystemRight<T>(/*要保存的数据*/entity: SystemRightInput, __selection?: string): Promise<T & SystemRight>;
+	systemRightSave<T>(/*要保存的数据*/entity: SystemRightInput, __selection?: string): Promise<T & SystemRight>;
 	/*没有就插入，有就更新*/
-	saveDepartment<T>(/*要保存的数据*/entity: DepartmentInput, __selection?: string): Promise<T & Department>;
+	departmentSave<T>(/*要保存的数据*/entity: DepartmentInput, __selection?: string): Promise<T & Department>;
 	/*没有就插入，有就更新*/
-	saveRole<T>(/*要保存的数据*/entity: RoleInput, __selection?: string): Promise<T & Role>;
+	roleSave<T>(/*要保存的数据*/entity: RoleInput, __selection?: string): Promise<T & Role>;
 	/*没有就插入，有就更新*/
-	saveStation<T>(/*要保存的数据*/entity: StationInput, __selection?: string): Promise<T & Station>;
+	stationSave<T>(/*要保存的数据*/entity: StationInput, __selection?: string): Promise<T & Station>;
 	/*没有就插入，有就更新*/
-	saveToDoItem<T>(/*要保存的数据*/entity: ToDoItemInput, __selection?: string): Promise<T & ToDoItem>;
+	toDoItemSave<T>(/*要保存的数据*/entity: ToDoItemInput, __selection?: string): Promise<T & ToDoItem>;
 	/*没有就插入，有就更新*/
-	saveRoleGroup<T>(/*要保存的数据*/entity: RoleGroupInput, __selection?: string): Promise<T & RoleGroup>;
+	roleGroupSave<T>(/*要保存的数据*/entity: RoleGroupInput, __selection?: string): Promise<T & RoleGroup>;
 	/*没有就插入，有就更新*/
-	saveUserLoginLog<T>(/*要保存的数据*/entity: UserLoginLogInput, __selection?: string): Promise<T & UserLoginLog>;
+	userLoginLogSave<T>(/*要保存的数据*/entity: UserLoginLogInput, __selection?: string): Promise<T & UserLoginLog>;
 	/*没有就插入，有就更新*/
-	saveSafetyScoreLog<T>(/*要保存的数据*/entity: SafetyScoreLogInput, __selection?: string): Promise<T & SafetyScoreLog>;
+	safetyScoreLogSave<T>(/*要保存的数据*/entity: SafetyScoreLogInput, __selection?: string): Promise<T & SafetyScoreLog>;
 	/*没有就插入，有就更新*/
-	saveSafetyScoreRule<T>(/*要保存的数据*/entity: SafetyScoreRuleInput, __selection?: string): Promise<T & SafetyScoreRule>;
+	safetyScoreRuleSave<T>(/*要保存的数据*/entity: SafetyScoreRuleInput, __selection?: string): Promise<T & SafetyScoreRule>;
 	/*插入数据*/
-	insertUser<T>(/*要插入的数据*/entity: UserInput, __selection?: string): Promise<T & User>;
+	userInsert<T>(/*要插入的数据*/entity: UserInput, __selection?: string): Promise<T & User>;
 	/*插入数据*/
-	insertSystem<T>(/*要插入的数据*/entity: SystemInput, __selection?: string): Promise<T & System>;
+	systemInsert<T>(/*要插入的数据*/entity: SystemInput, __selection?: string): Promise<T & System>;
 	/*插入数据*/
-	insertSystemEvent<T>(/*要插入的数据*/entity: SystemEventInput, __selection?: string): Promise<T & SystemEvent>;
+	systemEventInsert<T>(/*要插入的数据*/entity: SystemEventInput, __selection?: string): Promise<T & SystemEvent>;
 	/*插入数据*/
-	insertSystemRight<T>(/*要插入的数据*/entity: SystemRightInput, __selection?: string): Promise<T & SystemRight>;
+	systemRightInsert<T>(/*要插入的数据*/entity: SystemRightInput, __selection?: string): Promise<T & SystemRight>;
 	/*插入数据*/
-	insertDepartment<T>(/*要插入的数据*/entity: DepartmentInput, __selection?: string): Promise<T & Department>;
+	departmentInsert<T>(/*要插入的数据*/entity: DepartmentInput, __selection?: string): Promise<T & Department>;
 	/*插入数据*/
-	insertRole<T>(/*要插入的数据*/entity: RoleInput, __selection?: string): Promise<T & Role>;
+	roleInsert<T>(/*要插入的数据*/entity: RoleInput, __selection?: string): Promise<T & Role>;
 	/*插入数据*/
-	insertStation<T>(/*要插入的数据*/entity: StationInput, __selection?: string): Promise<T & Station>;
+	stationInsert<T>(/*要插入的数据*/entity: StationInput, __selection?: string): Promise<T & Station>;
 	/*插入数据*/
-	insertToDoItem<T>(/*要插入的数据*/entity: ToDoItemInput, __selection?: string): Promise<T & ToDoItem>;
+	toDoItemInsert<T>(/*要插入的数据*/entity: ToDoItemInput, __selection?: string): Promise<T & ToDoItem>;
 	/*插入数据*/
-	insertRoleGroup<T>(/*要插入的数据*/entity: RoleGroupInput, __selection?: string): Promise<T & RoleGroup>;
+	roleGroupInsert<T>(/*要插入的数据*/entity: RoleGroupInput, __selection?: string): Promise<T & RoleGroup>;
 	/*插入数据*/
-	insertUserLoginLog<T>(/*要插入的数据*/entity: UserLoginLogInput, __selection?: string): Promise<T & UserLoginLog>;
+	userLoginLogInsert<T>(/*要插入的数据*/entity: UserLoginLogInput, __selection?: string): Promise<T & UserLoginLog>;
 	/*插入数据*/
-	insertSafetyScoreLog<T>(/*要插入的数据*/entity: SafetyScoreLogInput, __selection?: string): Promise<T & SafetyScoreLog>;
+	safetyScoreLogInsert<T>(/*要插入的数据*/entity: SafetyScoreLogInput, __selection?: string): Promise<T & SafetyScoreLog>;
 	/*插入数据*/
-	insertSafetyScoreRule<T>(/*要插入的数据*/entity: SafetyScoreRuleInput, __selection?: string): Promise<T & SafetyScoreRule>;
+	safetyScoreRuleInsert<T>(/*要插入的数据*/entity: SafetyScoreRuleInput, __selection?: string): Promise<T & SafetyScoreRule>;
 }

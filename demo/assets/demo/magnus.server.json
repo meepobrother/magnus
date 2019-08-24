@@ -23786,7 +23786,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "getUser"
+            "value": "userGet"
           },
           "arguments": [
             {
@@ -23829,7 +23829,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "getSystem"
+            "value": "systemGet"
           },
           "arguments": [
             {
@@ -23872,7 +23872,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "getSystemEvent"
+            "value": "systemEventGet"
           },
           "arguments": [
             {
@@ -23915,7 +23915,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "getSystemRight"
+            "value": "systemRightGet"
           },
           "arguments": [
             {
@@ -23958,7 +23958,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "getDepartment"
+            "value": "departmentGet"
           },
           "arguments": [
             {
@@ -24001,7 +24001,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "getRole"
+            "value": "roleGet"
           },
           "arguments": [
             {
@@ -24044,7 +24044,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "getStation"
+            "value": "stationGet"
           },
           "arguments": [
             {
@@ -24087,7 +24087,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "getToDoItem"
+            "value": "toDoItemGet"
           },
           "arguments": [
             {
@@ -24130,7 +24130,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "getRoleGroup"
+            "value": "roleGroupGet"
           },
           "arguments": [
             {
@@ -24173,7 +24173,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "getUserLoginLog"
+            "value": "userLoginLogGet"
           },
           "arguments": [
             {
@@ -24216,7 +24216,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "getSafetyScoreLog"
+            "value": "safetyScoreLogGet"
           },
           "arguments": [
             {
@@ -24259,7 +24259,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "getSafetyScoreRule"
+            "value": "safetyScoreRuleGet"
           },
           "arguments": [
             {
@@ -24302,7 +24302,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "findUser"
+            "value": "userFind"
           },
           "arguments": [
             {
@@ -24381,7 +24381,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "findSystem"
+            "value": "systemFind"
           },
           "arguments": [
             {
@@ -24460,7 +24460,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "findSystemEvent"
+            "value": "systemEventFind"
           },
           "arguments": [
             {
@@ -24539,7 +24539,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "findSystemRight"
+            "value": "systemRightFind"
           },
           "arguments": [
             {
@@ -24618,7 +24618,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "findDepartment"
+            "value": "departmentFind"
           },
           "arguments": [
             {
@@ -24697,7 +24697,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "findRole"
+            "value": "roleFind"
           },
           "arguments": [
             {
@@ -24776,7 +24776,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "findStation"
+            "value": "stationFind"
           },
           "arguments": [
             {
@@ -24855,7 +24855,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "findToDoItem"
+            "value": "toDoItemFind"
           },
           "arguments": [
             {
@@ -24934,7 +24934,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "findRoleGroup"
+            "value": "roleGroupFind"
           },
           "arguments": [
             {
@@ -25013,7 +25013,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "findUserLoginLog"
+            "value": "userLoginLogFind"
           },
           "arguments": [
             {
@@ -25092,7 +25092,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "findSafetyScoreLog"
+            "value": "safetyScoreLogFind"
           },
           "arguments": [
             {
@@ -25171,7 +25171,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "findSafetyScoreRule"
+            "value": "safetyScoreRuleFind"
           },
           "arguments": [
             {
@@ -25250,7 +25250,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "deleteUser"
+            "value": "userDelete"
           },
           "arguments": [
             {
@@ -25293,7 +25293,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "deleteSystem"
+            "value": "systemDelete"
           },
           "arguments": [
             {
@@ -25336,7 +25336,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "deleteSystemEvent"
+            "value": "systemEventDelete"
           },
           "arguments": [
             {
@@ -25379,7 +25379,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "deleteSystemRight"
+            "value": "systemRightDelete"
           },
           "arguments": [
             {
@@ -25422,7 +25422,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "deleteDepartment"
+            "value": "departmentDelete"
           },
           "arguments": [
             {
@@ -25465,7 +25465,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "deleteRole"
+            "value": "roleDelete"
           },
           "arguments": [
             {
@@ -25508,7 +25508,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "deleteStation"
+            "value": "stationDelete"
           },
           "arguments": [
             {
@@ -25551,7 +25551,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "deleteToDoItem"
+            "value": "toDoItemDelete"
           },
           "arguments": [
             {
@@ -25594,7 +25594,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "deleteRoleGroup"
+            "value": "roleGroupDelete"
           },
           "arguments": [
             {
@@ -25637,7 +25637,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "deleteUserLoginLog"
+            "value": "userLoginLogDelete"
           },
           "arguments": [
             {
@@ -25680,7 +25680,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "deleteSafetyScoreLog"
+            "value": "safetyScoreLogDelete"
           },
           "arguments": [
             {
@@ -25723,7 +25723,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "deleteSafetyScoreRule"
+            "value": "safetyScoreRuleDelete"
           },
           "arguments": [
             {
@@ -25777,7 +25777,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "saveUser"
+            "value": "userSave"
           },
           "arguments": [
             {
@@ -25820,7 +25820,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "saveSystem"
+            "value": "systemSave"
           },
           "arguments": [
             {
@@ -25863,7 +25863,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "saveSystemEvent"
+            "value": "systemEventSave"
           },
           "arguments": [
             {
@@ -25906,7 +25906,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "saveSystemRight"
+            "value": "systemRightSave"
           },
           "arguments": [
             {
@@ -25949,7 +25949,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "saveDepartment"
+            "value": "departmentSave"
           },
           "arguments": [
             {
@@ -25992,7 +25992,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "saveRole"
+            "value": "roleSave"
           },
           "arguments": [
             {
@@ -26035,7 +26035,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "saveStation"
+            "value": "stationSave"
           },
           "arguments": [
             {
@@ -26078,7 +26078,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "saveToDoItem"
+            "value": "toDoItemSave"
           },
           "arguments": [
             {
@@ -26121,7 +26121,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "saveRoleGroup"
+            "value": "roleGroupSave"
           },
           "arguments": [
             {
@@ -26164,7 +26164,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "saveUserLoginLog"
+            "value": "userLoginLogSave"
           },
           "arguments": [
             {
@@ -26207,7 +26207,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "saveSafetyScoreLog"
+            "value": "safetyScoreLogSave"
           },
           "arguments": [
             {
@@ -26250,7 +26250,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "saveSafetyScoreRule"
+            "value": "safetyScoreRuleSave"
           },
           "arguments": [
             {
@@ -26293,7 +26293,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "insertUser"
+            "value": "userInsert"
           },
           "arguments": [
             {
@@ -26336,7 +26336,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "insertSystem"
+            "value": "systemInsert"
           },
           "arguments": [
             {
@@ -26379,7 +26379,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "insertSystemEvent"
+            "value": "systemEventInsert"
           },
           "arguments": [
             {
@@ -26422,7 +26422,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "insertSystemRight"
+            "value": "systemRightInsert"
           },
           "arguments": [
             {
@@ -26465,7 +26465,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "insertDepartment"
+            "value": "departmentInsert"
           },
           "arguments": [
             {
@@ -26508,7 +26508,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "insertRole"
+            "value": "roleInsert"
           },
           "arguments": [
             {
@@ -26551,7 +26551,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "insertStation"
+            "value": "stationInsert"
           },
           "arguments": [
             {
@@ -26594,7 +26594,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "insertToDoItem"
+            "value": "toDoItemInsert"
           },
           "arguments": [
             {
@@ -26637,7 +26637,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "insertRoleGroup"
+            "value": "roleGroupInsert"
           },
           "arguments": [
             {
@@ -26680,7 +26680,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "insertUserLoginLog"
+            "value": "userLoginLogInsert"
           },
           "arguments": [
             {
@@ -26723,7 +26723,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "insertSafetyScoreLog"
+            "value": "safetyScoreLogInsert"
           },
           "arguments": [
             {
@@ -26766,7 +26766,7 @@
           },
           "name": {
             "kind": "Name",
-            "value": "insertSafetyScoreRule"
+            "value": "safetyScoreRuleInsert"
           },
           "arguments": [
             {
