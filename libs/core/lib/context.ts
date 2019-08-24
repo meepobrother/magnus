@@ -153,7 +153,7 @@ export function createGraphql(
   return str;
 }
 
-interface IRunner {
+export interface IRunner {
   <T>(source: string, variableValues?: any): Promise<T>;
   [key: string]: any;
 }

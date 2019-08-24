@@ -48,54 +48,20 @@ export class ToDoItem {
     })
     createDate?: string;
 
-	/**
-	 * 来源模块
-	 */
-    @ManyToOne(() => System, type => type.toDoItems)
-    @JoinTable({
-        name: `fromSystemId`
-    })
-    fromSystem?: System;
-
     @Column({
         default: null
     })
     fromSystemId?: number;
-	/**
-	 * 来源事件
-	 */
-    @ManyToOne(() => SystemEvent, type => type.toDoItems)
-    @JoinTable({
-        name: `fromEventId`
-    })
-    fromEvent?: SystemEvent;
 
     @Column({
         default: null
     })
     fromEventId?: number;
-	/**
-	 * 申请人
-	 */
-    @ManyToOne(() => User, type => type.toDoItems)
-    @JoinTable({
-        name: `fromUserId`
-    })
-    fromUser?: User;
 
     @Column({
         default: null
     })
     fromUserId?: number;
-
-	/**
-	 * 处理人
-	 */
-    @ManyToOne(() => User, type => type.toDoItems)
-    @JoinTable({
-        name: `toUserId`
-    })
-    toUser?: User;
 
     @Column({
         default: null

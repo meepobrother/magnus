@@ -68,12 +68,6 @@ export class Station {
     status: number;
 
 	/**
-	 * 创建用户
-	 */
-    @ManyToOne(() => User, type => type.createStations)
-    createUser?: User;
-
-	/**
 	 * 创建日期
 	 */
     @CreateDateColumn({
@@ -92,34 +86,4 @@ export class Station {
         }
     })
     createDate?: string;
-
-	/**
-	 * 每个岗位有一个部门
-	 */
-    @ManyToOne(() => Department, type => type.stations)
-    department?: Department;
-
-	/**
-	 * 某个岗位可以被什么角色使用
-	 */
-    @ManyToMany(() => Role, type => type.canUseStations)
-    @JoinTable({
-        name: 'station_canuse_role'
-    })
-    canUseRoles?: Role[];
-
-    @ManyToMany(() => User, type => type.stations)
-    @JoinTable({
-        name: 'station_user'
-    })
-    users?: User[];
-    @ResolveProperty()
-    async getUsers(): Promise<User[]> {
-        return [];
-    }
-	/**
-	 * 一个岗位有一个role group
-	 */
-    @ManyToOne(() => RoleGroup, type => type.stations)
-    roleGroup: RoleGroup;
 }

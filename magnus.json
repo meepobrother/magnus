@@ -12,5 +12,6 @@
   },
   "types": "demo/magnus/demo/magnus.server",
   "def": "demo/assets/demo/magnus.server.graphql",
-  "reciveName": []
+  "reciveName": [],
+  "version": "1.0.0"
 }

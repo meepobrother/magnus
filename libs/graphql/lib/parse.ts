@@ -183,33 +183,35 @@ export class ParseVisitor implements ast.Visitor {
         node.value = context.value;
         return node;
     }
-    visitValueAst(node: undefined, context: graphql.ValueNode) {
-        if (context.kind === 'Variable') {
-            return this.visitVariableAst(new ast.VariableAst(), context)
-        }
-        else if (context.kind === 'IntValue') {
-            return this.visitIntValueAst(new ast.IntValueAst(), context)
-        }
-        else if (context.kind === 'FloatValue') {
-            return this.visitFloatValueAst(new ast.FloatValueAst(), context)
-        }
-        else if (context.kind === 'StringValue') {
-            return this.visitStringValueAst(new ast.StringValueAst(), context)
-        }
-        else if (context.kind === 'BooleanValue') {
-            return this.visitBooleanValueAst(new ast.BooleanValueAst(), context)
-        }
-        else if (context.kind === 'EnumValue') {
-            return this.visitEnumValueAst(new ast.EnumValueAst(), context)
-        }
-        else if (context.kind === 'ListValue') {
-            return this.visitListValueAst(new ast.ListValueAst(), context)
-        }
-        else if (context.kind === 'ObjectValue') {
-            return this.visitObjectValueAst(new ast.ObjectValueAst(), context)
-        }
-        else {
-            return this.visitNullValueAst(new ast.NullValueAst(), context)
+    visitValueAst(node: undefined, context: graphql.ValueNode): any {
+        if (context) {
+            if (context.kind === 'Variable') {
+                return this.visitVariableAst(new ast.VariableAst(), context)
+            }
+            else if (context.kind === 'IntValue') {
+                return this.visitIntValueAst(new ast.IntValueAst(), context)
+            }
+            else if (context.kind === 'FloatValue') {
+                return this.visitFloatValueAst(new ast.FloatValueAst(), context)
+            }
+            else if (context.kind === 'StringValue') {
+                return this.visitStringValueAst(new ast.StringValueAst(), context)
+            }
+            else if (context.kind === 'BooleanValue') {
+                return this.visitBooleanValueAst(new ast.BooleanValueAst(), context)
+            }
+            else if (context.kind === 'EnumValue') {
+                return this.visitEnumValueAst(new ast.EnumValueAst(), context)
+            }
+            else if (context.kind === 'ListValue') {
+                return this.visitListValueAst(new ast.ListValueAst(), context)
+            }
+            else if (context.kind === 'ObjectValue') {
+                return this.visitObjectValueAst(new ast.ObjectValueAst(), context)
+            }
+            else {
+                return this.visitNullValueAst(new ast.NullValueAst(), context)
+            }
         }
     }
     visitEnumValueAst(node: ast.EnumValueAst, context: graphql.EnumValueNode) {
@@ -395,10 +397,14 @@ export class ParseVisitor implements ast.Visitor {
         return node;
     }
     visitStringValueAst(node: ast.StringValueAst, context: graphql.StringValueNode) {
-        node.value = context.value;
+        node.value = context && context.value;
         return node;
     }
     visitInputValueDefinitionAst(node: ast.InputValueDefinitionAst, context: graphql.InputValueDefinitionNode) {
+        node.description = this.visitStringValueAst(new ast.StringValueAst(), context.description!);
+        node.name = this.visitNameAst(new ast.NameAst(), context.name);
+        node.type = this.visitTypeAst(undefined, context.type)
+        node.defaultValue = this.visitValueAst(undefined, context.defaultValue!);
         return node;
     }
     visitListTypeAst(node: ast.ListTypeAst, context: graphql.ListTypeNode) {

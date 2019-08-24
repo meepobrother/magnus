@@ -1,6 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, CreateDateColumn, Column, OneToMany } from 'typeorm';
-import { Department } from './department';
-import { ResolveProperty } from '@notadd/magnus-core';
+import { Entity, PrimaryGeneratedColumn, CreateDateColumn, Column } from 'typeorm';
 /**
  * 域
  */
@@ -56,15 +54,4 @@ export class Domain {
         }
     })
     createDate?: number;
-
-	/**
-	 * 部门
-	 */
-    @OneToMany(() => Department, type => type.domain)
-    departments?: Department[];
-
-    @ResolveProperty()
-    async getDepartments(): Promise<Department[]> {
-        return [];
-    }
 }

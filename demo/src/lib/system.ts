@@ -39,37 +39,6 @@ export class System {
     code: string;
 
 	/**
-	 * 模块权限
-	 */
-    @OneToMany(() => SystemRight, type => type.fromSystem, {
-        cascade: ['insert', 'remove', 'update']
-    })
-    rights?: SystemRight[];
-    @ResolveProperty()
-    async getSystemRights(): Promise<SystemRight[]> {
-        return [];
-    }
-	/**
-	 * 模块事件
-	 */
-    @OneToMany(() => SystemEvent, type => type.fromSystem, {
-        cascade: ['insert', 'remove', 'update']
-    })
-    events?: SystemEvent[];
-    @ResolveProperty()
-    async getSystemEvents(): Promise<SystemEvent[]> {
-        return [];
-    }
-	/**
-	 * 代办事项
-	 */
-    @OneToMany(() => ToDoItem, type => type.fromSystem)
-    toDoItems?: ToDoItem[];
-    @ResolveProperty()
-    async getToDoItems(): Promise<ToDoItem[]> {
-        return [];
-    }
-	/**
 	 * 配置时间
 	 */
     @CreateDateColumn({

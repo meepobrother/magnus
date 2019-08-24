@@ -47,19 +47,4 @@ export class SystemRight {
 	 * 权限链接
 	 */
 	link?: string;
-
-	/**
-	 * 来源模块
-	 */
-	@ManyToOne(() => System, type => type.rights)
-	@JoinTable({
-		name: 'fromSystemId'
-	})
-	fromSystem?: System;
-
-	/**
-	 * 可用角色
-	 */
-	@ManyToOne(() => Role, type => type.rights)
-	toRoles?: Role;
 }

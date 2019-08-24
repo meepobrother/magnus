@@ -1,5 +1,0 @@
-query getUser($ids: [Int!]!) {
-  getUser(entity: { id: "1" }) {
-    username
-  }
-}

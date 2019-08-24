@@ -1,6 +1,6 @@
 {
   "name": "@notadd/magnus-apollo",
-  "version": "3.3.18",
+  "version": "3.3.29",
   "description": "> TODO: description",
   "author": "imeepos <1037483576@qq.com>",
   "homepage": "https://github.com/notadd/magnus/tree/master/libs/apollo#readme",
@@ -27,7 +27,7 @@
     "url": "https://github.com/meepobrother/magnus/issues"
   },
   "dependencies": {
-    "@notadd/magnus-graphql": "^3.3.18",
+    "@notadd/magnus-graphql": "^3.3.29",
     "apollo-server": "^2.6.7"
   },
   "gitHead": "acbf551528e935fe60bc728c46992f3671bfe140"

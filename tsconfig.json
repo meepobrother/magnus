@@ -74,5 +74,5 @@
     "plugins": []
   },
   "include": ["libs", "tools", "demo"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "tools", "demo"]
 }
