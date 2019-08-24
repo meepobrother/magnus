@@ -76,6 +76,10 @@ export class ApiToProto implements graphql.Visitor {
     }
   }
   _messages: Set<string> = new Set();
+  visitScalarTypeDefinitionAst(
+    node: graphql.ScalarTypeDefinitionAst,
+    context: any
+  ) {}
   visitObjectTypeDefinitionAst(
     node: graphql.ObjectTypeDefinitionAst,
     context: ast.Message

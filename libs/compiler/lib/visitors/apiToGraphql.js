@@ -71,6 +71,7 @@ class ApiToProto {
             this.subscription.methods.push(mth);
         }
     }
+    visitScalarTypeDefinitionAst(node, context) { }
     visitObjectTypeDefinitionAst(node, context) {
         const name = node.name.visit(this, context);
         if (this._messages.has(name)) {
