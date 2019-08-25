@@ -129,7 +129,7 @@ class ApiToProto {
         context.fields.push(field);
     }
     visitListTypeAst(node, context) {
-        context.decorator.unshift("repeated");
+        context.decorator && context.decorator.unshift("repeated");
         const type = node.type.visit(this, context);
         return type;
     }
