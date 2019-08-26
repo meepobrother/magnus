@@ -20,6 +20,18 @@ export declare class Handler {
     Partial(node: ast.TypeReferenceNode | ast.TypeAliasDeclaration, context: any): graphql.NamedTypeAst<any, any> | undefined;
     Where(node: ast.TypeReferenceNode | ast.TypeAliasDeclaration, context: any): graphql.NamedTypeAst<any, any> | undefined;
 }
+interface Metadata {
+    name: string;
+    decorators: string[];
+    entity: string;
+    parameters: {
+        name: string;
+        index: number;
+    }[];
+}
+interface Metadatas {
+    [key: string]: Metadata[];
+}
 export declare class TsToGraphqlVisitor implements ast.Visitor {
     name: string;
     documentAst: graphql.DocumentAst;
@@ -40,13 +52,7 @@ export declare class TsToGraphqlVisitor implements ast.Visitor {
      */
     permission: PermissionOptions[];
     isEntity: boolean;
-    entities: {
-        [key: string]: {
-            name: string;
-            decorators: string[];
-            entity: string;
-        }[];
-    };
+    entities: Metadatas;
     handler: Handler;
     constructor();
     createIdentifier(text: string): ast.Identifier;
@@ -95,3 +101,4 @@ export declare class TsToGraphqlVisitor implements ast.Visitor {
     visitEnumDeclaration(node: ast.EnumDeclaration, context: MagnusContext): graphql.EnumTypeDefinitionAst<any, any>;
     visitEnumMember(node: ast.EnumMember, context: MagnusContext): graphql.EnumValueDefinitionAst<any, any>;
 }
+export {};

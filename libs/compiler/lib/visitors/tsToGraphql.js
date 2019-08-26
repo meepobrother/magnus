@@ -871,10 +871,17 @@ class TsToGraphqlVisitor {
             // 搜集字段
             this.isEntity = true;
             const name = node.name && node.name.visit(expression_1.expressionVisitor, ``);
-            this.entities[name] = (node.members || []).map((member) => {
-                const name = member.name.visit(expression_1.expressionVisitor, ``);
+            this.entities[name] = (node.members || []).filter(it => !!it).map((member) => {
+                const name = member.name && member.name.visit(expression_1.expressionVisitor, ``);
                 const decorators = member.getDecorators()(expression_1.expressionVisitor);
                 const type = member.type && member.type.visit(expression_1.expressionVisitor, ``);
+                const method = member;
+                const args = method.parameters && method.parameters.map((arg, index) => {
+                    const name = arg.name.visit(expression_1.expressionVisitor, ``);
+                    return {
+                        name, index
+                    };
+                });
                 let entity = ``;
                 if (typeof type === "string") {
                     entity = type;
@@ -885,9 +892,10 @@ class TsToGraphqlVisitor {
                 else {
                 }
                 return {
-                    name,
+                    name: name || 'controller',
                     decorators,
-                    entity
+                    entity,
+                    parameters: args
                 };
             });
         }

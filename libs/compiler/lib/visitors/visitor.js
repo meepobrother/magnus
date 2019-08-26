@@ -543,6 +543,30 @@ class ConstructorDeclaration extends Node {
             throw new Error(`${visitor.name} 没有 visitConstructorDeclaration 方法`);
         }
     }
+    getDecorators() {
+        return (visitor) => {
+            const decorators = this.decorators.map(dec => dec.visit(visitor, {}));
+            return decorators.map(dec => dec.name);
+        };
+    }
+    getDecorator(name) {
+        return (visitor) => {
+            const decorators = this.decorators.map(dec => dec.visit(visitor, {}));
+            const item = decorators.find(dec => dec.name === name);
+            if (item) {
+                if (item.arguments.length === 1) {
+                    return item.arguments[0];
+                }
+                else if (item.arguments.length === 0) {
+                    return undefined;
+                }
+                else {
+                    return item.arguments;
+                }
+            }
+            return null;
+        };
+    }
 }
 exports.ConstructorDeclaration = ConstructorDeclaration;
 class AsteriskToken extends Node {
