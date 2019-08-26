@@ -67,6 +67,7 @@ export declare class MagnusVisitor implements ast.Visitor {
     name: string;
     collection: CollectionContext;
     constructor(manager: MangusContextManager);
+    visitSemicolonClassElement(node: ast.SemicolonClassElement, context: any): void;
     visitClassDeclaration(node: ast.ClassDeclaration, context: CollectionContext): MagnusTopContext | undefined;
     isNull(val: any): val is null;
     setMagnus(node: ast.GetAccessorDeclaration | ast.SetAccessorDeclaration | ast.MethodDeclaration | ast.PropertyDeclaration, context: MagnusTopContext): void;

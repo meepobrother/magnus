@@ -64,37 +64,39 @@ async function bootstrap(config) {
             // 这里生成客户端使用的对应的graphql
             const apiVisitor = new api_1.ApiVisitor();
             if (documentAst.definitions.length > 17) {
-                documentAst.visit(apiVisitor, {});
-                let api = ``;
-                if (apiVisitor.query) {
-                    apiVisitor.query.list.map((li) => (api += `${li}\n`));
-                }
-                if (apiVisitor.mutation) {
-                    apiVisitor.mutation.list.map((li) => (api += `${li}\n`));
-                }
-                if (apiVisitor.subscription) {
-                    apiVisitor.subscription.list.map((li) => (api += `${li}\n`));
-                }
                 const res = magnus_graphql_1.toJson(documentAst);
-                if (api.length > 0) {
-                    if (isServer && config.scripts) {
-                        const content = graphql_1.print(res);
-                        fs_extra_1.writeFileSync(path_1.join(assets, `magnus.server.graphql`), content);
-                        fs_extra_1.writeFileSync(path_1.join(assets, `magnus.server-api.graphql`), api);
-                        const schema = graphql_1.buildASTSchema(res);
-                        fs_extra_1.writeFileSync(path_1.join(assets, "magnus.server-schema.json"), JSON.stringify(graphql_1.introspectionFromSchema(schema), null, 2));
-                        buildApi_1.buildNgApi(path_1.join(assets, "magnus.server-schema.json"), path_1.join(assets, `magnus.server-api.graphql`), path_1.join(dist, `magnus.server-angular.v${config.version || `1.0.0`}.ts`), config.name);
-                        buildApi_1.buildReactApi(path_1.join(assets, "magnus.server-schema.json"), path_1.join(assets, `magnus.server-api.graphql`), path_1.join(dist, `magnus.server-react.v${config.version || `1.0.0`}.tsx`), config.name);
-                        buildApi_1.buildMagnusApi(path_1.join(assets, "magnus.server-schema.json"), path_1.join(assets, `magnus.server-api.graphql`), path_1.join(dist, `magnus.server-magnus.v${config.version || `1.0.0`}.ts`), config.name);
-                        // create ast
-                        const parseGraphqlAst = magnus_graphql_1.parse(api);
-                        const apiToProto = new apiToGraphql_1.ApiToProto();
-                        apiToProto.schema = magnus_graphql_1.parse(content);
-                        apiToProto.config = config;
-                        const proto = parseGraphqlAst.visit(apiToProto, collectionContext);
-                        const protoAst = new magnus_grpc_1.ast.ParseVisitor();
-                        const protoStr = proto.visit(protoAst, ``);
-                        fs_extra_1.writeFileSync(path_1.join(assets, `magnus.server.proto`), protoStr);
+                if (config.scripts) {
+                    documentAst.visit(apiVisitor, {});
+                    let api = ``;
+                    if (apiVisitor.query) {
+                        apiVisitor.query.list.map((li) => (api += `${li}\n`));
+                    }
+                    if (apiVisitor.mutation) {
+                        apiVisitor.mutation.list.map((li) => (api += `${li}\n`));
+                    }
+                    if (apiVisitor.subscription) {
+                        apiVisitor.subscription.list.map((li) => (api += `${li}\n`));
+                    }
+                    if (api.length > 0) {
+                        if (isServer && config.scripts) {
+                            const content = graphql_1.print(res);
+                            fs_extra_1.writeFileSync(path_1.join(assets, `magnus.server.graphql`), content);
+                            fs_extra_1.writeFileSync(path_1.join(assets, `magnus.server-api.graphql`), api);
+                            const schema = graphql_1.buildASTSchema(res);
+                            fs_extra_1.writeFileSync(path_1.join(assets, "magnus.server-schema.json"), JSON.stringify(graphql_1.introspectionFromSchema(schema), null, 2));
+                            buildApi_1.buildNgApi(path_1.join(assets, "magnus.server-schema.json"), path_1.join(assets, `magnus.server-api.graphql`), path_1.join(dist, `magnus.server-angular.v${config.version || `1.0.0`}.ts`), config.name);
+                            buildApi_1.buildReactApi(path_1.join(assets, "magnus.server-schema.json"), path_1.join(assets, `magnus.server-api.graphql`), path_1.join(dist, `magnus.server-react.v${config.version || `1.0.0`}.tsx`), config.name);
+                            buildApi_1.buildMagnusApi(path_1.join(assets, "magnus.server-schema.json"), path_1.join(assets, `magnus.server-api.graphql`), path_1.join(dist, `magnus.server-magnus.v${config.version || `1.0.0`}.ts`), config.name);
+                            // create ast
+                            const parseGraphqlAst = magnus_graphql_1.parse(api);
+                            const apiToProto = new apiToGraphql_1.ApiToProto();
+                            apiToProto.schema = magnus_graphql_1.parse(content);
+                            apiToProto.config = config;
+                            const proto = parseGraphqlAst.visit(apiToProto, collectionContext);
+                            const protoAst = new magnus_grpc_1.ast.ParseVisitor();
+                            const protoStr = proto.visit(protoAst, ``);
+                            fs_extra_1.writeFileSync(path_1.join(assets, `magnus.server.proto`), protoStr);
+                        }
                     }
                 }
                 // 搜集metadata entity数据库 类名 依赖名
@@ -123,26 +125,26 @@ async function bootstrap(config) {
                 const sourceFile = astToGraphqlVisitor.documentAst;
                 if (sourceFile.definitions.length > 17) {
                     const context = `import {
-    Double,
-    Float,
-    Int32,
-    Uint32,
-    Sint32,
-    Fixed32,
-    Sfixed32,
-    Int64,
-    Uint64,
-    Sint64,
-    Fixed64,
-    Sfixed64,
-    Bool,
-    String,
-    Bytes,
-    Empty,
-    ID
-} from '@notadd/magnus-core';
-import { Observable } from 'rxjs';
-`;
+        Double,
+        Float,
+        Int32,
+        Uint32,
+        Sint32,
+        Fixed32,
+        Sfixed32,
+        Int64,
+        Uint64,
+        Sint64,
+        Fixed64,
+        Sfixed64,
+        Bool,
+        String,
+        Bytes,
+        Empty,
+        ID
+    } from '@notadd/magnus-core';
+    import { Observable } from 'rxjs';
+    `;
                     const content = sourceFile.visit(visitor, context);
                     if (isServer) {
                         // declare
@@ -157,89 +159,89 @@ import { Observable } from 'rxjs';
                     const path2 = path_1.join(assets, `magnus.proto`);
                     const relativePath = path_1.relative(dist, path2);
                     const index = `import { Transport } from '@nestjs/microservices';
-import { join } from 'path';
-export const ${lodash_1.camelCase(config.name)}Options: any = {
-    transport: Transport.GRPC,
-    options: {
-        url: \`\${process.env.${config.hostEnv ||
+    import { join } from 'path';
+    export const ${lodash_1.camelCase(config.name)}Options: any = {
+        transport: Transport.GRPC,
+        options: {
+            url: \`\${process.env.${config.hostEnv ||
                         "COMMON_HOST"} || '0.0.0.0'}:\${process.env.${config.portEnv ||
                         "COMMON_PORT"}||'9001'}\`,
-        package: '${config.name || "magnus"}',
-        protoPath: join(__dirname, '${relativePath}'),
-    },
-    name: "${config.name || "magnus"}"
-};
-`;
+            package: '${config.name || "magnus"}',
+            protoPath: join(__dirname, '${relativePath}'),
+        },
+        name: "${config.name || "magnus"}"
+    };
+    `;
                     fs_extra_1.writeFileSync(path_1.join(dist, `${config.name}.ts`), index);
                     const path23 = path_1.join(assets, `magnus.server.proto`);
                     const relativePath3 = path_1.relative(dist, path23);
                     const indexServer = `import { Transport } from '@nestjs/microservices';
-import { join } from 'path';
-export const ${lodash_1.camelCase(config.name)}Options: any = {
-    transport: Transport.GRPC,
-    options: {
-        url: \`\${process.env.${config.hostEnv ||
+    import { join } from 'path';
+    export const ${lodash_1.camelCase(config.name)}Options: any = {
+        transport: Transport.GRPC,
+        options: {
+            url: \`\${process.env.${config.hostEnv ||
                         "COMMON_HOST"} || '0.0.0.0'}:\${process.env.${config.portEnv ||
                         "COMMON_PORT"}||'9001'}\`,
-        package: '${config.name || "magnus"}',
-        protoPath: join(__dirname, '${relativePath3}'),
-    },
-    name: "${config.name || "magnus"}"
-};
-`;
+            package: '${config.name || "magnus"}',
+            protoPath: join(__dirname, '${relativePath3}'),
+        },
+        name: "${config.name || "magnus"}"
+    };
+    `;
                     fs_extra_1.writeFileSync(path_1.join(dist, `${config.name}.server.ts`), indexServer);
                     const injectableContext = `import { Injectable } from '@nestjs/common';
-import { systemSettingOptions } from './systemSetting.server';
-import { Client, ClientGrpc } from '@nestjs/microservices';
-import { Query, Mutation } from './magnus.server';
-@Injectable()
-export default class Resolver {
-	@Client(systemSettingOptions)
-	client: ClientGrpc;
-	query: Query;
-	mutation: Mutation;
-	onModuleInit() {
-		this.query = this.client.getService<Query>("Query");
-		this.mutation = this.client.getService<Mutation>("Mutation");
-	}
-}
-`;
+    import { systemSettingOptions } from './systemSetting.server';
+    import { Client, ClientGrpc } from '@nestjs/microservices';
+    import { Query, Mutation } from './magnus.server';
+    @Injectable()
+    export default class Resolver {
+        @Client(systemSettingOptions)
+        client: ClientGrpc;
+        query: Query;
+        mutation: Mutation;
+        onModuleInit() {
+            this.query = this.client.getService<Query>("Query");
+            this.mutation = this.client.getService<Mutation>("Mutation");
+        }
+    }
+    `;
                     fs_extra_1.writeFileSync(path_1.join(dist, `${config.name}.injector.ts`), injectableContext);
                     const path24 = path_1.join(assets, `magnus.metadata.json`);
                     const relativePath4 = path_1.relative(dist, path24);
                     const resolverFactory = `import { Injectable } from '@nestjs/common';
-import Resolver from './systemSetting.injector';
-import { upperFirst } from 'lodash';
-import { GraphQLResolveInfo } from 'graphql';
-const metadata = require("${relativePath4}");
-
-@Injectable()
-export class ResolverFactory {
-	constructor(public inject: Resolver) {}
-	create() {
-		const resolver = {};
-		Object.keys(metadata).map(key => {
-			const operator = upperFirst(key);
-			resolver[\`\${operator}\`] = resolver[\`\${operator}\`] || {};
-			const obj = metadata[key];
-			Object.keys(obj).map(hkey => {
-				resolver[\`\${operator\}\`][hkey] = (
-					source: any,
-					args: any,
-					context: any,
-					info: GraphQLResolveInfo
-				) => {
-					if (operator === 'Query') {
-						return this.inject.query[\`\${hkey}\`](args);
-					} else {
-						return this.inject.mutation[\`\${hkey\}\`](args);
-					}
-				};
-			});
-		});
-	}
-}
-`;
+    import Resolver from './systemSetting.injector';
+    import { upperFirst } from 'lodash';
+    import { GraphQLResolveInfo } from 'graphql';
+    const metadata = require("${relativePath4}");
+    
+    @Injectable()
+    export class ResolverFactory {
+        constructor(public inject: Resolver) {}
+        create() {
+            const resolver = {};
+            Object.keys(metadata).map(key => {
+                const operator = upperFirst(key);
+                resolver[\`\${operator}\`] = resolver[\`\${operator}\`] || {};
+                const obj = metadata[key];
+                Object.keys(obj).map(hkey => {
+                    resolver[\`\${operator\}\`][hkey] = (
+                        source: any,
+                        args: any,
+                        context: any,
+                        info: GraphQLResolveInfo
+                    ) => {
+                        if (operator === 'Query') {
+                            return this.inject.query[\`\${hkey}\`](args);
+                        } else {
+                            return this.inject.mutation[\`\${hkey\}\`](args);
+                        }
+                    };
+                });
+            });
+        }
+    }
+    `;
                     fs_extra_1.writeFileSync(path_1.join(dist, `resolverFactory.ts`), resolverFactory);
                 }
                 if (isServer) {
@@ -254,9 +256,9 @@ export class ResolverFactory {
                 }
                 fs_extra_1.writeFileSync(path_1.join(assets, `ip.txt`), `${config.name}前端接口:${config.host}${config.port ? `:${config.port}` : ""}`);
                 fs_extra_1.writeFileSync(path_1.join(dist, `api-url.v${config.version}.ts`), `export const apiConfig = {
-  apiUrl: 'http://${config.host}${config.port ? `:${config.port}` : ""}/graphql',
-  name: '${config.name}'
-};`);
+      apiUrl: 'http://${config.host}${config.port ? `:${config.port}` : ""}/graphql',
+      name: '${config.name}'
+    };`);
             }
         }
         if (config.debug) {

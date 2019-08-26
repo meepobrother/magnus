@@ -162,6 +162,7 @@ class MagnusVisitor {
         this.manager = manager;
         this.name = `MagnusVisitor`;
     }
+    visitSemicolonClassElement(node, context) { }
     visitClassDeclaration(node, context) {
         this.collection = context;
         const resolver = node.getDecorator("Resolver")(expression_1.expressionVisitor);
