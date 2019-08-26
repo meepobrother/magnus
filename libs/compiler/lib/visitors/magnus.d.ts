@@ -36,6 +36,7 @@ export declare class MagnusContext {
     isNonNull: boolean;
     params: any;
     class: ClassDef;
+    getNotT(): any;
     oldName: string;
     readonly topName: string;
     readonly parentName: string;

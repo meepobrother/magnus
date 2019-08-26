@@ -81,6 +81,12 @@ export class MagnusContext {
     name: ``,
     relations: []
   };
+  getNotT(): any {
+    if (this.currentEntity === "T") {
+      return this.contextParent.getNotT();
+    }
+    return this.currentEntity;
+  }
   //防止无限循环
   oldName: string;
   get topName(): string {

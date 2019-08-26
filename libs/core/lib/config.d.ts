@@ -1,5 +1,6 @@
 /// <reference types="node" />
 export interface MagnusConfig {
+    scripts: boolean;
     /**
      * 根目录
      */

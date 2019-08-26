@@ -1,4 +1,0 @@
-package demo;
-syntax = "proto3";
-message Empty{
-}

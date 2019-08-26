@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const typeorm_1 = require("typeorm");
 class MagnusBase {
     init(tablename, selection, def, entities) {
         this.tablename = this.tablename || tablename;
@@ -8,6 +9,71 @@ class MagnusBase {
         this.entities = entities;
         this.relations = this.typeDef[this.tablename];
         this.entity = this.entities[this.tablename];
+    }
+    createWhere(where, opt = "and", result) {
+        if (where)
+            Object.keys(where).map(key => {
+                const keys = key.split("_");
+                let type = ``;
+                let column = ``;
+                if (keys.length > 1) {
+                    type = keys.pop();
+                }
+                else {
+                    type = undefined;
+                    const opt = keys[0];
+                    if (opt === "OR") {
+                        const ors = where[opt];
+                        ors.map((or) => {
+                            this.createWhere(or, "or");
+                        });
+                    }
+                    else if (opt === "AND") {
+                        const ands = where[opt];
+                        ands.map((or) => {
+                            this.createWhere(or, "and");
+                        });
+                    }
+                    else if (opt === "NOT") {
+                        const nots = where[opt];
+                        nots.map((or) => {
+                            this.createWhere(or, "not");
+                        });
+                    }
+                }
+                column = keys.join("_");
+                const value = where[key];
+                switch (type) {
+                    case "Not":
+                        return new typeorm_1.FindOperator("not", value);
+                    case "in":
+                        return new typeorm_1.FindOperator("in", value);
+                    case "NotIn":
+                        return new typeorm_1.FindOperator("not", new typeorm_1.FindOperator("in", value));
+                    case "Lt":
+                        return new typeorm_1.FindOperator("lessThan", value);
+                    case "Lte":
+                        return new typeorm_1.FindOperator("lessThanOrEqual", value);
+                    case "Gt":
+                        return new typeorm_1.FindOperator("moreThan", value);
+                    case "Gte":
+                        return new typeorm_1.FindOperator("moreThanOrEqual", value);
+                    case "Contains":
+                        return new typeorm_1.FindOperator("like", `%${value}%`);
+                    case "NotContains":
+                        return new typeorm_1.FindOperator("not", new typeorm_1.FindOperator("like", `%${value}%`));
+                    case "StartsWith":
+                        return new typeorm_1.FindOperator("like", `${value}%`);
+                    case "NotStartsWith":
+                        return new typeorm_1.FindOperator("not", new typeorm_1.FindOperator("like", `${value}%`));
+                    case "EndsWith":
+                        return new typeorm_1.FindOperator("like", `%${value}`);
+                    case "NotEndsWith":
+                        return new typeorm_1.FindOperator("not", new typeorm_1.FindOperator("like", `%${value}`));
+                    default:
+                        return new typeorm_1.FindOperator("equal", value);
+                }
+            });
     }
     createSelectAndRelations() {
         const select = [];

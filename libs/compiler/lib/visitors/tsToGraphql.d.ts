@@ -13,8 +13,8 @@ export declare class Handler {
     private __order;
     private __where;
     constructor(visitor: TsToGraphqlVisitor);
-    Promise(node: ast.TypeReferenceNode | ast.TypeAliasDeclaration, context: any): graphql.NamedTypeAst<any, any> | graphql.ListTypeAst<any, any> | graphql.NonNullTypeAst<any, any> | undefined;
-    Observable(node: ast.TypeReferenceNode | ast.TypeAliasDeclaration, context: any): graphql.NamedTypeAst<any, any> | graphql.ListTypeAst<any, any> | graphql.NonNullTypeAst<any, any> | undefined;
+    Promise(node: ast.TypeReferenceNode | ast.TypeAliasDeclaration, context: any): graphql.NonNullTypeAst<any, any> | graphql.NamedTypeAst<any, any> | graphql.ListTypeAst<any, any> | undefined;
+    Observable(node: ast.TypeReferenceNode | ast.TypeAliasDeclaration, context: any): graphql.NonNullTypeAst<any, any> | graphql.NamedTypeAst<any, any> | graphql.ListTypeAst<any, any> | undefined;
     Order(node: ast.TypeReferenceNode | ast.TypeAliasDeclaration, context: any): graphql.NamedTypeAst<any, any> | undefined;
     DeepPartial(node: ast.TypeReferenceNode | ast.TypeAliasDeclaration, context: any): graphql.NamedTypeAst<any, any> | undefined;
     Partial(node: ast.TypeReferenceNode | ast.TypeAliasDeclaration, context: any): graphql.NamedTypeAst<any, any> | undefined;

@@ -77,7 +77,7 @@ async function bootstrap(config) {
                 }
                 const res = magnus_graphql_1.toJson(documentAst);
                 if (api.length > 0) {
-                    if (isServer) {
+                    if (isServer && config.scripts) {
                         const content = graphql_1.print(res);
                         fs_extra_1.writeFileSync(path_1.join(assets, `magnus.server.graphql`), content);
                         fs_extra_1.writeFileSync(path_1.join(assets, `magnus.server-api.graphql`), api);
@@ -138,7 +138,8 @@ async function bootstrap(config) {
     Bool,
     String,
     Bytes,
-    Empty
+    Empty,
+    ID
 } from '@notadd/magnus-core';
 import { Observable } from 'rxjs';
 `;
@@ -170,6 +171,76 @@ export const ${lodash_1.camelCase(config.name)}Options: any = {
 };
 `;
                     fs_extra_1.writeFileSync(path_1.join(dist, `${config.name}.ts`), index);
+                    const path23 = path_1.join(assets, `magnus.server.proto`);
+                    const relativePath3 = path_1.relative(dist, path23);
+                    const indexServer = `import { Transport } from '@nestjs/microservices';
+import { join } from 'path';
+export const ${lodash_1.camelCase(config.name)}Options: any = {
+    transport: Transport.GRPC,
+    options: {
+        url: \`\${process.env.${config.hostEnv ||
+                        "COMMON_HOST"} || '0.0.0.0'}:\${process.env.${config.portEnv ||
+                        "COMMON_PORT"}||'9001'}\`,
+        package: '${config.name || "magnus"}',
+        protoPath: join(__dirname, '${relativePath3}'),
+    },
+    name: "${config.name || "magnus"}"
+};
+`;
+                    fs_extra_1.writeFileSync(path_1.join(dist, `${config.name}.server.ts`), indexServer);
+                    const injectableContext = `import { Injectable } from '@nestjs/common';
+import { systemSettingOptions } from './systemSetting.server';
+import { Client, ClientGrpc } from '@nestjs/microservices';
+import { Query, Mutation } from './magnus.server';
+@Injectable()
+export default class Resolver {
+	@Client(systemSettingOptions)
+	client: ClientGrpc;
+	query: Query;
+	mutation: Mutation;
+	onModuleInit() {
+		this.query = this.client.getService<Query>("Query");
+		this.mutation = this.client.getService<Mutation>("Mutation");
+	}
+}
+`;
+                    fs_extra_1.writeFileSync(path_1.join(dist, `${config.name}.injector.ts`), injectableContext);
+                    const path24 = path_1.join(assets, `magnus.metadata.json`);
+                    const relativePath4 = path_1.relative(dist, path24);
+                    const resolverFactory = `import { Injectable } from '@nestjs/common';
+import Resolver from './systemSetting.injector';
+import { upperFirst } from 'lodash';
+import { GraphQLResolveInfo } from 'graphql';
+const metadata = require("${relativePath4}");
+
+@Injectable()
+export class ResolverFactory {
+	constructor(public inject: Resolver) {}
+	create() {
+		const resolver = {};
+		Object.keys(metadata).map(key => {
+			const operator = upperFirst(key);
+			resolver[\`\${operator}\`] = resolver[\`\${operator}\`] || {};
+			const obj = metadata[key];
+			Object.keys(obj).map(hkey => {
+				resolver[\`\${operator\}\`][hkey] = (
+					source: any,
+					args: any,
+					context: any,
+					info: GraphQLResolveInfo
+				) => {
+					if (operator === 'Query') {
+						return this.inject.query[\`\${hkey}\`](args);
+					} else {
+						return this.inject.mutation[\`\${hkey\}\`](args);
+					}
+				};
+			});
+		});
+	}
+}
+`;
+                    fs_extra_1.writeFileSync(path_1.join(dist, `resolverFactory.ts`), resolverFactory);
                 }
                 if (isServer) {
                     const entities = astToGraphqlVisitor.tsToGraphqlVisitor.entities;
@@ -291,6 +362,7 @@ function sendFile(config) {
     const assets = path_1.join(config.root, config.assets, config.name);
     if (target === "magnus") {
         sendLocalFile(dist, `${config.name}.ts`, config);
+        sendLocalFile(dist, `${config.name}.server.ts`, config);
         sendLocalFile(dist, "magnus.ts", config);
         sendLocalFile(dist, "magnus.server.ts", config);
         sendLocalFile(dist, `magnus.server-angular.v${config.version || "1.0.0"}.ts`, config);

@@ -451,6 +451,7 @@ class TsToGraphqlVisitor {
                 if (type)
                     res.type = this.createNonNullTypeAst(type);
             }
+            context.currentEntity = context.getNotT();
             context.currentName = node.name.visit(expression_1.expressionVisitor, ``);
             res.name = this.visitPropertyName(node.name, context);
             return res;
@@ -470,6 +471,7 @@ class TsToGraphqlVisitor {
                 if (type)
                     res.type = this.createNonNullTypeAst(type);
             }
+            context.currentEntity = context.getNotT();
             context.currentName = node.name.visit(expression_1.expressionVisitor, ``);
             res.name = this.visitPropertyName(node.name, context);
             return res;
@@ -507,6 +509,7 @@ class TsToGraphqlVisitor {
                     res.type = this.createNonNullTypeAst(type);
             }
         }
+        context.currentEntity = context.getNotT();
         context.currentName = node.name.visit(expression_1.expressionVisitor, context);
         res.name = this.visitPropertyName(node.name, context);
         return res;
@@ -633,6 +636,7 @@ class TsToGraphqlVisitor {
             if (ResolveProperty === null) {
                 context._needChangeName = true;
                 const name = node.name.visit(expression_1.expressionVisitor, ``);
+                context.currentEntity = context.getNotT();
                 context.currentName = lodash_1.camelCase(`${context.currentEntity}_${name}`);
             }
         }
@@ -790,18 +794,7 @@ class TsToGraphqlVisitor {
     }
     visitTypeReferenceNode(node, context) {
         const typeName = expression_1.expressionVisitor.visitTypeReferenceNode(node, ``);
-        if (typeName === "ListMessages") {
-            if (context.currentEntity === this.currentEntity) {
-                // 没变
-            }
-            else {
-                this.lastCurrentEntity = this.currentEntity;
-                this.currentEntity = context.currentEntity;
-            }
-        }
-        if (context.currentEntity === "T") {
-            context.currentEntity = this.currentEntity;
-        }
+        context.currentEntity = context.getNotT();
         const typeArguments = node.typeArguments.map(t => t.visit(expression_1.expressionVisitor, ``));
         const handler = this.handler[typeName];
         if (handler) {
@@ -834,7 +827,7 @@ class TsToGraphqlVisitor {
                         return context.currentEntity;
                     }
                     else {
-                        context.currentEntity = it;
+                        context.currentEntity = it === "T" ? context.currentEntity : it;
                         return context.currentEntity;
                     }
                 }
@@ -990,6 +983,7 @@ class TsToGraphqlVisitor {
         context.isProperty = true;
         context.isUpperFirst = true;
         node.typeParameters.map(type => context.typeParameters.add(type.visit(expression_1.expressionVisitor, ``)));
+        context.currentEntity = context.getNotT();
         if (context.isInput) {
             const ast = new magnus_graphql_1.ast.InputObjectTypeDefinitionAst();
             const description = this.createStringValue(node.docs.map(doc => this.visitJSDoc(doc, context)));
