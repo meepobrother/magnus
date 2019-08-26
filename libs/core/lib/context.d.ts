@@ -12,7 +12,8 @@ declare type Arguments = {
     index: number;
     decorator: string[];
 }[];
-export declare type HandlerDef = [FieldName, ClassName, TableName, MethodName, Arguments];
+declare type TypeName = string;
+export declare type HandlerDef = [FieldName, ClassName, TableName, MethodName, Arguments, TypeName];
 export interface HandlerDefMap {
     [key: string]: HandlerDef[];
 }

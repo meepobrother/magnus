@@ -16,12 +16,15 @@ type Arguments = {
   index: number;
   decorator: string[];
 }[];
+type TypeName = string;
+
 export type HandlerDef = [
   FieldName,
   ClassName,
   TableName,
   MethodName,
-  Arguments
+  Arguments,
+  TypeName
 ];
 export interface HandlerDefMap {
   [key: string]: HandlerDef[];

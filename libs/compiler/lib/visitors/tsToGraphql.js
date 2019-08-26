@@ -571,7 +571,8 @@ class TsToGraphqlVisitor {
                     decorator: arg.decorator
                 };
                 return res;
-            })
+            }),
+            node.type.visit(expression_1.expressionVisitor, ``)
         ];
     }
     visitMethodDeclaration(node, context) {

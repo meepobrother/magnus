@@ -630,7 +630,8 @@ export class TsToGraphqlVisitor implements ast.Visitor {
                     decorator: arg.decorator
                 };
                 return res;
-            })
+            }),
+            node.type.visit(expressionVisitor, ``)
         ];
     }
     visitMethodDeclaration(

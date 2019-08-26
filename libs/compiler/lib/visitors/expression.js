@@ -62,7 +62,14 @@ class ExpressionVisitor {
         };
     }
     visitTypeReferenceNode(node, context) {
-        return node.typeName.visit(this, context);
+        const typeName = node.typeName.visit(this, context);
+        if (typeName === 'Promise') {
+            return node.typeArguments[0].visit(this, context);
+        }
+        else if (typeName === 'Observable') {
+            return node.typeArguments[0].visit(this, context);
+        }
+        return typeName;
     }
     //
     visitImportDeclaration(node, context) {
