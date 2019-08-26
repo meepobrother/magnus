@@ -272,32 +272,32 @@
   dependencies:
     lodash "^4.15.0"
 
-"@notadd/codegen-nest-client@^3.3.29":
-  version "3.3.29"
-  resolved "https://registry.yarnpkg.com/@notadd/codegen-nest-client/-/codegen-nest-client-3.3.29.tgz#df78fd26e21eb239336b12cb58ab3cbd24cd27fa"
-  integrity sha512-tkiSvFHV/6i/5VM7/Ki7zhQD1X+34iVOgrqtrm/OQGDa2coXc395zYT7LrT6wbGW1TtFRvNKfvyv2pyAMrJhDw==
+"@notadd/codegen-nest-client@^3.4.4":
+  version "3.4.4"
+  resolved "https://registry.yarnpkg.com/@notadd/codegen-nest-client/-/codegen-nest-client-3.4.4.tgz#07a5bff70c054699fbd13ecce918d76caadc33ca"
+  integrity sha512-Y7bPFe0NRDHRGedMrp+3A6IFhDqflutp0O1I8I1l3N3dWFSkesl7HsUI/pDDxQxjAw2XfdKOd0vhy9JTk8eKTQ==
 
-"@notadd/magnus-core@^3.3.29":
-  version "3.3.29"
-  resolved "https://registry.yarnpkg.com/@notadd/magnus-core/-/magnus-core-3.3.29.tgz#8b4f694e7925904273d9109cba919b195871cf62"
-  integrity sha512-Tk3uGveBqCRvJhQOg5aRkxi/bFxiPEi+ZhORAHCQngrVt8vkUQjEpjABmOTM0TQp5dUQdUt/KkkAxyB2hweK4w==
+"@notadd/magnus-core@^3.4.4":
+  version "3.4.4"
+  resolved "https://registry.yarnpkg.com/@notadd/magnus-core/-/magnus-core-3.4.4.tgz#4bd1dd3897da81f70341a4f8a56a197d37be1677"
+  integrity sha512-lDnAaL2HZiVTzv3pr6LKtNeJcbVSehM8a4BqoVl5yxsrRJ21+wlu+85QHPNlhxdOmzgor7I4GI0q54fB8pafeA==
   dependencies:
     graphql "^14.4.2"
     tslib "^1.10.0"
     typeorm "^0.2.18"
 
-"@notadd/magnus-graphql@^3.3.29":
-  version "3.3.29"
-  resolved "https://registry.yarnpkg.com/@notadd/magnus-graphql/-/magnus-graphql-3.3.29.tgz#56ba75e1487acb354fc61150b36502a25116c96a"
-  integrity sha512-hpJaMexvEJyU8ehzoO/v3Hg6gzlKOh6kK+nvjWn3l4APIIbgicz+k97drClX1m6RtGo1zTY8BYfPUkb9PA4W+w==
+"@notadd/magnus-graphql@^3.4.4":
+  version "3.4.4"
+  resolved "https://registry.yarnpkg.com/@notadd/magnus-graphql/-/magnus-graphql-3.4.4.tgz#039f84260691f1a46425a7dadba85836cb3d099d"
+  integrity sha512-nwUPDL0n/OeZ9umcerzXbHRGgKk8PjDejWjFtov/9s4pggFiSWLMgWEmJmAEL5+xdD2e4GOaZEw7TE5kJt/nLA==
   dependencies:
     graphql "^14.4.2"
     tslib "^1.10.0"
 
-"@notadd/magnus-grpc@^3.3.29":
-  version "3.3.29"
-  resolved "https://registry.yarnpkg.com/@notadd/magnus-grpc/-/magnus-grpc-3.3.29.tgz#0213e1c1fe2f90d7895678b98243dbeb537c8cf9"
-  integrity sha512-hxs4ulfwwWj/AicX8Bc1yBl9LX/Ouy8FFE6CxhY03JjllTWTI4Eu45QNI7V4f7sEwJhk+8Xuc++AW0Qe6MkD4A==
+"@notadd/magnus-grpc@^3.4.4":
+  version "3.4.4"
+  resolved "https://registry.yarnpkg.com/@notadd/magnus-grpc/-/magnus-grpc-3.4.4.tgz#284efdd6fe24fb70878a616f551e4c24d7334272"
+  integrity sha512-guDHL3KqLWSUMbG6WPVJ/44PJUvLr54WBlQGCuYKJC5brlnL19sDTgd/pcSZGdCPKhN+PuNbuBokN03SSDIDiw==
   dependencies:
     "@nestjs/common" "^6.4.1"
     "@types/multimatch" "^2.1.3"
@@ -3200,7 +3200,7 @@ pull-stream@^3.2.3, pull-stream@^3.6.13, pull-stream@^3.6.9:
   resolved "https://registry.yarnpkg.com/pull-stream/-/pull-stream-3.6.14.tgz#529dbd5b86131f4a5ed636fdf7f6af00781357ee"
   integrity sha512-KIqdvpqHHaTUA2mCYcLG1ibEbu/LCKoJZsBWyv9lSYtPkJPBq8m3Hxa103xHi6D2thj5YXa0TqK3L3GUkwgnew==
 
-"pull-ws@github:hugomrdias/pull-ws#fix/bundle-size":
+pull-ws@hugomrdias/pull-ws#fix/bundle-size:
   version "3.3.1"
   resolved "https://codeload.github.com/hugomrdias/pull-ws/tar.gz/8e2ce0bb3b1cd6804828316e937fff8e0bef6225"
   dependencies:
