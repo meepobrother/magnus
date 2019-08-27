@@ -30,7 +30,6 @@ class Handler {
         this.__where = new Set();
     }
     Promise(node, context) {
-        console.log(`Promise`);
         if (node instanceof ast.TypeReferenceNode) {
             if (node.typeArguments.length === 1) {
                 const typeNode = node.typeArguments[0];
@@ -557,6 +556,14 @@ class TsToGraphqlVisitor {
         return property;
     }
     createMetadate(res, context, node) {
+        const type = node.type.visit(this, context);
+        let typeName = type.name.value;
+        if (typeof typeName === 'string') {
+            typeName = typeName.replace('ListMessages', '');
+            typeName = typeName.replace('Messages', '');
+            typeName = typeName.replace('Message', '');
+        }
+        console.log(typeName);
         return [
             res.name.value,
             context.topName,
@@ -573,7 +580,7 @@ class TsToGraphqlVisitor {
                 };
                 return res;
             }),
-            node.type.visit(expression_1.expressionVisitor, ``)
+            typeName
         ];
     }
     visitMethodDeclaration(node, context) {
@@ -630,9 +637,9 @@ class TsToGraphqlVisitor {
         // 返回值
         context.isNonNull = false;
         const type = this.visitTypeNode(node.type, context);
-        // if (type.name.value === '[object Object]') {
+        if (type.name.value === '[object Object]') {
             // console.log(node.type)
-        // }
+        }
         if (type)
             res.type = type;
         if (context.currentEntity.length > 0 &&

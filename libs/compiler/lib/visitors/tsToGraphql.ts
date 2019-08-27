@@ -37,7 +37,6 @@ export class Handler {
         node: ast.TypeReferenceNode | ast.TypeAliasDeclaration,
         context: any
     ) {
-        console.log(`Promise`)
         if (node instanceof ast.TypeReferenceNode) {
             if (node.typeArguments.length === 1) {
                 const typeNode = node.typeArguments[0];
@@ -616,6 +615,14 @@ export class TsToGraphqlVisitor implements ast.Visitor {
         return property;
     }
     createMetadate(res: any, context: any, node: any): HandlerDef {
+        const type = node.type.visit(this, context) as graphql.NamedTypeAst;
+        let typeName = type.name.value;
+        if (typeof typeName === 'string') {
+            typeName = typeName.replace('ListMessages', '')
+            typeName = typeName.replace('Messages', '')
+            typeName = typeName.replace('Message', '')
+        }
+        console.log(typeName)
         return [
             res.name.value,
             context.topName,
@@ -632,7 +639,7 @@ export class TsToGraphqlVisitor implements ast.Visitor {
                 };
                 return res;
             }),
-            node.type.visit(expressionVisitor, ``)
+            typeName
         ];
     }
     visitMethodDeclaration(
