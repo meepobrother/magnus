@@ -880,7 +880,9 @@ class TsToGraphqlVisitor {
                 const args = method.parameters && method.parameters.map((arg, index) => {
                     const name = arg.name.visit(expression_1.expressionVisitor, ``);
                     return {
-                        name, index
+                        name,
+                        index,
+                        decorator: arg.decorators.map(dec => dec.visit(expression_1.expressionVisitor, ``).name)
                     };
                 });
                 let entity = ``;

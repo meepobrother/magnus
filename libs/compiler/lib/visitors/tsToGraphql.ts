@@ -968,10 +968,12 @@ export class TsToGraphqlVisitor implements ast.Visitor {
                 );
                 const type = member.type && member.type.visit(expressionVisitor, ``);
                 const method = member as ast.MethodDeclaration;
-                const args = method.parameters && method.parameters.map((arg: any, index: number) => {
+                const args = method.parameters && method.parameters.map((arg, index: number) => {
                     const name = arg.name.visit(expressionVisitor, ``)
                     return {
-                        name, index
+                        name,
+                        index,
+                        decorator: arg.decorators.map(dec => dec.visit(expressionVisitor, ``).name)
                     }
                 })
                 let entity = ``;
