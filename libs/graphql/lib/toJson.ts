@@ -157,9 +157,10 @@ export class ToJsonVisitor<C = any> implements ast.Visitor<C, l.ASTNode> {
     }
 
     visitNamedTypeAst(node: ast.NamedTypeAst, context: C): l.NamedTypeNode {
+        const name = node.name && node.name.visit(this, context);
         return {
             kind: 'NamedType',
-            name: node.name && node.name.visit(this, context)
+            name
         }
     }
 
@@ -382,9 +383,15 @@ export class ToJsonVisitor<C = any> implements ast.Visitor<C, l.ASTNode> {
         }
     }
     visitNameAst(node: ast.NameAst, context: C): l.NameNode {
+        let name = ``
+        if (typeof node.value === 'string') {
+            name = node.value;
+        } else {
+            console.log(node.value)
+        }
         return {
             kind: 'Name',
-            value: node.value
+            value: name
         }
     }
     visitListTypeAst(node: ast.ListTypeAst, context: C): l.ListTypeNode {

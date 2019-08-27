@@ -138,9 +138,10 @@ class ToJsonVisitor {
         };
     }
     visitNamedTypeAst(node, context) {
+        const name = node.name && node.name.visit(this, context);
         return {
             kind: 'NamedType',
-            name: node.name && node.name.visit(this, context)
+            name
         };
     }
     visitInterfaceTypeExtensionAst(node, context) {
@@ -360,9 +361,16 @@ class ToJsonVisitor {
         };
     }
     visitNameAst(node, context) {
+        let name = ``;
+        if (typeof node.value === 'string') {
+            name = node.value;
+        }
+        else {
+            console.log(node.value);
+        }
         return {
             kind: 'Name',
-            value: node.value
+            value: name
         };
     }
     visitListTypeAst(node, context) {
