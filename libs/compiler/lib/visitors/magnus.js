@@ -55,8 +55,6 @@ class MagnusContext {
         this.typeParameters = new Set();
         this.entities = [];
         this.type = "query";
-        // 当前操作的entity
-        this.currentEntity = ``;
         this.isSelf = false;
         // 是否属性
         this.isProperty = false;
@@ -67,6 +65,17 @@ class MagnusContext {
             name: ``,
             relations: []
         };
+        // 当前操作的entity
+        this._currentEntity = ``;
+    }
+    get currentEntity() {
+        return this._currentEntity;
+    }
+    set currentEntity(entity) {
+        if (['T', 'Message', "Messages", "ListMessages"].includes(entity)) {
+            return;
+        }
+        this._currentEntity = entity;
     }
     getNotT() {
         if (this.currentEntity === "T") {

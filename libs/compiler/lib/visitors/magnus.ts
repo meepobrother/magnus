@@ -66,8 +66,6 @@ export class MagnusContext {
     type: "query" | "mutation" | "subscription" | "proto" | "entity" = "query";
     node: ast.Node;
     name: string;
-    // 当前操作的entity
-    currentEntity: string = ``;
     isSelf: boolean = false;
     // 是否属性
     isProperty: boolean = false;
@@ -81,22 +79,39 @@ export class MagnusContext {
         name: ``,
         relations: []
     };
+    // 当前操作的entity
+    _currentEntity: string = ``;
+    //防止无限循环
+    oldName: string;
+    // 是否需要更名
+    _needChangeName: boolean;
+
+    // 新的名字
+    currentName: string;
+
+    // 首字母大写
+    isUpperFirst: boolean;
+    get currentEntity() {
+        return this._currentEntity;
+    }
+    set currentEntity(entity: string) {
+        if (['T', 'Message', "Messages", "ListMessages"].includes(entity)) {
+            return;
+        }
+        this._currentEntity = entity;
+    }
     getNotT(): any {
         if (this.currentEntity === "T") {
             return this.contextParent.getNotT();
         }
         return this.currentEntity;
     }
-    //防止无限循环
-    oldName: string;
     get topName(): string {
         return this.parent && this.parent.name;
     }
     get parentName() {
         return this.topName;
     }
-    // 是否需要更名
-    _needChangeName: boolean;
     // 是否包含上级
     hasParentName(name: string): boolean {
         if (this.parentName === name) {
@@ -108,17 +123,12 @@ export class MagnusContext {
         }
         return false;
     }
-
     get needChangeName(): boolean {
         if (typeof this._needChangeName === "boolean") return this._needChangeName;
         if (!this.currentName) return false;
         return this.currentName !== this.name;
     }
-    // 新的名字
-    currentName: string;
 
-    // 首字母大写
-    isUpperFirst: boolean;
     get isQuery() {
         return this.type === "query";
     }

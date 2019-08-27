@@ -39,8 +39,9 @@ export declare class ExpressionVisitor implements ast.Visitor {
     visitBinaryExpression(node: ast.BinaryExpression, context: any): void;
     visitBinaryOperatorToken(node: ast.BinaryOperatorToken, context: any): void;
     visitNewExpression(node: ast.NewExpression, context: any): void;
-    visitUnionTypeNode(node: ast.UnionTypeNode, context: any): void;
+    visitUnionTypeNode(node: ast.UnionTypeNode, context: any): any;
     visitNullLiteral(node: ast.NullLiteral, context: any): void;
     visitShorthandPropertyAssignment(node: ast.ShorthandPropertyAssignment, context: any): void;
+    visitTypeNode(node: ast.TypeNode, context: any): any;
 }
 export declare const expressionVisitor: ExpressionVisitor;

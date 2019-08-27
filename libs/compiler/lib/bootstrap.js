@@ -65,6 +65,10 @@ async function bootstrap(config) {
             const apiVisitor = new api_1.ApiVisitor();
             if (documentAst.definitions.length > 17) {
                 const res = magnus_graphql_1.toJson(documentAst);
+                const content = graphql_1.print(res);
+                if (isServer) {
+                    fs_extra_1.writeFileSync(path_1.join(assets, `magnus.server.graphql`), content);
+                }
                 if (config.scripts) {
                     documentAst.visit(apiVisitor, {});
                     let api = ``;
@@ -78,9 +82,7 @@ async function bootstrap(config) {
                         apiVisitor.subscription.list.map((li) => (api += `${li}\n`));
                     }
                     if (api.length > 0) {
-                        if (isServer && config.scripts) {
-                            const content = graphql_1.print(res);
-                            fs_extra_1.writeFileSync(path_1.join(assets, `magnus.server.graphql`), content);
+                        if (isServer) {
                             fs_extra_1.writeFileSync(path_1.join(assets, `magnus.server-api.graphql`), api);
                             const schema = graphql_1.buildASTSchema(res);
                             fs_extra_1.writeFileSync(path_1.join(assets, "magnus.server-schema.json"), JSON.stringify(graphql_1.introspectionFromSchema(schema), null, 2));

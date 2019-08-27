@@ -10,7 +10,6 @@ import {
 } from "@notadd/magnus-core";
 import { expressionVisitor } from "./expression";
 import { CollectionContext } from "./collection";
-import { MethodDeclaration } from 'ts-morph';
 export const toString = new ToString();
 export const WhereMap: { [key: string]: string } = {
     Not: `不等于`,
@@ -33,10 +32,12 @@ export class Handler {
     private __where: Set<string> = new Set();
 
     constructor(public visitor: TsToGraphqlVisitor) { }
+
     Promise(
         node: ast.TypeReferenceNode | ast.TypeAliasDeclaration,
         context: any
     ) {
+        console.log(`Promise`)
         if (node instanceof ast.TypeReferenceNode) {
             if (node.typeArguments.length === 1) {
                 const typeNode = node.typeArguments[0];
@@ -640,7 +641,6 @@ export class TsToGraphqlVisitor implements ast.Visitor {
     ): graphql.FieldDefinitionAst | undefined {
         context.isProperty = false;
         if (context.isInput) {
-            // 完善信息
             return undefined;
         }
         const proto =
@@ -700,6 +700,9 @@ export class TsToGraphqlVisitor implements ast.Visitor {
         // 返回值
         context.isNonNull = false;
         const type = this.visitTypeNode(node.type, context);
+        if ((type as any).name.value === '[object Object]') {
+            // console.log(node.type)
+        }
         if (type) res.type = type;
         if (
             context.currentEntity.length > 0 &&
@@ -874,7 +877,7 @@ export class TsToGraphqlVisitor implements ast.Visitor {
         const typeName = expressionVisitor.visitTypeReferenceNode(node, ``);
         context.currentEntity = context.getNotT();
         const typeArguments = node.typeArguments.map(t =>
-            t.visit(expressionVisitor, ``)
+            expressionVisitor.visitTypeNode(t, ``)
         );
         const handler = (this.handler as any)[typeName];
         if (handler) {
@@ -909,15 +912,24 @@ export class TsToGraphqlVisitor implements ast.Visitor {
                         if (context.hasTypeParameter(it)) {
                             return context.currentEntity;
                         } else {
-                            context.currentEntity = it === "T" ? context.currentEntity : it;
                             return context.currentEntity;
                         }
-                    } else if(it) {
-                        if (context.hasTypeParameter(it.elementType)) {
-                            return context.currentEntity;
-                        } else {
-                            context.currentEntity = it.elementType;
-                            return context.currentEntity;
+                    } else if (it) {
+                        if (it.kind === 'UnionTypeNode') {
+                            if (it.type) {
+                                const types = it.type.filter((it: string) => it !== 'undefined')
+                                if (types.length === 1) {
+                                    context.currentEntity = types[0];
+                                    return types[0];
+                                }
+                            }
+                        } else if (it.kind === 'ArrayTypeNode') {
+                            if (context.hasTypeParameter(it.elementType)) {
+                                return context.currentEntity;
+                            } else {
+                                context.currentEntity = it.elementType;
+                                return context.currentEntity;
+                            }
                         }
                     }
                 })

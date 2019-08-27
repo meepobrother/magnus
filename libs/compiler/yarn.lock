@@ -277,19 +277,19 @@
   resolved "https://registry.yarnpkg.com/@notadd/codegen-nest-client/-/codegen-nest-client-3.4.4.tgz#07a5bff70c054699fbd13ecce918d76caadc33ca"
   integrity sha512-Y7bPFe0NRDHRGedMrp+3A6IFhDqflutp0O1I8I1l3N3dWFSkesl7HsUI/pDDxQxjAw2XfdKOd0vhy9JTk8eKTQ==
 
-"@notadd/magnus-core@^3.4.4":
-  version "3.4.4"
-  resolved "https://registry.yarnpkg.com/@notadd/magnus-core/-/magnus-core-3.4.4.tgz#4bd1dd3897da81f70341a4f8a56a197d37be1677"
-  integrity sha512-lDnAaL2HZiVTzv3pr6LKtNeJcbVSehM8a4BqoVl5yxsrRJ21+wlu+85QHPNlhxdOmzgor7I4GI0q54fB8pafeA==
+"@notadd/magnus-core@^3.4.8":
+  version "3.4.8"
+  resolved "https://registry.yarnpkg.com/@notadd/magnus-core/-/magnus-core-3.4.8.tgz#35ac229db66e6c14e8497a48ec93be6962739198"
+  integrity sha512-H6Lz1InUeOfxdW0rCRL2/xWLNod8Tk4PSTIHgXgcd5VSH2FLryRZQefqr3MNon/052iqxk8oxAXPa8Wq4T2zDg==
   dependencies:
     graphql "^14.4.2"
     tslib "^1.10.0"
     typeorm "^0.2.18"
 
-"@notadd/magnus-graphql@^3.4.4":
-  version "3.4.4"
-  resolved "https://registry.yarnpkg.com/@notadd/magnus-graphql/-/magnus-graphql-3.4.4.tgz#039f84260691f1a46425a7dadba85836cb3d099d"
-  integrity sha512-nwUPDL0n/OeZ9umcerzXbHRGgKk8PjDejWjFtov/9s4pggFiSWLMgWEmJmAEL5+xdD2e4GOaZEw7TE5kJt/nLA==
+"@notadd/magnus-graphql@^3.4.12":
+  version "3.4.12"
+  resolved "https://registry.yarnpkg.com/@notadd/magnus-graphql/-/magnus-graphql-3.4.12.tgz#370ff8410eb9b07c725a24d20435547bfe0ead83"
+  integrity sha512-rfhtKOd8r2/1uAug2bbkSWUna/UlDs5YwFdGDy4AJE5quoLxAKw/E05OuwARl0rR/9DV2Qsb37xnVohyD0vAGA==
   dependencies:
     graphql "^14.4.2"
     tslib "^1.10.0"

@@ -30,6 +30,7 @@ class Handler {
         this.__where = new Set();
     }
     Promise(node, context) {
+        console.log(`Promise`);
         if (node instanceof ast.TypeReferenceNode) {
             if (node.typeArguments.length === 1) {
                 const typeNode = node.typeArguments[0];
@@ -578,7 +579,6 @@ class TsToGraphqlVisitor {
     visitMethodDeclaration(node, context) {
         context.isProperty = false;
         if (context.isInput) {
-            // 完善信息
             return undefined;
         }
         const proto = node.getDecorator(`GrpcMethod`)(expression_1.expressionVisitor) ||
@@ -630,6 +630,9 @@ class TsToGraphqlVisitor {
         // 返回值
         context.isNonNull = false;
         const type = this.visitTypeNode(node.type, context);
+        // if (type.name.value === '[object Object]') {
+            // console.log(node.type)
+        // }
         if (type)
             res.type = type;
         if (context.currentEntity.length > 0 &&
@@ -796,7 +799,7 @@ class TsToGraphqlVisitor {
     visitTypeReferenceNode(node, context) {
         const typeName = expression_1.expressionVisitor.visitTypeReferenceNode(node, ``);
         context.currentEntity = context.getNotT();
-        const typeArguments = node.typeArguments.map(t => t.visit(expression_1.expressionVisitor, ``));
+        const typeArguments = node.typeArguments.map(t => expression_1.expressionVisitor.visitTypeNode(t, ``));
         const handler = this.handler[typeName];
         if (handler) {
             const res = handler.bind(this.handler)(node, context);
@@ -830,17 +833,27 @@ class TsToGraphqlVisitor {
                         return context.currentEntity;
                     }
                     else {
-                        context.currentEntity = it === "T" ? context.currentEntity : it;
                         return context.currentEntity;
                     }
                 }
                 else if (it) {
-                    if (context.hasTypeParameter(it.elementType)) {
-                        return context.currentEntity;
+                    if (it.kind === 'UnionTypeNode') {
+                        if (it.type) {
+                            const types = it.type.filter((it) => it !== 'undefined');
+                            if (types.length === 1) {
+                                context.currentEntity = types[0];
+                                return types[0];
+                            }
+                        }
                     }
-                    else {
-                        context.currentEntity = it.elementType;
-                        return context.currentEntity;
+                    else if (it.kind === 'ArrayTypeNode') {
+                        if (context.hasTypeParameter(it.elementType)) {
+                            return context.currentEntity;
+                        }
+                        else {
+                            context.currentEntity = it.elementType;
+                            return context.currentEntity;
+                        }
                     }
                 }
             })
