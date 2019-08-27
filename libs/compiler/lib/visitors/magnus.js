@@ -77,11 +77,11 @@ class MagnusContext {
         }
         this._currentEntity = entity;
     }
-    getNotT() {
+    getNotT(name) {
         if (this.currentEntity === "T") {
-            return this.contextParent.getNotT();
+            return this.contextParent.getNotT(name);
         }
-        return this.currentEntity;
+        return this.currentEntity === 'T' ? name : this.currentEntity;
     }
     get topName() {
         return this.parent && this.parent.name;

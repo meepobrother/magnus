@@ -41,7 +41,7 @@ export declare class MagnusContext {
     currentName: string;
     isUpperFirst: boolean;
     currentEntity: string;
-    getNotT(): any;
+    getNotT(name: string): any;
     readonly topName: string;
     readonly parentName: string;
     hasParentName(name: string): boolean;

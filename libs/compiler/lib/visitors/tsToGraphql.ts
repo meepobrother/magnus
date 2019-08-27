@@ -517,7 +517,7 @@ export class TsToGraphqlVisitor implements ast.Visitor {
                 const type = this.visitTypeNode(node.type, context);
                 if (type) res.type = this.createNonNullTypeAst(type);
             }
-            context.currentEntity = context.getNotT();
+            context.currentEntity = context.getNotT(this.lastCurrentEntity);
             context.currentName = node.name.visit(expressionVisitor, ``);
             res.name = this.visitPropertyName(node.name, context);
             return res;
@@ -534,7 +534,7 @@ export class TsToGraphqlVisitor implements ast.Visitor {
                 const type = this.visitTypeNode(node.type, context);
                 if (type) res.type = this.createNonNullTypeAst(type);
             }
-            context.currentEntity = context.getNotT();
+            context.currentEntity = context.getNotT(this.lastCurrentEntity);
             context.currentName = node.name.visit(expressionVisitor, ``);
             res.name = this.visitPropertyName(node.name, context);
             return res;
@@ -562,8 +562,12 @@ export class TsToGraphqlVisitor implements ast.Visitor {
         );
         if (description) res.description = description;
         const type = this.visitTypeNode(node.type, context);
+        let isT = false;
+        if ((type as any).name && (type as any).name.value === 'T') {
+            isT = true;
+        }
         if (node.questionToken) {
-            if (type) res.type = type;
+            if (type) res.type = isT ? context.getNotT(this.lastCurrentEntity) : type;
         } else {
             if (this.isNotRequired(node)) {
                 if (type) res.type = type;
@@ -571,7 +575,7 @@ export class TsToGraphqlVisitor implements ast.Visitor {
                 if (type) res.type = this.createNonNullTypeAst(type);
             }
         }
-        context.currentEntity = context.getNotT();
+        context.currentEntity = context.getNotT(this.lastCurrentEntity);
         context.currentName = node.name.visit(expressionVisitor, context);
         res.name = this.visitPropertyName(node.name, context);
         return res;
@@ -622,7 +626,6 @@ export class TsToGraphqlVisitor implements ast.Visitor {
             typeName = typeName.replace('Messages', '')
             typeName = typeName.replace('Message', '')
         }
-        console.log(typeName)
         return [
             res.name.value,
             context.topName,
@@ -707,8 +710,8 @@ export class TsToGraphqlVisitor implements ast.Visitor {
         // 返回值
         context.isNonNull = false;
         const type = this.visitTypeNode(node.type, context);
-        if ((type as any).name.value === '[object Object]') {
-            // console.log(node.type)
+        if ((type as any).name.value === 'Message') {
+            console.log(context.currentEntity || 'Message')
         }
         if (type) res.type = type;
         if (
@@ -718,7 +721,7 @@ export class TsToGraphqlVisitor implements ast.Visitor {
             if (ResolveProperty === null) {
                 context._needChangeName = true;
                 const name = node.name.visit(expressionVisitor, ``);
-                context.currentEntity = context.getNotT();
+                context.currentEntity = context.getNotT(this.lastCurrentEntity);
                 context.currentName = camelCase(`${context.currentEntity}_${name}`);
             }
         } else {
@@ -813,6 +816,9 @@ export class TsToGraphqlVisitor implements ast.Visitor {
         return node.comment;
     }
     visitTypeNode(node: ast.TypeNode, context: MagnusContext): graphql.TypeAst {
+        if (this.currentEntity !== 'T') {
+            this.lastCurrentEntity = context.currentEntity;
+        }
         if (node instanceof ast.ArrayTypeNode) {
             return this.visitArrayTypeNode(node, context);
         } else if (node instanceof ast.KeywordTypeNode) {
@@ -876,13 +882,19 @@ export class TsToGraphqlVisitor implements ast.Visitor {
         }
     }
     currentEntity: string;
-    lastCurrentEntity: string;
+    _lastCurrentEntity: string;
+    set lastCurrentEntity(entity: string) {
+        this._lastCurrentEntity = entity;
+    }
+    get lastCurrentEntity() {
+        return this._lastCurrentEntity;
+    }
     visitTypeReferenceNode(
         node: ast.TypeReferenceNode,
         context: MagnusContext
     ): graphql.TypeAst {
         const typeName = expressionVisitor.visitTypeReferenceNode(node, ``);
-        context.currentEntity = context.getNotT();
+        context.currentEntity = context.getNotT(this.lastCurrentEntity);
         const typeArguments = node.typeArguments.map(t =>
             expressionVisitor.visitTypeNode(t, ``)
         );
@@ -919,6 +931,7 @@ export class TsToGraphqlVisitor implements ast.Visitor {
                         if (context.hasTypeParameter(it)) {
                             return context.currentEntity;
                         } else {
+                            context.currentEntity = it;
                             return context.currentEntity;
                         }
                     } else if (it) {
@@ -1102,6 +1115,9 @@ export class TsToGraphqlVisitor implements ast.Visitor {
         ctx.isUpperFirst = true;
         // ctx.isInput = false;
         _ast.name = node.name.visit(this, ctx);
+        if (['Message', 'Messages', 'ListMessages'].includes(_ast.name.value)) {
+            return;
+        }
         _ast.fields = members
             .map(member => member.visit(this, ctx))
             .filter(item => !!item);
@@ -1116,7 +1132,7 @@ export class TsToGraphqlVisitor implements ast.Visitor {
         node.typeParameters.map(type =>
             context.typeParameters.add(type.visit(expressionVisitor, ``))
         );
-        context.currentEntity = context.getNotT();
+        context.currentEntity = context.getNotT(this.lastCurrentEntity);
         if (context.isInput) {
             const ast = new graphql.InputObjectTypeDefinitionAst();
             const description = this.createStringValue(
