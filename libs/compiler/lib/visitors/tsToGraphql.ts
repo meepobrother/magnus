@@ -889,16 +889,18 @@ export class TsToGraphqlVisitor implements ast.Visitor {
         /**
          * 如果有
          */
-        if (
-            context.hasTypeParameter(typeName) ||
-            (typeName.length === 1 && context.currentEntity)
-        ) {
-            // 添加一个type
-            ctx.currentName = context.currentEntity;
-            context._needChangeName = true;
-            context.currentName = ctx.currentName;
-            this.addType(ctx.currentEntity, ctx);
-            return this.createNamedTypeAst(ctx.currentName);
+        if (typeName) {
+            if (
+                context.hasTypeParameter(typeName) ||
+                (typeName.length === 1 && context.currentEntity)
+            ) {
+                // 添加一个type
+                ctx.currentName = context.currentEntity;
+                context._needChangeName = true;
+                context.currentName = ctx.currentName;
+                this.addType(ctx.currentEntity, ctx);
+                return this.createNamedTypeAst(ctx.currentName);
+            }
         }
         if (typeArguments.length > 0) {
             const name = typeArguments
@@ -910,7 +912,7 @@ export class TsToGraphqlVisitor implements ast.Visitor {
                             context.currentEntity = it === "T" ? context.currentEntity : it;
                             return context.currentEntity;
                         }
-                    } else {
+                    } else if(it) {
                         if (context.hasTypeParameter(it.elementType)) {
                             return context.currentEntity;
                         } else {
