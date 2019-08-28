@@ -20,6 +20,7 @@ type Arguments = {
 interface MagnusType {
     name: string;
     typeArguments: MagnusType;
+    fullName: string;
 }
 
 export type HandlerDef = [

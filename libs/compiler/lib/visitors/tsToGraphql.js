@@ -585,7 +585,9 @@ class TsToGraphqlVisitor {
         }
     }
     createMetadate(res, context, node) {
+        const graphqlType = node.type.visit(this, ``);
         const type = this.createTypeNode(node.type);
+        type.fullName = graphqlType.name.value;
         return [
             res.name.value,
             context.topName,

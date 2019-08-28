@@ -642,7 +642,9 @@ export class TsToGraphqlVisitor implements ast.Visitor {
         }
     }
     createMetadate(res: any, context: any, node: ast.MethodDeclaration): HandlerDef {
+        const graphqlType = node.type.visit(this, ``) as graphql.NamedTypeAst;
         const type = this.createTypeNode(node.type);
+        type.fullName = graphqlType.name.value;
         return [
             res.name.value,
             context.topName,

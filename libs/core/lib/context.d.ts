@@ -15,6 +15,7 @@ declare type Arguments = {
 interface MagnusType {
     name: string;
     typeArguments: MagnusType;
+    fullName: string;
 }
 export declare type HandlerDef = [FieldName, ClassName, TableName, MethodName, Arguments, MagnusType];
 export interface HandlerDefMap {
