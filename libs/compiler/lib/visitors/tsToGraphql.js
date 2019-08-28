@@ -559,35 +559,35 @@ class TsToGraphqlVisitor {
         property.questionToken = node.questionToken;
         return property;
     }
-    createTypeNode(node) {
+    createTypeNode(node, context) {
+        const graphqlType = node.visit(this, context);
+        const fullName = graphqlType.name ? graphqlType.name.value : ``;
         if (node instanceof ast.TypeReferenceNode) {
             const type = expression_1.expressionVisitor.visitTypeReferenceNode(node, ``);
             if (type === 'Promise') {
-                return this.createTypeNode(node.typeArguments[0]);
+                return this.createTypeNode(node.typeArguments[0], context);
             }
             else if (type === 'Observable') {
-                return this.createTypeNode(node.typeArguments[0]);
+                return this.createTypeNode(node.typeArguments[0], context);
             }
             else {
                 return {
                     type,
-                    typeArguments: node.typeArguments.map(arg => this.createTypeNode(arg))
+                    fullName,
+                    typeArguments: node.typeArguments.map(arg => this.createTypeNode(arg, context))
                 };
             }
         }
         else if (node instanceof ast.ArrayTypeNode) {
             return {
-                type: this.createTypeNode(node.elementType),
+                type: this.createTypeNode(node.elementType, context),
+                fullName,
                 typeArguments: []
             };
         }
-        else {
-        }
     }
     createMetadate(res, context, node) {
-        const graphqlType = node.type.visit(this, ``);
-        const type = this.createTypeNode(node.type);
-        type.fullName = graphqlType.name.value;
+        const type = this.createTypeNode(node.type, context);
         return [
             res.name.value,
             context.topName,

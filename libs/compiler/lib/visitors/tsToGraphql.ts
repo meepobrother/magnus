@@ -462,7 +462,6 @@ export class TsToGraphqlVisitor implements ast.Visitor {
     isUndefined(val: any) {
         return typeof val === "undefined";
     }
-
     visitMethodSignature(
         node: ast.MethodSignature,
         context: MagnusContext
@@ -618,33 +617,33 @@ export class TsToGraphqlVisitor implements ast.Visitor {
         property.questionToken = node.questionToken;
         return property;
     }
-    createTypeNode(node: ast.TypeNode): any {
+    createTypeNode(node: ast.TypeNode, context: any): any {
+        const graphqlType = node.visit(this, context) as graphql.NamedTypeAst;
+        const fullName = graphqlType.name ? graphqlType.name.value : ``;
         if (node instanceof ast.TypeReferenceNode) {
             const type = expressionVisitor.visitTypeReferenceNode(node, ``);
             if (type === 'Promise') {
-                return this.createTypeNode(node.typeArguments[0])
+                return this.createTypeNode(node.typeArguments[0], context)
             }
             else if (type === 'Observable') {
-                return this.createTypeNode(node.typeArguments[0])
+                return this.createTypeNode(node.typeArguments[0], context)
             } else {
                 return {
                     type,
-                    typeArguments: node.typeArguments.map(arg => this.createTypeNode(arg))
+                    fullName,
+                    typeArguments: node.typeArguments.map(arg => this.createTypeNode(arg, context))
                 }
             }
         } else if (node instanceof ast.ArrayTypeNode) {
             return {
-                type: this.createTypeNode(node.elementType),
+                type: this.createTypeNode(node.elementType, context),
+                fullName,
                 typeArguments: []
             }
-        } else {
-
         }
     }
     createMetadate(res: any, context: any, node: ast.MethodDeclaration): HandlerDef {
-        const graphqlType = node.type.visit(this, ``) as graphql.NamedTypeAst;
-        const type = this.createTypeNode(node.type);
-        type.fullName = graphqlType.name.value;
+        const type = this.createTypeNode(node.type, context);
         return [
             res.name.value,
             context.topName,
