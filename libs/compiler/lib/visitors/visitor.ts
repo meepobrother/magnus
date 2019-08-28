@@ -429,15 +429,6 @@ export type TypeNode =
     | IntersectionTypeNode
     | ExpressionWithTypeArguments
     | JSDocNullableType;
-// export class TypeNode extends Node<ts.TypeNode>{
-//     visit(visitor: Visitor, context: any) {
-//         if (visitor.visitTypeNode) {
-//             return visitor.visitTypeNode(this, context)
-//         } else {
-//             throw new Error(`${visitor.name} 没有 visitTypeNode 方法`)
-//         }
-//     }
-// }
 export class QuestionToken extends Node<ts.QuestionToken> {
     visit(visitor: Visitor, context: any) {
         if (visitor.visitQuestionToken) {

@@ -561,12 +561,7 @@ class TsToGraphqlVisitor {
     }
     createMetadate(res, context, node) {
         const type = node.type.visit(this, context);
-        let typeName = type.name.value;
-        if (typeof typeName === 'string') {
-            typeName = typeName.replace('ListMessages', '');
-            typeName = typeName.replace('Messages', '');
-            typeName = typeName.replace('Message', '');
-        }
+        const typeName = type.name.value;
         return [
             res.name.value,
             context.topName,
@@ -901,42 +896,37 @@ class TsToGraphqlVisitor {
         const scalar = node.getDecorator(`Scalar`)(expression_1.expressionVisitor);
         const directive = node.getDecorator(`Directive`)(expression_1.expressionVisitor);
         const resolver = node.getDecorator(`Resolver`)(expression_1.expressionVisitor);
-        const entity = node.getDecorator(`Entity`)(expression_1.expressionVisitor);
         this.isEntity = false;
-        if (entity !== null) {
-            // 搜集字段
-            this.isEntity = true;
-            const name = node.name && node.name.visit(expression_1.expressionVisitor, ``);
-            this.entities[name] = (node.members || []).filter(it => !!it).map((member) => {
-                const name = member.name && member.name.visit(expression_1.expressionVisitor, ``);
-                const decorators = member.getDecorators()(expression_1.expressionVisitor);
-                const type = member.type && member.type.visit(expression_1.expressionVisitor, ``);
-                const method = member;
-                const args = method.parameters && method.parameters.map((arg, index) => {
-                    const name = arg.name.visit(expression_1.expressionVisitor, ``);
-                    return {
-                        name,
-                        index,
-                        decorator: arg.decorators.map(dec => dec.visit(expression_1.expressionVisitor, ``).name)
-                    };
-                });
-                let entity = ``;
-                if (typeof type === "string") {
-                    entity = type;
-                }
-                else if (entity) {
-                    entity = type.elementType;
-                }
-                else {
-                }
+        this.isEntity = true;
+        const name = node.name && node.name.visit(expression_1.expressionVisitor, ``);
+        this.entities[name] = (node.members || []).filter(it => !!it).map((member) => {
+            const name = member.name && member.name.visit(expression_1.expressionVisitor, ``);
+            const decorators = member.getDecorators()(expression_1.expressionVisitor);
+            const type = member.type && member.type.visit(expression_1.expressionVisitor, ``);
+            const method = member;
+            const args = method.parameters && method.parameters.map((arg, index) => {
+                const name = arg.name.visit(expression_1.expressionVisitor, ``);
                 return {
-                    name: name || 'controller',
-                    decorators,
-                    entity,
-                    parameters: args
+                    name,
+                    index,
+                    decorator: arg.decorators.map(dec => dec.visit(expression_1.expressionVisitor, ``).name)
                 };
             });
-        }
+            let entity = ``;
+            if (typeof type === "string") {
+                entity = type;
+            }
+            else if (entity) {
+                entity = type.elementType;
+            }
+            return {
+                name: name || 'controller',
+                decorators,
+                entity,
+                parameters: args
+            };
+        });
+        this.isEntity = false;
         const members = node.members
             .filter(member => {
             return (!(member instanceof ast.MethodDeclaration) ||

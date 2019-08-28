@@ -341,15 +341,6 @@ class ObjectLiteralExpression extends Node {
     }
 }
 exports.ObjectLiteralExpression = ObjectLiteralExpression;
-// export class TypeNode extends Node<ts.TypeNode>{
-//     visit(visitor: Visitor, context: any) {
-//         if (visitor.visitTypeNode) {
-//             return visitor.visitTypeNode(this, context)
-//         } else {
-//             throw new Error(`${visitor.name} 没有 visitTypeNode 方法`)
-//         }
-//     }
-// }
 class QuestionToken extends Node {
     visit(visitor, context) {
         if (visitor.visitQuestionToken) {
