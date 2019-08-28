@@ -12,8 +12,11 @@ declare type Arguments = {
     index: number;
     decorator: string[];
 }[];
-declare type TypeName = string;
-export declare type HandlerDef = [FieldName, ClassName, TableName, MethodName, Arguments, TypeName];
+interface MagnusType {
+    name: string;
+    typeArguments: MagnusType;
+}
+export declare type HandlerDef = [FieldName, ClassName, TableName, MethodName, Arguments, MagnusType];
 export interface HandlerDefMap {
     [key: string]: HandlerDef[];
 }

@@ -618,9 +618,31 @@ export class TsToGraphqlVisitor implements ast.Visitor {
         property.questionToken = node.questionToken;
         return property;
     }
-    createMetadate(res: any, context: any, node: any): HandlerDef {
-        const type = node.type.visit(this, context) as graphql.NamedTypeAst;
-        const typeName = type.name.value;
+    createTypeNode(node: ast.TypeNode): any {
+        if (node instanceof ast.TypeReferenceNode) {
+            const type = expressionVisitor.visitTypeReferenceNode(node, ``);
+            if (type === 'Promise') {
+                return this.createTypeNode(node.typeArguments[0])
+            }
+            else if (type === 'Observable') {
+                return this.createTypeNode(node.typeArguments[0])
+            } else {
+                return {
+                    type,
+                    typeArguments: node.typeArguments.map(arg => this.createTypeNode(arg))
+                }
+            }
+        } else if (node instanceof ast.ArrayTypeNode) {
+            return {
+                type: this.createTypeNode(node.elementType),
+                typeArguments: []
+            }
+        } else {
+
+        }
+    }
+    createMetadate(res: any, context: any, node: ast.MethodDeclaration): HandlerDef {
+        const type = this.createTypeNode(node.type);
         return [
             res.name.value,
             context.topName,
@@ -637,7 +659,7 @@ export class TsToGraphqlVisitor implements ast.Visitor {
                 };
                 return res;
             }),
-            typeName
+            type as any
         ];
     }
     visitMethodDeclaration(

@@ -559,9 +559,33 @@ class TsToGraphqlVisitor {
         property.questionToken = node.questionToken;
         return property;
     }
+    createTypeNode(node) {
+        if (node instanceof ast.TypeReferenceNode) {
+            const type = expression_1.expressionVisitor.visitTypeReferenceNode(node, ``);
+            if (type === 'Promise') {
+                return this.createTypeNode(node.typeArguments[0]);
+            }
+            else if (type === 'Observable') {
+                return this.createTypeNode(node.typeArguments[0]);
+            }
+            else {
+                return {
+                    type,
+                    typeArguments: node.typeArguments.map(arg => this.createTypeNode(arg))
+                };
+            }
+        }
+        else if (node instanceof ast.ArrayTypeNode) {
+            return {
+                type: this.createTypeNode(node.elementType),
+                typeArguments: []
+            };
+        }
+        else {
+        }
+    }
     createMetadate(res, context, node) {
-        const type = node.type.visit(this, context);
-        const typeName = type.name.value;
+        const type = this.createTypeNode(node.type);
         return [
             res.name.value,
             context.topName,
@@ -578,7 +602,7 @@ class TsToGraphqlVisitor {
                 };
                 return res;
             }),
-            typeName
+            type
         ];
     }
     visitMethodDeclaration(node, context) {
