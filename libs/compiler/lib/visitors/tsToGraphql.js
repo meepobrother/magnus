@@ -10,17 +10,15 @@ exports.toString = new magnus_graphql_1.ToString();
 exports.WhereMap = {
     Not: `不等于`,
     In: `在制定内，如[1,2]`,
-    NotIn: `不在制定内,如[1,2]`,
     Lt: `小于`,
     Lte: `小于等于`,
     Gt: `大于`,
     Gte: `大于等于`,
-    Contains: `包含`,
-    NotContains: `不包含`,
-    StartsWith: `开头等于`,
-    NotStartsWith: `开头不等于`,
-    EndsWith: `结尾等于`,
-    NotEndsWith: `结尾不等于`
+    Like: `包含`,
+    Between: `指定范围`,
+    Any: `任意`,
+    IsNull: `空`,
+    Raw: `raw`
 };
 class Handler {
     constructor(visitor) {
@@ -219,14 +217,14 @@ class Handler {
                                                 field.description.value + ` ${desc1.value}`;
                                         if (newField.name)
                                             newField.name.value = `${newField.name.value}_${key}`;
-                                        if (["In", "NotIn"].includes(key)) {
+                                        if (["In", "Between", "Any"].includes(key)) {
                                             if (typeName === "Int" || typeName === "String") {
                                                 newField.type = this.visitor.createListTypeAst(this.visitor.createNonNullTypeAst(field.type));
                                                 fields.push(newField);
                                                 needField = true;
                                             }
                                         }
-                                        else if (["Not", "Lt", "Lte", "Gt", "Gte"].includes(key)) {
+                                        else if (["Lt", "Lte", "Gt", "Gte", "Not", "IsNull"].includes(key)) {
                                             if (typeName === "Int" || typeName === "String") {
                                                 newField.type = type;
                                                 fields.push(newField);
@@ -234,20 +232,14 @@ class Handler {
                                             }
                                         }
                                         else if ([
-                                            "Contains",
-                                            "NotContains",
-                                            "StartsWith",
-                                            "NotStartsWith",
-                                            "EndsWith",
-                                            "NotEndsWith"
+                                            "Like",
+                                            "Raw"
                                         ].includes(key)) {
                                             if (typeName === "String") {
                                                 newField.type = type;
                                                 fields.push(newField);
                                                 needField = true;
                                             }
-                                        }
-                                        else {
                                         }
                                     }
                                 });

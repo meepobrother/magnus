@@ -14,17 +14,15 @@ export const toString = new ToString();
 export const WhereMap: { [key: string]: string } = {
     Not: `不等于`,
     In: `在制定内，如[1,2]`,
-    NotIn: `不在制定内,如[1,2]`,
     Lt: `小于`,
     Lte: `小于等于`,
     Gt: `大于`,
     Gte: `大于等于`,
-    Contains: `包含`,
-    NotContains: `不包含`,
-    StartsWith: `开头等于`,
-    NotStartsWith: `开头不等于`,
-    EndsWith: `结尾等于`,
-    NotEndsWith: `结尾不等于`
+    Like: `包含`,
+    Between: `指定范围`,
+    Any: `任意`,
+    IsNull: `空`,
+    Raw: `raw`
 };
 export class Handler {
     private __partial: Set<string> = new Set();
@@ -255,7 +253,7 @@ export class Handler {
                                                 field.description.value + ` ${desc1.value}`;
                                         if (newField.name)
                                             newField.name.value = `${newField.name.value}_${key}`;
-                                        if (["In", "NotIn"].includes(key)) {
+                                        if (["In", "Between", "Any"].includes(key)) {
                                             if (typeName === "Int" || typeName === "String") {
                                                 newField.type = this.visitor.createListTypeAst(
                                                     this.visitor.createNonNullTypeAst(field.type)
@@ -264,7 +262,7 @@ export class Handler {
                                                 needField = true;
                                             }
                                         } else if (
-                                            ["Not", "Lt", "Lte", "Gt", "Gte"].includes(key)
+                                            ["Lt", "Lte", "Gt", "Gte", "Not", "IsNull"].includes(key)
                                         ) {
                                             if (typeName === "Int" || typeName === "String") {
                                                 newField.type = type;
@@ -273,12 +271,8 @@ export class Handler {
                                             }
                                         } else if (
                                             [
-                                                "Contains",
-                                                "NotContains",
-                                                "StartsWith",
-                                                "NotStartsWith",
-                                                "EndsWith",
-                                                "NotEndsWith"
+                                                "Like",
+                                                "Raw"
                                             ].includes(key)
                                         ) {
                                             if (typeName === "String") {
@@ -286,7 +280,6 @@ export class Handler {
                                                 fields.push(newField);
                                                 needField = true;
                                             }
-                                        } else {
                                         }
                                     }
                                 });
