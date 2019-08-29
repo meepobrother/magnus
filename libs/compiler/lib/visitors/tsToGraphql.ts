@@ -261,8 +261,14 @@ export class Handler {
                                                 fields.push(newField);
                                                 needField = true;
                                             }
+                                        } else if (["Lt", "Lte", "Gt", "Gte"].includes(key)) {
+                                            if (typeName === "Int") {
+                                                newField.type = type;
+                                                fields.push(newField);
+                                                needField = true;
+                                            }
                                         } else if (
-                                            ["Lt", "Lte", "Gt", "Gte", "Not", "IsNull"].includes(key)
+                                            ["Not", "IsNull"].includes(key)
                                         ) {
                                             if (typeName === "Int" || typeName === "String") {
                                                 newField.type = type;

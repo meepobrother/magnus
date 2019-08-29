@@ -224,7 +224,14 @@ class Handler {
                                                 needField = true;
                                             }
                                         }
-                                        else if (["Lt", "Lte", "Gt", "Gte", "Not", "IsNull"].includes(key)) {
+                                        else if (["Lt", "Lte", "Gt", "Gte"].includes(key)) {
+                                            if (typeName === "Int") {
+                                                newField.type = type;
+                                                fields.push(newField);
+                                                needField = true;
+                                            }
+                                        }
+                                        else if (["Not", "IsNull"].includes(key)) {
                                             if (typeName === "Int" || typeName === "String") {
                                                 newField.type = type;
                                                 fields.push(newField);
