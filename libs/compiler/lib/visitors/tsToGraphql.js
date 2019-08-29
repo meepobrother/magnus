@@ -955,8 +955,10 @@ class TsToGraphqlVisitor {
             if (typeof type === "string") {
                 entity = type;
             }
-            else if (entity) {
-                entity = type.elementType;
+            else if (type) {
+                if (type.kind === "ArrayTypeNode") {
+                    entity = type.elementType;
+                }
             }
             return {
                 name: name || "controller",
