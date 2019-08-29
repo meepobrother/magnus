@@ -1,4 +1,4 @@
-import ApolloClient, { FetchResult, Observable, ApolloQueryResult } from 'apollo-boost';
+import ApolloClient, { FetchResult, Observable, ApolloQueryResult } from "apollo-boost";
 export declare function setClient(name: string, runner: ApolloClient<any>): void;
 export declare class Query<A, B> {
     document: any;

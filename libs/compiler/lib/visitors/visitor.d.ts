@@ -1064,7 +1064,7 @@ export declare class TsVisitor implements Visitor {
     /**
      * type node end
      */
-    visitEntityName(node: EntityName, context: ts.EntityName): QualifiedName | Identifier;
+    visitEntityName(node: EntityName, context: ts.EntityName): Identifier | QualifiedName;
     visitQualifiedName(node: QualifiedName, context: ts.QualifiedName): QualifiedName;
     visitPropertyName(node: any, context: ts.PropertyName): PropertyName;
     visitComputedPropertyName(node: ComputedPropertyName, context: ts.ComputedPropertyName): ComputedPropertyName;
@@ -1079,7 +1079,7 @@ export declare class TsVisitor implements Visitor {
     visitPropertyAccessExpression(node: PropertyAccessExpression, context: ts.PropertyAccessExpression): PropertyAccessExpression;
     visitCallExpression(node: CallExpression, context: ts.CallExpression): CallExpression;
     visitObjectLiteralExpression(node: ObjectLiteralExpression, context: ts.ObjectLiteralExpression): ObjectLiteralExpression;
-    visitObjectLiteralElementLike(node: ObjectLiteralElementLike, context: ts.ObjectLiteralElementLike): ShorthandPropertyAssignment | PropertyAssignment | MethodDeclaration | GetAccessorDeclaration | SetAccessorDeclaration | SpreadAssignment | ObjectLiteralElementLike;
+    visitObjectLiteralElementLike(node: ObjectLiteralElementLike, context: ts.ObjectLiteralElementLike): MethodDeclaration | GetAccessorDeclaration | SetAccessorDeclaration | ShorthandPropertyAssignment | PropertyAssignment | SpreadAssignment | ObjectLiteralElementLike;
     visitShorthandPropertyAssignment(node: ShorthandPropertyAssignment, context: ts.ShorthandPropertyAssignment): ShorthandPropertyAssignment;
     visitSpreadAssignment(node: SpreadAssignment, context: ts.SpreadAssignment): SpreadAssignment;
     visitPropertyAssignment(node: PropertyAssignment, context: ts.PropertyAssignment): PropertyAssignment;

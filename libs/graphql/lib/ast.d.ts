@@ -85,7 +85,7 @@ export declare class DocumentAst<C = any, O = any> extends Ast<C, O> {
     protos: ObjectTypeDefinitionAst[];
     visit(visitor: Visitor, context: C): O;
     getDefinitionAstIndex(name: string): number;
-    hasDefinitionAst(name: string): ScalarTypeExtensionAst<any, any> | ObjectTypeExtensionAst<any, any> | InterfaceTypeExtensionAst<any, any> | UnionTypeExtensionAst<any, any> | EnumTypeExtensionAst<any, any> | InputObjectTypeExtensionAst<any, any> | OperationDefinitionAst<C, O> | FragmentDefinitionAst<C, O> | SchemaDefinitionAst<C, O> | ScalarTypeDefinitionAst<C, O> | ObjectTypeDefinitionAst<C, O> | InterfaceTypeDefinitionAst<C, O> | UnionTypeDefinitionAst<C, O> | EnumTypeDefinitionAst<C, O> | InputObjectTypeDefinitionAst<C, O> | DirectiveDefinitionAst<C, O> | SchemaExtensionAst<C, O> | undefined;
+    hasDefinitionAst(name: string): UnionTypeExtensionAst<any, any> | ScalarTypeExtensionAst<any, any> | ObjectTypeExtensionAst<any, any> | InterfaceTypeExtensionAst<any, any> | EnumTypeExtensionAst<any, any> | InputObjectTypeExtensionAst<any, any> | OperationDefinitionAst<C, O> | FragmentDefinitionAst<C, O> | SchemaDefinitionAst<C, O> | ScalarTypeDefinitionAst<C, O> | ObjectTypeDefinitionAst<C, O> | InterfaceTypeDefinitionAst<C, O> | UnionTypeDefinitionAst<C, O> | EnumTypeDefinitionAst<C, O> | InputObjectTypeDefinitionAst<C, O> | DirectiveDefinitionAst<C, O> | SchemaExtensionAst<C, O> | undefined;
     copy(): DocumentAst<any, any>;
 }
 export declare class VariableAst<C = any, O = any> extends Ast<C, O> {

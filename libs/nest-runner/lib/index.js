@@ -16,10 +16,13 @@ class Query {
 exports.Query = Query;
 class Mutation {
     run(variables) {
-        return clients.get(this.client).mutate({
+        return clients
+            .get(this.client)
+            .mutate({
             mutation: this.document,
             variables: variables
-        }).then(res => res.data);
+        })
+            .then((res) => res.data);
     }
 }
 exports.Mutation = Mutation;

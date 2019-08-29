@@ -217,8 +217,15 @@ class Handler {
                                                 field.description.value + ` ${desc1.value}`;
                                         if (newField.name)
                                             newField.name.value = `${newField.name.value}_${key}`;
-                                        if (["In", "Between", "Any"].includes(key)) {
+                                        if (["In", "Any"].includes(key)) {
                                             if (typeName === "Int" || typeName === "String") {
+                                                newField.type = this.visitor.createListTypeAst(this.visitor.createNonNullTypeAst(field.type));
+                                                fields.push(newField);
+                                                needField = true;
+                                            }
+                                        }
+                                        else if (key === "Between") {
+                                            if (typeName === "Int") {
                                                 newField.type = this.visitor.createListTypeAst(this.visitor.createNonNullTypeAst(field.type));
                                                 fields.push(newField);
                                                 needField = true;
@@ -238,10 +245,7 @@ class Handler {
                                                 needField = true;
                                             }
                                         }
-                                        else if ([
-                                            "Like",
-                                            "Raw"
-                                        ].includes(key)) {
+                                        else if (["Like", "Raw"].includes(key)) {
                                             if (typeName === "String") {
                                                 newField.type = type;
                                                 fields.push(newField);
@@ -294,6 +298,7 @@ class Handler {
                                 }
                                 Object.keys(exports.WhereMap).map((key) => {
                                     const typeName = type.name.value;
+                                    const isNumberOperator = ["Lt", "Lte", "Gt", "Gte"].includes(key);
                                     if (["Int", "String", "Boolean", "Timestamp", "Date"].includes(typeName)) {
                                         const newField = field.copy();
                                         const desc1 = this.visitor.createStringValue([
@@ -307,14 +312,28 @@ class Handler {
                                                 field.description.value + ` ${desc1.value}`;
                                         if (newField.name)
                                             newField.name.value = `${newField.name.value}_${key}`;
-                                        if (["In", "NotIn"].includes(key)) {
+                                        if (["In", "Any"].includes(key)) {
                                             if (typeName === "Int" || typeName === "String") {
                                                 newField.type = this.visitor.createListTypeAst(this.visitor.createNonNullTypeAst(field.type));
                                                 fields.push(newField);
                                                 needField = true;
                                             }
                                         }
-                                        else if (["Not", "Lt", "Lte", "Gt", "Gte"].includes(key)) {
+                                        else if (key === "Between") {
+                                            if (typeName === "Int") {
+                                                newField.type = this.visitor.createListTypeAst(this.visitor.createNonNullTypeAst(field.type));
+                                                fields.push(newField);
+                                                needField = true;
+                                            }
+                                        }
+                                        else if (isNumberOperator) {
+                                            if (typeName === "Int") {
+                                                newField.type = type;
+                                                fields.push(newField);
+                                                needField = true;
+                                            }
+                                        }
+                                        else if (["Not", "IsNull"].includes(key)) {
                                             if (typeName === "Int" ||
                                                 typeName === "String" ||
                                                 typeName === "Timestamp" ||
@@ -324,21 +343,12 @@ class Handler {
                                                 needField = true;
                                             }
                                         }
-                                        else if ([
-                                            "Contains",
-                                            "NotContains",
-                                            "StartsWith",
-                                            "NotStartsWith",
-                                            "EndsWith",
-                                            "NotEndsWith"
-                                        ].includes(key)) {
+                                        else if (["Like", "Raw"].includes(key)) {
                                             if (typeName === "String") {
                                                 newField.type = type;
                                                 fields.push(newField);
                                                 needField = true;
                                             }
-                                        }
-                                        else {
                                         }
                                     }
                                 });
@@ -495,7 +505,7 @@ class TsToGraphqlVisitor {
             res.description = description;
         const type = this.visitTypeNode(node.type, context);
         let isT = false;
-        if (type.name && type.name.value === 'T') {
+        if (type.name && type.name.value === "T") {
             isT = true;
         }
         if (node.questionToken) {
@@ -563,10 +573,10 @@ class TsToGraphqlVisitor {
         const fullName = graphqlType.name ? graphqlType.name.value : ``;
         if (node instanceof ast.TypeReferenceNode) {
             const type = expression_1.expressionVisitor.visitTypeReferenceNode(node, ``);
-            if (type === 'Promise') {
+            if (type === "Promise") {
                 return this.createTypeNode(node.typeArguments[0], context);
             }
-            else if (type === 'Observable') {
+            else if (type === "Observable") {
                 return this.createTypeNode(node.typeArguments[0], context);
             }
             else {
@@ -660,8 +670,8 @@ class TsToGraphqlVisitor {
         // 返回值
         context.isNonNull = false;
         const type = this.visitTypeNode(node.type, context);
-        if (type.name.value === 'Message') {
-            console.log(context.currentEntity || 'Message');
+        if (type.name.value === "Message") {
+            console.log(context.currentEntity || "Message");
         }
         if (type)
             res.type = type;
@@ -759,7 +769,7 @@ class TsToGraphqlVisitor {
         return node.comment;
     }
     visitTypeNode(node, context) {
-        if (this.currentEntity !== 'T') {
+        if (this.currentEntity !== "T") {
             this.lastCurrentEntity = context.currentEntity;
         }
         if (node instanceof ast.ArrayTypeNode) {
@@ -877,16 +887,16 @@ class TsToGraphqlVisitor {
                     }
                 }
                 else if (it) {
-                    if (it.kind === 'UnionTypeNode') {
+                    if (it.kind === "UnionTypeNode") {
                         if (it.type) {
-                            const types = it.type.filter((it) => it !== 'undefined');
+                            const types = it.type.filter((it) => it !== "undefined");
                             if (types.length === 1) {
                                 context.currentEntity = types[0];
                                 return types[0];
                             }
                         }
                     }
-                    else if (it.kind === 'ArrayTypeNode') {
+                    else if (it.kind === "ArrayTypeNode") {
                         if (context.hasTypeParameter(it.elementType)) {
                             return context.currentEntity;
                         }
@@ -924,19 +934,23 @@ class TsToGraphqlVisitor {
         this.isEntity = false;
         this.isEntity = true;
         const name = node.name && node.name.visit(expression_1.expressionVisitor, ``);
-        this.entities[name] = (node.members || []).filter(it => !!it).map((member) => {
-            const name = member.name && member.name.visit(expression_1.expressionVisitor, ``);
+        this.entities[name] = (node.members || [])
+            .filter(it => !!it)
+            .map((member) => {
+            const name = member.name &&
+                member.name.visit(expression_1.expressionVisitor, ``);
             const decorators = member.getDecorators()(expression_1.expressionVisitor);
             const type = member.type && member.type.visit(expression_1.expressionVisitor, ``);
             const method = member;
-            const args = method.parameters && method.parameters.map((arg, index) => {
-                const name = arg.name.visit(expression_1.expressionVisitor, ``);
-                return {
-                    name,
-                    index,
-                    decorator: arg.decorators.map(dec => dec.visit(expression_1.expressionVisitor, ``).name)
-                };
-            });
+            const args = method.parameters &&
+                method.parameters.map((arg, index) => {
+                    const name = arg.name.visit(expression_1.expressionVisitor, ``);
+                    return {
+                        name,
+                        index,
+                        decorator: arg.decorators.map(dec => dec.visit(expression_1.expressionVisitor, ``).name)
+                    };
+                });
             let entity = ``;
             if (typeof type === "string") {
                 entity = type;
@@ -945,7 +959,7 @@ class TsToGraphqlVisitor {
                 entity = type.elementType;
             }
             return {
-                name: name || 'controller',
+                name: name || "controller",
                 decorators,
                 entity,
                 parameters: args
@@ -1034,7 +1048,7 @@ class TsToGraphqlVisitor {
         ctx.isUpperFirst = true;
         // ctx.isInput = false;
         _ast.name = node.name.visit(this, ctx);
-        if (['Message', 'Messages', 'ListMessages'].includes(_ast.name.value)) {
+        if (["Message", "Messages", "ListMessages"].includes(_ast.name.value)) {
             return;
         }
         _ast.fields = members
