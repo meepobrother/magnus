@@ -24,13 +24,10 @@ export class Mutation<A, B> {
   document: any;
   client: string;
   run(variables: B): Promise<FetchResult<A>> {
-    return clients
-      .get(this.client)!
-      .mutate({
-        mutation: this.document,
-        variables: variables
-      })
-      .then((res: any) => res.data);
+    return clients.get(this.client)!.mutate({
+      mutation: this.document,
+      variables: variables
+    });
   }
 }
 
