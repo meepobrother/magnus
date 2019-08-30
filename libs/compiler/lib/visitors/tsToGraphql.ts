@@ -624,6 +624,9 @@ export class TsToGraphqlVisitor implements ast.Visitor {
     return property;
   }
   createTypeNode(node: ast.TypeNode, context: any): any {
+    if (!node) {
+      return;
+    }
     const graphqlType = node.visit(this, context) as graphql.NamedTypeAst;
     const fullName = graphqlType.name ? graphqlType.name.value : ``;
     if (node instanceof ast.TypeReferenceNode) {

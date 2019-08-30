@@ -569,6 +569,9 @@ class TsToGraphqlVisitor {
         return property;
     }
     createTypeNode(node, context) {
+        if (!node) {
+            return;
+        }
         const graphqlType = node.visit(this, context);
         const fullName = graphqlType.name ? graphqlType.name.value : ``;
         if (node instanceof ast.TypeReferenceNode) {
