@@ -8,4 +8,6 @@ tslib_1.__exportStar(require("./json"), exports);
 tslib_1.__exportStar(require("./timestrap"), exports);
 const date_1 = tslib_1.__importDefault(require("./date"));
 exports.Date = date_1.default;
+var ID_1 = require("./ID");
+exports.ID = ID_1.ID;
 //# sourceMappingURL=index.js.map

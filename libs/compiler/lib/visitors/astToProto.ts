@@ -192,7 +192,6 @@ export class AstToProtoVisitor implements graphql.Visitor {
       case "Bool":
       case "Boolean":
         return `bool`;
-      case "ID":
       case "Bytes":
         return `bytes`;
       default:
