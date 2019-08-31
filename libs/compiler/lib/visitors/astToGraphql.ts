@@ -63,6 +63,7 @@ export class AstToGraphqlVisitor implements ast.Visitor {
     this.documentAst.definitions.push(this.createScalar(`Json`));
     this.documentAst.definitions.push(this.createScalar(`Timestamp`));
     this.documentAst.definitions.push(this.createScalar(`Date`));
+    this.documentAst.definitions.push(this.createScalar(`ID`));
 
     this.protos = {};
     this.collection.classes.map(cls => this.collectCls(cls, collection));
@@ -84,7 +85,16 @@ export class AstToGraphqlVisitor implements ast.Visitor {
               query.node as any,
               query
             );
-            if (ast) querys.push(ast);
+            if (ast) {
+              const existIndex = querys.findIndex(
+                q => q.name.value === ast.name.value
+              );
+              if (existIndex > -1) {
+                querys.splice(existIndex, 1, ast);
+              } else {
+                querys.push(ast);
+              }
+            }
           });
         } else {
           query.currentEntity = ``;
@@ -115,7 +125,16 @@ export class AstToGraphqlVisitor implements ast.Visitor {
               query.node as any,
               query
             );
-            if (ast) mutations.push(ast);
+            if (ast) {
+              const existIndex = mutations.findIndex(
+                q => q.name.value === ast.name.value
+              );
+              if (existIndex > -1) {
+                mutations.splice(existIndex, 1, ast);
+              } else {
+                mutations.push(ast);
+              }
+            }
           });
         } else {
           query.currentEntity = ``;
@@ -146,7 +165,16 @@ export class AstToGraphqlVisitor implements ast.Visitor {
               query.node as any,
               query
             );
-            if (ast) subscriptions.push(ast);
+            if (ast) {
+              const existIndex = subscriptions.findIndex(
+                q => q.name.value === ast.name.value
+              );
+              if (existIndex > -1) {
+                subscriptions.splice(existIndex, 1, ast);
+              } else {
+                subscriptions.push(ast);
+              }
+            }
           });
         } else {
           query.currentEntity = ``;

@@ -86,7 +86,9 @@ export class Handler {
                 return this.visitor.createNamedTypeAst(astName);
               }
               res.name.value = astName;
-              this.visitor.documentAst.definitions.push(res);
+              if (!this.visitor.documentAst.hasDefinitionAst(astName)) {
+                this.visitor.documentAst.definitions.push(res);
+              }
               this.__order.add(astName);
               return this.visitor.createNamedTypeAst(astName);
             }
@@ -111,7 +113,9 @@ export class Handler {
                 return this.visitor.createNamedTypeAst(astName);
               }
               res.name.value = astName;
-              this.visitor.documentAst.definitions.push(res);
+              if (!this.visitor.documentAst.hasDefinitionAst(astName)) {
+                this.visitor.documentAst.definitions.push(res);
+              }
               this.__order.add(astName);
               return this.visitor.createNamedTypeAst(astName);
             }
@@ -148,7 +152,9 @@ export class Handler {
               return this.visitor.createNamedTypeAst(astName);
             }
             res.name.value = astName;
-            this.visitor.documentAst.definitions.push(res);
+            if (!this.visitor.documentAst.hasDefinitionAst(astName)) {
+              this.visitor.documentAst.definitions.push(res);
+            }
             this.__partial.add(astName);
             return this.visitor.createNamedTypeAst(astName);
           }
@@ -301,7 +307,9 @@ export class Handler {
               fields.push(createField(`NOT`));
               res.fields = fields;
               res.name.value = astName;
-              this.visitor.documentAst.definitions.push(res);
+              if (!this.visitor.documentAst.hasDefinitionAst(astName)) {
+                this.visitor.documentAst.definitions.push(res);
+              }
               this.__where.add(astName);
               return this.visitor.createNamedTypeAst(astName);
             }
@@ -411,7 +419,9 @@ export class Handler {
               fields.push(createField(`NOT`));
               res.fields = fields;
               res.name.value = astName;
-              this.visitor.documentAst.definitions.push(res);
+              if (!this.visitor.documentAst.hasDefinitionAst(astName)) {
+                this.visitor.documentAst.definitions.push(res);
+              }
               this.__where.add(astName);
               return this.visitor.createNamedTypeAst(astName);
             }
@@ -905,7 +915,8 @@ export class TsToGraphqlVisitor implements ast.Visitor {
         this.set.add(context.currentName);
         const graphAst = ast2.visit(this, context);
         context.currentName = oldName;
-        if (!this.documentAst.hasDefinitionAst(context.currentName)) {
+        const graphqlAstName = graphAst.name.value;
+        if (!this.documentAst.hasDefinitionAst(graphqlAstName)) {
           this.documentAst.definitions.push(graphAst);
         }
       } else {
@@ -1001,6 +1012,39 @@ export class TsToGraphqlVisitor implements ast.Visitor {
     this.addType(`${typeName}`, ctx);
     return this.createNamedTypeAst(ctx.currentName);
   }
+  addEntity(node: any, context: any) {
+    const name = node.name && node.name.visit(expressionVisitor, ``);
+    this.entities[name] = (node.members || [])
+      .filter((it: any) => !!it)
+      .map((member: any) => {
+        const name =
+          (member as ast.PropertyDeclaration).name &&
+          (member as ast.PropertyDeclaration).name.visit(expressionVisitor, ``);
+        const decorators = (member as ast.PropertyDeclaration).getDecorators()(
+          expressionVisitor
+        );
+        const method = member as ast.MethodDeclaration;
+        const type = this.createTypeNode(method.type, context);
+        const args =
+          method.parameters &&
+          method.parameters.map((arg, index: number) => {
+            const name = arg.name.visit(expressionVisitor, ``);
+            return {
+              name,
+              index,
+              decorator: arg.decorators.map(
+                dec => dec.visit(expressionVisitor, ``).name
+              )
+            };
+          });
+        return {
+          name: name || "controller",
+          decorators,
+          entity: type,
+          parameters: args
+        };
+      });
+  }
   visitClassDeclaration(
     node: ast.ClassDeclaration,
     context: MagnusContext
@@ -1020,47 +1064,6 @@ export class TsToGraphqlVisitor implements ast.Visitor {
       expressionVisitor
     );
     const resolver = node.getDecorator(`Resolver`)(expressionVisitor);
-    this.isEntity = false;
-    this.isEntity = true;
-    const name = node.name && node.name.visit(expressionVisitor, ``);
-    this.entities[name] = (node.members || [])
-      .filter(it => !!it)
-      .map((member: any) => {
-        const name =
-          (member as ast.PropertyDeclaration).name &&
-          (member as ast.PropertyDeclaration).name.visit(expressionVisitor, ``);
-        const decorators = (member as ast.PropertyDeclaration).getDecorators()(
-          expressionVisitor
-        );
-        const type = member.type && member.type.visit(expressionVisitor, ``);
-        const method = member as ast.MethodDeclaration;
-        const args =
-          method.parameters &&
-          method.parameters.map((arg, index: number) => {
-            const name = arg.name.visit(expressionVisitor, ``);
-            return {
-              name,
-              index,
-              decorator: arg.decorators.map(
-                dec => dec.visit(expressionVisitor, ``).name
-              )
-            };
-          });
-        let entity = ``;
-        if (typeof type === "string") {
-          entity = type;
-        } else if (type) {
-          if (type.kind === "ArrayTypeNode") {
-            entity = type.elementType;
-          }
-        }
-        return {
-          name: name || "controller",
-          decorators,
-          entity,
-          parameters: args
-        };
-      });
     this.isEntity = false;
     const members = node.members
       .filter(member => {
@@ -1140,7 +1143,14 @@ export class TsToGraphqlVisitor implements ast.Visitor {
         node.docs.map(doc => this.visitJSDoc(doc, context))
       );
       if (description) ast.description = description;
-      if (ast.fields.length > 0) return ast;
+
+      if (ast.fields.length > 0) {
+        /**
+         * 构造this.entities
+         */
+        this.addEntity(node, context);
+        return ast;
+      }
     }
     const _ast = new graphql.ObjectTypeDefinitionAst();
     const description = this.createStringValue(
@@ -1158,7 +1168,13 @@ export class TsToGraphqlVisitor implements ast.Visitor {
     _ast.fields = members
       .map(member => member.visit(this, ctx))
       .filter(item => !!item);
-    if (_ast.fields.length > 0) return _ast as any;
+    if (_ast.fields.length > 0) {
+      /**
+       * 构造this.entities
+       */
+      this.addEntity(node, context);
+      return _ast as any;
+    }
   }
   visitInterfaceDeclaration(
     node: ast.InterfaceDeclaration,

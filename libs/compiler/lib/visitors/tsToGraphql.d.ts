@@ -77,6 +77,7 @@ export declare class TsToGraphqlVisitor implements ast.Visitor {
     _lastCurrentEntity: string;
     lastCurrentEntity: string;
     visitTypeReferenceNode(node: ast.TypeReferenceNode, context: MagnusContext): graphql.TypeAst;
+    addEntity(node: any, context: any): void;
     visitClassDeclaration(node: ast.ClassDeclaration, context: MagnusContext): graphql.InterfaceTypeDefinitionAst | graphql.InputObjectTypeDefinitionAst | graphql.ScalarTypeDefinitionAst | undefined;
     visitInterfaceDeclaration(node: ast.InterfaceDeclaration, context: MagnusContext): graphql.ObjectTypeDefinitionAst<any, any> | graphql.InputObjectTypeDefinitionAst<any, any> | undefined;
     createNamedTypeAst(name: string): graphql.NamedTypeAst<any, any>;
