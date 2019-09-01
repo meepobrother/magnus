@@ -73,6 +73,21 @@ class AstToGraphqlVisitor {
                         const ast = this.tsToGraphqlVisitor.visitMethodDeclaration(query.node, query);
                         if (ast) {
                             const existIndex = querys.findIndex(q => q.name.value === ast.name.value);
+                            const desc = this.documentAst.hasDefinitionAst(entity);
+                            if (desc) {
+                                if (desc.description) {
+                                    if (ast.description) {
+                                        const description = this.tsToGraphqlVisitor.createStringValue([ast.description.value, desc.description.value]);
+                                        if (description)
+                                            ast.description = description;
+                                    }
+                                    else {
+                                        const description = this.tsToGraphqlVisitor.createStringValue([desc.description.value]);
+                                        if (description)
+                                            ast.description = description;
+                                    }
+                                }
+                            }
                             if (existIndex > -1) {
                                 querys.splice(existIndex, 1, ast);
                             }
@@ -106,6 +121,21 @@ class AstToGraphqlVisitor {
                         const ast = this.tsToGraphqlVisitor.visitMethodDeclaration(query.node, query);
                         if (ast) {
                             const existIndex = mutations.findIndex(q => q.name.value === ast.name.value);
+                            const desc = this.documentAst.hasDefinitionAst(entity);
+                            if (desc) {
+                                if (desc.description) {
+                                    if (ast.description) {
+                                        const description = this.tsToGraphqlVisitor.createStringValue([ast.description.value, desc.description.value]);
+                                        if (description)
+                                            ast.description = description;
+                                    }
+                                    else {
+                                        const description = this.tsToGraphqlVisitor.createStringValue([desc.description.value]);
+                                        if (description)
+                                            ast.description = description;
+                                    }
+                                }
+                            }
                             if (existIndex > -1) {
                                 mutations.splice(existIndex, 1, ast);
                             }
