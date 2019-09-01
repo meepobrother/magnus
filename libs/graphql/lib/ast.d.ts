@@ -172,6 +172,7 @@ export declare class ObjectTypeExtensionAst<C = any, O = any> extends Ast<C, O> 
 }
 export declare class NamedTypeAst<C = any, O = any> extends Ast<C, O> {
     name: NameAst<C, O>;
+    isEntity: boolean;
     visit(visitor: Visitor<C, O>, context: C): O;
     copy(): NamedTypeAst<any, any>;
 }

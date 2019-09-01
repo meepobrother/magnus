@@ -586,6 +586,7 @@ class TsToGraphqlVisitor {
         const fullName = graphqlType.name ? graphqlType.name.value : ``;
         if (node instanceof ast.TypeReferenceNode) {
             const type = expression_1.expressionVisitor.visitTypeReferenceNode(node, ``);
+            const typeName = fullName.replace(type, ``);
             if (type === "Promise") {
                 return this.createTypeNode(node.typeArguments[0], context);
             }
@@ -595,7 +596,8 @@ class TsToGraphqlVisitor {
             else {
                 return {
                     type,
-                    fullName,
+                    fullName: typeName,
+                    isEntity: graphqlType.isEntity,
                     typeArguments: node.typeArguments.map(arg => this.createTypeNode(arg, context))
                 };
             }
@@ -603,6 +605,7 @@ class TsToGraphqlVisitor {
         else if (node instanceof ast.ArrayTypeNode) {
             return {
                 type: this.createTypeNode(node.elementType, context),
+                isEntity: graphqlType.isEntity,
                 fullName,
                 typeArguments: []
             };
@@ -885,7 +888,9 @@ class TsToGraphqlVisitor {
                 context._needChangeName = true;
                 context.currentName = ctx.currentName;
                 this.addType(ctx.currentEntity, ctx);
-                return this.createNamedTypeAst(ctx.currentName);
+                const namedType = this.createNamedTypeAst(ctx.currentName);
+                namedType.isEntity = true;
+                return namedType;
             }
         }
         if (typeArguments.length > 0) {

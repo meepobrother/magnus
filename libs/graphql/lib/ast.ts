@@ -509,6 +509,7 @@ export class ObjectTypeExtensionAst<C = any, O = any> extends Ast<C, O> {
 
 export class NamedTypeAst<C = any, O = any> extends Ast<C, O> {
     name: NameAst<C, O>;
+    isEntity: boolean;
     visit(visitor: Visitor<C, O>, context: C): O {
         if (visitor.visitNamedTypeAst) {
             return visitor.visitNamedTypeAst(this, context)
