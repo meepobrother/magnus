@@ -14,429 +14,356 @@ import { TypeVisitor, TypeContext } from '../visitor3/visitor3';
 export const toString = new ToString();
 export const WhereMap: { [key: string]: string } = {
     Not: `不等于`,
-    In: `在制定内，如[1,2]`,
+    In: `在制定内，如[1,2,3,...]`,
     Lt: `小于`,
     Lte: `小于等于`,
     Gt: `大于`,
     Gte: `大于等于`,
-    Like: `包含`,
-    Between: `指定范围`,
-    Any: `任意`,
-    IsNull: `空`,
-    Raw: `raw`
+    Like: `包含,左{title: "a%"} 右边{title: "%a"} 包含{title: "%a%"}`,
+    Between: `指定范围[min,max]`,
+    IsNull: `空`
 };
 
 export class Handler {
-    private __partial: Set<string> = new Set();
-    private __order: Set<string> = new Set();
-    private __where: Set<string> = new Set();
+         private __partial: Set<string> = new Set();
+         private __order: Set<string> = new Set();
+         private __where: Set<string> = new Set();
 
-    constructor(public visitor: TsToGraphqlVisitor) { }
+         constructor(public visitor: TsToGraphqlVisitor) {}
 
-    Promise(
-        node: ast.TypeReferenceNode | ast.TypeAliasDeclaration,
-        context: any
-    ) {
-        if (node instanceof ast.TypeReferenceNode) {
-            if (node.typeArguments.length === 1) {
-                const typeNode = node.typeArguments[0];
-                return this.visitor.visitTypeNode(typeNode, context);
-            }
-        }
-    }
-    Observable(
-        node: ast.TypeReferenceNode | ast.TypeAliasDeclaration,
-        context: any
-    ) {
-        if (node instanceof ast.TypeReferenceNode) {
-            if (node.typeArguments.length === 1) {
-                const typeNode = node.typeArguments[0];
-                return this.visitor.visitTypeNode(typeNode, context);
-            }
-        }
-    }
-    Order(node: ast.TypeReferenceNode | ast.TypeAliasDeclaration, context: any) {
-        if (node instanceof ast.TypeReferenceNode) {
-            if (node.typeArguments.length === 1) {
-                const source = node.typeArguments[0];
-                let name = (source as any).typeName.text;
-                if (!context.isEntity) {
-                    const sourceRes = this.visitor.visitTypeNode(source, context);
-                    if (sourceRes && (sourceRes as any).name)
-                        name = (sourceRes as any).name.value;
-                }
-                if (name) {
-                    const sourceAst = this.visitor.collection.findByName(name);
-                    if (sourceAst) {
-                        const res = sourceAst.visit(
-                            this.visitor,
-                            context
-                        ) as graphql.ObjectTypeDefinitionAst;
-                        if (res) {
-                            res.fields = res.fields.map(field => {
-                                const description = this.visitor.createStringValue([
-                                    `排序可选值为ASC或者DESC`
-                                ]);
-                                if (field.description && description)
-                                    field.description.value += `\n${description.value}`;
-                                field.type = this.visitor.createNamedTypeAst("String");
-                                return field;
-                            });
-                            const astName = res.name.value + "Order";
-                            if (this.__order.has(astName)) {
-                                return this.visitor.createNamedTypeAst(astName);
-                            }
-                            res.name.value = astName;
-                            if (!this.visitor.documentAst.hasDefinitionAst(astName)) {
-                                this.visitor.documentAst.definitions.push(res);
-                            }
-                            this.__order.add(astName);
-                            return this.visitor.createNamedTypeAst(astName);
-                        }
-                    } else {
-                        const item = this.visitor.documentAst.hasDefinitionAst(
-                            name
-                        ) as graphql.ObjectTypeDefinitionAst;
-                        if (item) {
-                            const res = item.copy();
-                            const astName = res.name.value + "Order";
-                            res.fields = res.fields || [];
-                            res.fields = res.fields.map(field => {
-                                const description = this.visitor.createStringValue([
-                                    `排序可选值为ASC或者DESC`
-                                ]);
-                                if (field.description && description)
-                                    field.description.value += `\n${description.value}`;
-                                field.type = this.visitor.createNamedTypeAst("String");
-                                return field;
-                            });
-                            if (this.__order.has(astName)) {
-                                return this.visitor.createNamedTypeAst(astName);
-                            }
-                            res.name.value = astName;
-                            if (!this.visitor.documentAst.hasDefinitionAst(astName)) {
-                                this.visitor.documentAst.definitions.push(res);
-                            }
-                            this.__order.add(astName);
-                            return this.visitor.createNamedTypeAst(astName);
-                        }
-                    }
-                }
-            }
-        }
-    }
-    DeepPartial(
-        node: ast.TypeReferenceNode | ast.TypeAliasDeclaration,
-        context: any
-    ) {
-        if (node instanceof ast.TypeReferenceNode) {
-            if (node.typeArguments.length === 1) {
-                const source = node.typeArguments[0];
-                const sourceRes = this.visitor.visitTypeNode(source, context);
-                if (sourceRes instanceof graphql.NamedTypeAst) {
-                    const sourceAst = this.visitor.collection.findByName(
-                        context.currentEntity
-                    );
-                    if (sourceAst) {
-                        const res = sourceAst.visit(
-                            this.visitor,
-                            context
-                        ) as graphql.ObjectTypeDefinitionAst;
-                        res.fields = res.fields.map(field => {
-                            if (field.type instanceof graphql.NonNullTypeAst) {
-                                field.type = field.type.type;
-                            }
-                            return field;
-                        });
-                        const astName = res.name.value + "DeepPartial";
-                        if (this.__partial.has(astName)) {
-                            return this.visitor.createNamedTypeAst(astName);
-                        }
-                        res.name.value = astName;
-                        if (!this.visitor.documentAst.hasDefinitionAst(astName)) {
-                            this.visitor.documentAst.definitions.push(res);
-                        }
-                        this.__partial.add(astName);
-                        return this.visitor.createNamedTypeAst(astName);
-                    }
-                }
-            }
-        }
-    }
-    Partial(
-        node: ast.TypeReferenceNode | ast.TypeAliasDeclaration,
-        context: any
-    ) {
-        if (node instanceof ast.TypeReferenceNode) {
-            if (node.typeArguments.length === 1) {
-                const source = node.typeArguments[0];
-                const sourceRes = this.visitor.visitTypeNode(source, context);
-                // debugger;
-                if (sourceRes instanceof graphql.NamedTypeAst) {
-                    const sourceAst = this.visitor.collection.findByName(
-                        context.currentEntity
-                    );
-                    if (sourceAst) {
-                        const res = sourceAst.visit(
-                            this.visitor,
-                            context
-                        ) as graphql.ObjectTypeDefinitionAst;
-                        res.fields = res.fields.map(field => {
-                            if (field.type instanceof graphql.NonNullTypeAst) {
-                                field.type = field.type.type;
-                            }
-                            return field;
-                        });
-                        const astName = res.name.value + "Partial";
-                        const old = this.visitor.documentAst.hasDefinitionAst(astName);
-                        if (!old) {
-                            res.name.value = astName;
-                            this.visitor.documentAst.definitions.push(res);
-                        }
-                        return this.visitor.createNamedTypeAst(astName);
-                    }
-                }
-            }
-        }
-    }
-    Where(node: ast.TypeReferenceNode | ast.TypeAliasDeclaration, context: any) {
-        if (node instanceof ast.TypeReferenceNode) {
-            if (node.typeArguments.length === 1) {
-                const source = node.typeArguments[0];
-                let name = (source as any).typeName.text;
-                if (!context.isEntity) {
-                    const sourceRes = this.visitor.visitTypeNode(source, context);
-                    if (sourceRes) {
-                        if ((sourceRes as any).name) {
-                            name = (sourceRes as any).name.value;
-                        }
-                    }
-                }
-                if (name) {
-                    const sourceAst = this.visitor.collection.findByName(name);
-                    if (sourceAst) {
-                        const res = sourceAst.visit(
-                            this.visitor,
-                            context
-                        ) as graphql.ObjectTypeDefinitionAst;
-                        const fields: any[] = [];
-                        if (res) {
-                            const astName = res.name.value + "Where";
-                            if (this.__where.has(astName)) {
-                                return this.visitor.createNamedTypeAst(astName);
-                            }
-                            const createField = (name: string) => {
-                                const ast = new graphql.FieldDefinitionAst();
-                                ast.name = this.visitor.createNameAst(name);
-                                ast.type = this.visitor.createListTypeAst(
-                                    this.visitor.createNonNullTypeAst(
-                                        this.visitor.createNamedTypeAst(astName)
-                                    )
-                                );
-                                return ast;
-                            };
-                            res.fields.map(field => {
-                                let needField = false;
-                                let type = field.type;
-                                if (type instanceof graphql.ListTypeAst) {
-                                    return;
-                                } else if (type instanceof graphql.NonNullTypeAst) {
-                                    if (type.type instanceof graphql.ListTypeAst) {
-                                        return;
-                                    }
-                                    type = type.type;
-                                }
-                                Object.keys(WhereMap).map((key: string) => {
-                                    const typeName = (type as any).name.value;
-                                    if (["Int", "String", "Boolean"].includes(typeName)) {
-                                        const newField = field.copy();
-                                        const desc1 = this.visitor.createStringValue([
-                                            `${WhereMap[key]}`
-                                        ]);
-                                        newField.description =
-                                            newField.description ||
-                                            this.visitor.createStringValue([``]);
-                                        if (field.description && desc1)
-                                            newField.description.value =
-                                                field.description.value + ` ${desc1.value}`;
-                                        if (newField.name)
-                                            newField.name.value = `${newField.name.value}_${key}`;
-                                        if (["In", "Any"].includes(key)) {
-                                            if (typeName === "Int" || typeName === "String") {
-                                                newField.type = this.visitor.createListTypeAst(
-                                                    this.visitor.createNonNullTypeAst(field.type)
-                                                );
-                                                fields.push(newField);
-                                                needField = true;
-                                            }
-                                        } else if (key === "Between") {
-                                            if (typeName === "Int"|| typeName === "String") {
-                                                newField.type = this.visitor.createListTypeAst(
-                                                    this.visitor.createNonNullTypeAst(field.type)
-                                                );
-                                                fields.push(newField);
-                                                needField = true;
-                                            }
-                                        } else if (["Lt", "Lte", "Gt", "Gte"].includes(key)) {
-                                            if (typeName === "Int") {
-                                                newField.type = type;
-                                                fields.push(newField);
-                                                needField = true;
-                                            }
-                                        } else if (["Not", "IsNull"].includes(key)) {
-                                            if (typeName === "Int" || typeName === "String") {
-                                                newField.type = type;
-                                                fields.push(newField);
-                                                needField = true;
-                                            }
-                                        } else if (["Like", "Raw"].includes(key)) {
-                                            if (typeName === "String") {
-                                                newField.type = type;
-                                                fields.push(newField);
-                                                needField = true;
-                                            }
-                                        }
-                                    }
-                                });
-                                if (needField) {
-                                    field.type = type;
-                                    fields.push(field);
-                                }
-                            });
-                            fields.push(createField(`AND`));
-                            fields.push(createField(`OR`));
-                            fields.push(createField(`NOT`));
-                            res.fields = fields;
-                            res.name.value = astName;
-                            if (!this.visitor.documentAst.hasDefinitionAst(astName)) {
-                                this.visitor.documentAst.definitions.push(res);
-                            }
-                            this.__where.add(astName);
-                            return this.visitor.createNamedTypeAst(astName);
-                        }
-                    } else {
-                        const item = this.visitor.documentAst.hasDefinitionAst(
-                            name
-                        ) as graphql.ObjectTypeDefinitionAst;
-                        if (item) {
-                            const res = item.copy();
-                            const fields: any[] = [];
-                            const astName = res.name.value + "Where";
-                            if (this.__where.has(astName)) {
-                                return this.visitor.createNamedTypeAst(astName);
-                            }
-                            const createField = (name: string) => {
-                                const ast = new graphql.FieldDefinitionAst();
-                                ast.name = this.visitor.createNameAst(name);
-                                ast.type = this.visitor.createListTypeAst(
-                                    this.visitor.createNonNullTypeAst(
-                                        this.visitor.createNamedTypeAst(astName)
-                                    )
-                                );
-                                return ast;
-                            };
-                            res.fields.map(field => {
-                                let needField = false;
-                                let type = field.type;
-                                if (type instanceof graphql.ListTypeAst) {
-                                    return;
-                                } else if (type instanceof graphql.NonNullTypeAst) {
-                                    if (type.type instanceof graphql.ListTypeAst) {
-                                        return;
-                                    }
-                                    type = type.type;
-                                }
-                                Object.keys(WhereMap).map((key: string) => {
-                                    const typeName = (type as any).name.value;
-                                    const isNumberOperator = ["Lt", "Lte", "Gt", "Gte"].includes(
-                                        key
-                                    );
-                                    if (
-                                        ["Int", "String", "Boolean", "Timestamp", "Date"].includes(
-                                            typeName
-                                        )
-                                    ) {
-                                        const newField = field.copy();
-                                        const desc1 = this.visitor.createStringValue([
-                                            `${WhereMap[key]}`
-                                        ]);
-                                        newField.description =
-                                            newField.description ||
-                                            this.visitor.createStringValue([``]);
-                                        if (field.description && desc1)
-                                            newField.description.value =
-                                                field.description.value + ` ${desc1.value}`;
-                                        if (newField.name)
-                                            newField.name.value = `${newField.name.value}_${key}`;
-                                        if (["In", "Any"].includes(key)) {
-                                            if (typeName === "Int" || typeName === "String") {
-                                                newField.type = this.visitor.createListTypeAst(
-                                                    this.visitor.createNonNullTypeAst(field.type)
-                                                );
-                                                fields.push(newField);
-                                                needField = true;
-                                            }
-                                        } else if (key === "Between") {
-                                            if (
-                                              typeName === "Int" ||
-                                              typeName === "String"
-                                            ) {
-                                              newField.type = this.visitor.createListTypeAst(
-                                                this.visitor.createNonNullTypeAst(
-                                                  field.type
-                                                )
-                                              );
-                                              fields.push(newField);
-                                              needField = true;
-                                            }
-                                        } else if (isNumberOperator) {
-                                            if (typeName === "Int") {
-                                                newField.type = type;
-                                                fields.push(newField);
-                                                needField = true;
-                                            }
-                                        } else if (["Not", "IsNull"].includes(key)) {
-                                            if (
-                                                typeName === "Int" ||
-                                                typeName === "String" ||
-                                                typeName === "Timestamp" ||
-                                                typeName === "Date"
-                                            ) {
-                                                newField.type = type;
-                                                fields.push(newField);
-                                                needField = true;
-                                            }
-                                        } else if (["Like", "Raw"].includes(key)) {
-                                            if (typeName === "String") {
-                                                newField.type = type;
-                                                fields.push(newField);
-                                                needField = true;
-                                            }
-                                        }
-                                    }
-                                });
-                                if (needField) {
-                                    field.type = type;
-                                    fields.push(field);
-                                }
-                            });
-                            fields.push(createField(`AND`));
-                            fields.push(createField(`OR`));
-                            fields.push(createField(`NOT`));
-                            res.fields = fields;
-                            res.name.value = astName;
-                            if (!this.visitor.documentAst.hasDefinitionAst(astName)) {
-                                this.visitor.documentAst.definitions.push(res);
-                            }
-                            this.__where.add(astName);
-                            return this.visitor.createNamedTypeAst(astName);
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
+         Promise(
+           node: ast.TypeReferenceNode | ast.TypeAliasDeclaration,
+           context: any
+         ) {
+           if (node instanceof ast.TypeReferenceNode) {
+             if (node.typeArguments.length === 1) {
+               const typeNode = node.typeArguments[0];
+               return this.visitor.visitTypeNode(typeNode, context);
+             }
+           }
+         }
+         Observable(
+           node: ast.TypeReferenceNode | ast.TypeAliasDeclaration,
+           context: any
+         ) {
+           if (node instanceof ast.TypeReferenceNode) {
+             if (node.typeArguments.length === 1) {
+               const typeNode = node.typeArguments[0];
+               return this.visitor.visitTypeNode(typeNode, context);
+             }
+           }
+         }
+         Order(
+           node: ast.TypeReferenceNode | ast.TypeAliasDeclaration,
+           context: any
+         ) {
+           if (node instanceof ast.TypeReferenceNode) {
+             if (node.typeArguments.length === 1) {
+               const source = node.typeArguments[0];
+               let name = (source as any).typeName.text;
+               if (!context.isEntity) {
+                 const sourceRes = this.visitor.visitTypeNode(source, context);
+                 if (sourceRes && (sourceRes as any).name)
+                   name = (sourceRes as any).name.value;
+               }
+               if (name) {
+                 const sourceAst = this.visitor.collection.findByName(name);
+                 if (sourceAst) {
+                   const res = sourceAst.visit(
+                     this.visitor,
+                     context
+                   ) as graphql.ObjectTypeDefinitionAst;
+                   if (res) {
+                     res.fields = res.fields.map(field => {
+                       const description = this.visitor.createStringValue([
+                         `排序可选值为ASC或者DESC`
+                       ]);
+                       if (field.description && description)
+                         field.description.value += `\n${description.value}`;
+                       field.type = this.visitor.createNamedTypeAst("String");
+                       return field;
+                     });
+                     const astName = res.name.value + "Order";
+                     if (this.__order.has(astName)) {
+                       return this.visitor.createNamedTypeAst(astName);
+                     }
+                     res.name.value = astName;
+                     if (!this.visitor.documentAst.hasDefinitionAst(astName)) {
+                       this.visitor.documentAst.definitions.push(res);
+                     }
+                     this.__order.add(astName);
+                     return this.visitor.createNamedTypeAst(astName);
+                   }
+                 } else {
+                   const item = this.visitor.documentAst.hasDefinitionAst(
+                     name
+                   ) as graphql.ObjectTypeDefinitionAst;
+                   if (item) {
+                     const res = item.copy();
+                     const astName = res.name.value + "Order";
+                     res.fields = res.fields || [];
+                     res.fields = res.fields.map(field => {
+                       const description = this.visitor.createStringValue([
+                         `排序可选值为ASC或者DESC`
+                       ]);
+                       if (field.description && description)
+                         field.description.value += `\n${description.value}`;
+                       field.type = this.visitor.createNamedTypeAst("String");
+                       return field;
+                     });
+                     if (this.__order.has(astName)) {
+                       return this.visitor.createNamedTypeAst(astName);
+                     }
+                     res.name.value = astName;
+                     if (!this.visitor.documentAst.hasDefinitionAst(astName)) {
+                       this.visitor.documentAst.definitions.push(res);
+                     }
+                     this.__order.add(astName);
+                     return this.visitor.createNamedTypeAst(astName);
+                   }
+                 }
+               }
+             }
+           }
+         }
+         DeepPartial(
+           node: ast.TypeReferenceNode | ast.TypeAliasDeclaration,
+           context: any
+         ) {
+           if (node instanceof ast.TypeReferenceNode) {
+             if (node.typeArguments.length === 1) {
+               const source = node.typeArguments[0];
+               const sourceRes = this.visitor.visitTypeNode(source, context);
+               if (sourceRes instanceof graphql.NamedTypeAst) {
+                 const sourceAst = this.visitor.collection.findByName(
+                   context.currentEntity
+                 );
+                 if (sourceAst) {
+                   const res = sourceAst.visit(
+                     this.visitor,
+                     context
+                   ) as graphql.ObjectTypeDefinitionAst;
+                   res.fields = res.fields.map(field => {
+                     if (field.type instanceof graphql.NonNullTypeAst) {
+                       field.type = field.type.type;
+                     }
+                     return field;
+                   });
+                   const astName = res.name.value + "DeepPartial";
+                   if (this.__partial.has(astName)) {
+                     return this.visitor.createNamedTypeAst(astName);
+                   }
+                   res.name.value = astName;
+                   if (!this.visitor.documentAst.hasDefinitionAst(astName)) {
+                     this.visitor.documentAst.definitions.push(res);
+                   }
+                   this.__partial.add(astName);
+                   return this.visitor.createNamedTypeAst(astName);
+                 }
+               }
+             }
+           }
+         }
+         Partial(
+           node: ast.TypeReferenceNode | ast.TypeAliasDeclaration,
+           context: any
+         ) {
+           if (node instanceof ast.TypeReferenceNode) {
+             if (node.typeArguments.length === 1) {
+               const source = node.typeArguments[0];
+               const sourceRes = this.visitor.visitTypeNode(source, context);
+               // debugger;
+               if (sourceRes instanceof graphql.NamedTypeAst) {
+                 const sourceAst = this.visitor.collection.findByName(
+                   context.currentEntity
+                 );
+                 if (sourceAst) {
+                   const res = sourceAst.visit(
+                     this.visitor,
+                     context
+                   ) as graphql.ObjectTypeDefinitionAst;
+                   res.fields = res.fields.map(field => {
+                     if (field.type instanceof graphql.NonNullTypeAst) {
+                       field.type = field.type.type;
+                     }
+                     return field;
+                   });
+                   const astName = res.name.value + "Partial";
+                   const old = this.visitor.documentAst.hasDefinitionAst(
+                     astName
+                   );
+                   if (!old) {
+                     res.name.value = astName;
+                     this.visitor.documentAst.definitions.push(res);
+                   }
+                   return this.visitor.createNamedTypeAst(astName);
+                 }
+               }
+             }
+           }
+         }
+         private createWhereKey(
+           field: any,
+           key: string,
+         ): any {
+             let dest:any;
+             let needField = false;
+            const type = field.type.copy();
+           const typeName = (type as any).name.value;
+           if (["Int", "String", "Boolean"].includes(typeName)) {
+             const newField = field.copy();
+             const desc1 = this.visitor.createStringValue([`${WhereMap[key]}`]);
+             newField.description =
+               newField.description || this.visitor.createStringValue([``]);
+             if (field.description && desc1)
+               newField.description.value =
+                 field.description.value + ` ${desc1.value}`;
+             if (newField.name)
+               newField.name.value = `${newField.name.value}_${key}`;
+             if (["Between", "In"].includes(key)) {
+               if (typeName === "Int" || typeName === "String") {
+                 newField.type = this.visitor.createListTypeAst(
+                   this.visitor.createNonNullTypeAst(field.type)
+                 );
+                 dest=newField;
+                 needField = true;
+               }
+             } else if (["Lt", "Lte", "Gt", "Gte", "Not"].includes(key)) {
+               if (typeName === "Int") {
+                 newField.type = type;
+                  dest = newField;
+                 needField = true;
+               }
+             } else if (["IsNull"]) {
+               if (typeName === "Int" || typeName === "String") {
+                 newField.type = new graphql.NamedTypeAst();
+                 newField.type.name = this.visitor.createNameAst(
+                   "Boolean"
+                 );
+                  dest = newField;
+                 needField = true;
+               }
+             } else if (["Like"].includes(key)) {
+               if (typeName === "String") {
+                 newField.type = new graphql.NamedTypeAst();
+                 newField.type.name = this.visitor.createNameAst(typeName);
+                  dest = newField;
+                 needField = true;
+               }
+             }
+           }
+           return { needField, dest };
+         }
+         Where(
+           node: ast.TypeReferenceNode | ast.TypeAliasDeclaration,
+           context: any
+         ) {
+           if (node instanceof ast.TypeReferenceNode) {
+             if (node.typeArguments.length === 1) {
+               const source = node.typeArguments[0];
+               let name = (source as any).typeName.text;
+               if (!context.isEntity) {
+                 const sourceRes = this.visitor.visitTypeNode(source, context);
+                 if (sourceRes) {
+                   if ((sourceRes as any).name) {
+                     name = (sourceRes as any).name.value;
+                   }
+                 }
+               }
+               if (name) {
+                 const sourceAst = this.visitor.collection.findByName(name);
+                 if (sourceAst) {
+                   const res = sourceAst.visit(
+                     this.visitor,
+                     context
+                   ) as graphql.ObjectTypeDefinitionAst;
+                   const fields: any[] = [];
+                   if (res) {
+                     const astName = res.name.value + "Where";
+                     if (this.__where.has(astName)) {
+                       return this.visitor.createNamedTypeAst(astName);
+                     }
+                     res.fields.map(field => {
+                       let type = field.type;
+                       let needField = false;
+                       if (type instanceof graphql.ListTypeAst) {
+                         return;
+                       } else if (type instanceof graphql.NonNullTypeAst) {
+                         if (type.type instanceof graphql.ListTypeAst) {
+                           return;
+                         }
+                         type = type.type;
+                       }
+                       Object.keys(WhereMap).map((key: string) => {
+                         const {
+                           needField: need,
+                           dest
+                         } = this.createWhereKey(field, key);
+                         needField = need;
+                         if (dest) fields.push(dest);
+                       });
+                       if (needField) {
+                         field.type = type;
+                         fields.push(field);
+                       }
+                     });
+                     res.fields = fields;
+                     res.name.value = astName;
+                     if (!this.visitor.documentAst.hasDefinitionAst(astName)) {
+                       this.visitor.documentAst.definitions.push(res);
+                     }
+                     this.__where.add(astName);
+                     return this.visitor.createNamedTypeAst(astName);
+                   }
+                 } else {
+                   const item = this.visitor.documentAst.hasDefinitionAst(
+                     name
+                   ) as graphql.ObjectTypeDefinitionAst;
+                   if (item) {
+                     const res = item.copy();
+                     const fields: any[] = [];
+                     const astName = res.name.value + "Where";
+                     if (this.__where.has(astName)) {
+                       return this.visitor.createNamedTypeAst(astName);
+                     }
+                     res.fields.map(field => {
+                       let needField = false;
+                       let type = field.type.copy();
+                       if (type instanceof graphql.ListTypeAst) {
+                         return;
+                       } else if (type instanceof graphql.NonNullTypeAst) {
+                         if (type.type instanceof graphql.ListTypeAst) {
+                           return;
+                         }
+                         type = type.type;
+                       }
+                       Object.keys(WhereMap).map((key: string) => {
+                         const {
+                           needField: need,
+                           dest
+                         } = this.createWhereKey(field, key);
+                         needField = need;
+                         if (dest) fields.push(dest);
+                       });
+                       if (needField) {
+                         field.type = type;
+                         fields.push(field);
+                       }
+                     });
+                     res.fields = fields;
+                     res.name.value = astName;
+                     if (!this.visitor.documentAst.hasDefinitionAst(astName)) {
+                       this.visitor.documentAst.definitions.push(res);
+                     }
+                     this.__where.add(astName);
+                     return this.visitor.createNamedTypeAst(astName);
+                   }
+                 }
+               }
+             }
+           }
+         }
+       }
 interface Metadata {
     name: string;
     decorators: string[];

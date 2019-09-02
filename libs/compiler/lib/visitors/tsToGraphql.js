@@ -10,16 +10,14 @@ const visitor3_1 = require("../visitor3/visitor3");
 exports.toString = new magnus_graphql_1.ToString();
 exports.WhereMap = {
     Not: `不等于`,
-    In: `在制定内，如[1,2]`,
+    In: `在制定内，如[1,2,3,...]`,
     Lt: `小于`,
     Lte: `小于等于`,
     Gt: `大于`,
     Gte: `大于等于`,
-    Like: `包含`,
-    Between: `指定范围`,
-    Any: `任意`,
-    IsNull: `空`,
-    Raw: `raw`
+    Like: `包含,左{title: "a%"} 右边{title: "%a"} 包含{title: "%a%"}`,
+    Between: `指定范围[min,max]`,
+    IsNull: `空`
 };
 class Handler {
     constructor(visitor) {
@@ -168,6 +166,54 @@ class Handler {
             }
         }
     }
+    createWhereKey(field, key) {
+        let dest;
+        let needField = false;
+        const type = field.type.copy();
+        const typeName = type.name.value;
+        if (["Int", "String", "Boolean"].includes(typeName)) {
+            const newField = field.copy();
+            const desc1 = this.visitor.createStringValue([`${exports.WhereMap[key]}`]);
+            newField.description =
+                newField.description || this.visitor.createStringValue([``]);
+            if (field.description && desc1)
+                newField.description.value =
+                    field.description.value + ` ${desc1.value}`;
+            if (newField.name)
+                newField.name.value = `${newField.name.value}_${key}`;
+            if (["Between", "In"].includes(key)) {
+                if (typeName === "Int" || typeName === "String") {
+                    newField.type = this.visitor.createListTypeAst(this.visitor.createNonNullTypeAst(field.type));
+                    dest = newField;
+                    needField = true;
+                }
+            }
+            else if (["Lt", "Lte", "Gt", "Gte", "Not"].includes(key)) {
+                if (typeName === "Int") {
+                    newField.type = type;
+                    dest = newField;
+                    needField = true;
+                }
+            }
+            else if (["IsNull"]) {
+                if (typeName === "Int" || typeName === "String") {
+                    newField.type = new magnus_graphql_1.ast.NamedTypeAst();
+                    newField.type.name = this.visitor.createNameAst("Boolean");
+                    dest = newField;
+                    needField = true;
+                }
+            }
+            else if (["Like"].includes(key)) {
+                if (typeName === "String") {
+                    newField.type = new magnus_graphql_1.ast.NamedTypeAst();
+                    newField.type.name = this.visitor.createNameAst(typeName);
+                    dest = newField;
+                    needField = true;
+                }
+            }
+        }
+        return { needField, dest };
+    }
     Where(node, context) {
         if (node instanceof ast.TypeReferenceNode) {
             if (node.typeArguments.length === 1) {
@@ -191,15 +237,9 @@ class Handler {
                             if (this.__where.has(astName)) {
                                 return this.visitor.createNamedTypeAst(astName);
                             }
-                            const createField = (name) => {
-                                const ast = new magnus_graphql_1.ast.FieldDefinitionAst();
-                                ast.name = this.visitor.createNameAst(name);
-                                ast.type = this.visitor.createListTypeAst(this.visitor.createNonNullTypeAst(this.visitor.createNamedTypeAst(astName)));
-                                return ast;
-                            };
                             res.fields.map(field => {
-                                let needField = false;
                                 let type = field.type;
+                                let needField = false;
                                 if (type instanceof magnus_graphql_1.ast.ListTypeAst) {
                                     return;
                                 }
@@ -210,65 +250,16 @@ class Handler {
                                     type = type.type;
                                 }
                                 Object.keys(exports.WhereMap).map((key) => {
-                                    const typeName = type.name.value;
-                                    if (["Int", "String", "Boolean"].includes(typeName)) {
-                                        const newField = field.copy();
-                                        const desc1 = this.visitor.createStringValue([
-                                            `${exports.WhereMap[key]}`
-                                        ]);
-                                        newField.description =
-                                            newField.description ||
-                                                this.visitor.createStringValue([``]);
-                                        if (field.description && desc1)
-                                            newField.description.value =
-                                                field.description.value + ` ${desc1.value}`;
-                                        if (newField.name)
-                                            newField.name.value = `${newField.name.value}_${key}`;
-                                        if (["In", "Any"].includes(key)) {
-                                            if (typeName === "Int" || typeName === "String") {
-                                                newField.type = this.visitor.createListTypeAst(this.visitor.createNonNullTypeAst(field.type));
-                                                fields.push(newField);
-                                                needField = true;
-                                            }
-                                        }
-                                        else if (key === "Between") {
-                                            if (typeName === "Int" || typeName === "String") {
-                                                newField.type = this.visitor.createListTypeAst(this.visitor.createNonNullTypeAst(field.type));
-                                                fields.push(newField);
-                                                needField = true;
-                                            }
-                                        }
-                                        else if (["Lt", "Lte", "Gt", "Gte"].includes(key)) {
-                                            if (typeName === "Int") {
-                                                newField.type = type;
-                                                fields.push(newField);
-                                                needField = true;
-                                            }
-                                        }
-                                        else if (["Not", "IsNull"].includes(key)) {
-                                            if (typeName === "Int" || typeName === "String") {
-                                                newField.type = type;
-                                                fields.push(newField);
-                                                needField = true;
-                                            }
-                                        }
-                                        else if (["Like", "Raw"].includes(key)) {
-                                            if (typeName === "String") {
-                                                newField.type = type;
-                                                fields.push(newField);
-                                                needField = true;
-                                            }
-                                        }
-                                    }
+                                    const { needField: need, dest } = this.createWhereKey(field, key);
+                                    needField = need;
+                                    if (dest)
+                                        fields.push(dest);
                                 });
                                 if (needField) {
                                     field.type = type;
                                     fields.push(field);
                                 }
                             });
-                            fields.push(createField(`AND`));
-                            fields.push(createField(`OR`));
-                            fields.push(createField(`NOT`));
                             res.fields = fields;
                             res.name.value = astName;
                             if (!this.visitor.documentAst.hasDefinitionAst(astName)) {
@@ -287,15 +278,9 @@ class Handler {
                             if (this.__where.has(astName)) {
                                 return this.visitor.createNamedTypeAst(astName);
                             }
-                            const createField = (name) => {
-                                const ast = new magnus_graphql_1.ast.FieldDefinitionAst();
-                                ast.name = this.visitor.createNameAst(name);
-                                ast.type = this.visitor.createListTypeAst(this.visitor.createNonNullTypeAst(this.visitor.createNamedTypeAst(astName)));
-                                return ast;
-                            };
                             res.fields.map(field => {
                                 let needField = false;
-                                let type = field.type;
+                                let type = field.type.copy();
                                 if (type instanceof magnus_graphql_1.ast.ListTypeAst) {
                                     return;
                                 }
@@ -306,70 +291,16 @@ class Handler {
                                     type = type.type;
                                 }
                                 Object.keys(exports.WhereMap).map((key) => {
-                                    const typeName = type.name.value;
-                                    const isNumberOperator = ["Lt", "Lte", "Gt", "Gte"].includes(key);
-                                    if (["Int", "String", "Boolean", "Timestamp", "Date"].includes(typeName)) {
-                                        const newField = field.copy();
-                                        const desc1 = this.visitor.createStringValue([
-                                            `${exports.WhereMap[key]}`
-                                        ]);
-                                        newField.description =
-                                            newField.description ||
-                                                this.visitor.createStringValue([``]);
-                                        if (field.description && desc1)
-                                            newField.description.value =
-                                                field.description.value + ` ${desc1.value}`;
-                                        if (newField.name)
-                                            newField.name.value = `${newField.name.value}_${key}`;
-                                        if (["In", "Any"].includes(key)) {
-                                            if (typeName === "Int" || typeName === "String") {
-                                                newField.type = this.visitor.createListTypeAst(this.visitor.createNonNullTypeAst(field.type));
-                                                fields.push(newField);
-                                                needField = true;
-                                            }
-                                        }
-                                        else if (key === "Between") {
-                                            if (typeName === "Int" ||
-                                                typeName === "String") {
-                                                newField.type = this.visitor.createListTypeAst(this.visitor.createNonNullTypeAst(field.type));
-                                                fields.push(newField);
-                                                needField = true;
-                                            }
-                                        }
-                                        else if (isNumberOperator) {
-                                            if (typeName === "Int") {
-                                                newField.type = type;
-                                                fields.push(newField);
-                                                needField = true;
-                                            }
-                                        }
-                                        else if (["Not", "IsNull"].includes(key)) {
-                                            if (typeName === "Int" ||
-                                                typeName === "String" ||
-                                                typeName === "Timestamp" ||
-                                                typeName === "Date") {
-                                                newField.type = type;
-                                                fields.push(newField);
-                                                needField = true;
-                                            }
-                                        }
-                                        else if (["Like", "Raw"].includes(key)) {
-                                            if (typeName === "String") {
-                                                newField.type = type;
-                                                fields.push(newField);
-                                                needField = true;
-                                            }
-                                        }
-                                    }
+                                    const { needField: need, dest } = this.createWhereKey(field, key);
+                                    needField = need;
+                                    if (dest)
+                                        fields.push(dest);
                                 });
                                 if (needField) {
                                     field.type = type;
                                     fields.push(field);
                                 }
                             });
-                            fields.push(createField(`AND`));
-                            fields.push(createField(`OR`));
-                            fields.push(createField(`NOT`));
                             res.fields = fields;
                             res.name.value = astName;
                             if (!this.visitor.documentAst.hasDefinitionAst(astName)) {
