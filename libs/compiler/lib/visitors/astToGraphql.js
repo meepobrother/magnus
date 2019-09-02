@@ -236,7 +236,7 @@ class AstToGraphqlVisitor {
             });
         });
         const queryRes = this.createObjectTypeDefinitionAst("Query", querys);
-        const mutationRes = this.createObjectTypeDefinitionAst("Mutation", mutations);
+        const mutationRes = this.createObjectTypeDefinitionAst("Mutation", mutations.sort());
         const subscriptionRes = this.createObjectTypeDefinitionAst("Subscription", subscriptions);
         Object.keys(this.protos).map(key => {
             const protos = this.protos[key];

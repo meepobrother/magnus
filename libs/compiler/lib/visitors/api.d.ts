@@ -4,6 +4,7 @@ declare class ImportCore {
     parent: ImportCore;
     children: ImportCore[];
     parameters: string[];
+    level: number;
     constructor(name: string);
     /**
      * 是否在某个

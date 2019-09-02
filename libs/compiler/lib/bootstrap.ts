@@ -72,28 +72,40 @@ export async function bootstrap(config: MagnusConfig) {
         manager,
         collectionContext
       );
+      const res = toJson(documentAst);
+      const content = print(res);
+      // 搜集metadata entity数据库 类名 依赖名
+      if (isServer) {
+        writeFileSync(join(assets, `magnus.server.graphql`), content);
+        const metadataContent = JSON.stringify(
+          astToGraphqlVisitor.tsToGraphqlVisitor.def,
+          null,
+          2
+        );
+        writeFileSync(join(assets, `magnus.metadata.json`), metadataContent);
+        const serverContent = JSON.stringify(res, null, 2);
+        writeFileSync(join(assets, `magnus.server.json`), serverContent);
+      } else {
+        const content = JSON.stringify(res, null, 2);
+        writeFileSync(join(assets, `magnus.json`), content);
+      }
       // 这里生成客户端使用的对应的graphql
       const apiVisitor = new ApiVisitor();
       if (documentAst.definitions.length > 17) {
-        const res = toJson(documentAst);
-        const content = print(res);
-        if (isServer) {
-          writeFileSync(join(assets, `magnus.server.graphql`), content);
-        }
         if (config.scripts) {
           documentAst.visit(apiVisitor, {});
           let api = ``;
-          if (apiVisitor.query) {
-            apiVisitor.query.list.map((li: string) => (api += `${li}\n`));
-          }
+          // if (apiVisitor.query) {
+          //   apiVisitor.query.list.map((li: string) => (api += `${li}\n`));
+          // }
           if (apiVisitor.mutation) {
             apiVisitor.mutation.list.map((li: string) => (api += `${li}\n`));
           }
-          if (apiVisitor.subscription) {
-            apiVisitor.subscription.list.map(
-              (li: string) => (api += `${li}\n`)
-            );
-          }
+          // if (apiVisitor.subscription) {
+          //   apiVisitor.subscription.list.map(
+          //     (li: string) => (api += `${li}\n`)
+          //   );
+          // }
           if (api.length > 0) {
             if (isServer) {
               writeFileSync(join(assets, `magnus.server-api.graphql`), api);
@@ -144,20 +156,7 @@ export async function bootstrap(config: MagnusConfig) {
             }
           }
         }
-        // 搜集metadata entity数据库 类名 依赖名
-        if (isServer) {
-          const metadataContent = JSON.stringify(
-            astToGraphqlVisitor.tsToGraphqlVisitor.def,
-            null,
-            2
-          );
-          writeFileSync(join(assets, `magnus.metadata.json`), metadataContent);
-          const serverContent = JSON.stringify(res, null, 2);
-          writeFileSync(join(assets, `magnus.server.json`), serverContent);
-        } else {
-          const content = JSON.stringify(res, null, 2);
-          writeFileSync(join(assets, `magnus.json`), content);
-        }
+
         if (!isServer) {
           // proto
           const astToProtoVisitor = new AstToProtoVisitor();
