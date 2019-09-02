@@ -72,8 +72,8 @@ export async function bootstrap(config: MagnusConfig) {
         manager,
         collectionContext
       );
-      const res = toJson(documentAst);
-      const content = print(res);
+      const documentAstJson = toJson(documentAst);
+      const content = print(documentAstJson);
       // 搜集metadata entity数据库 类名 依赖名
       if (isServer) {
         writeFileSync(join(assets, `magnus.server.graphql`), content);
@@ -83,10 +83,10 @@ export async function bootstrap(config: MagnusConfig) {
           2
         );
         writeFileSync(join(assets, `magnus.metadata.json`), metadataContent);
-        const serverContent = JSON.stringify(res, null, 2);
+        const serverContent = JSON.stringify(documentAstJson, null, 2);
         writeFileSync(join(assets, `magnus.server.json`), serverContent);
       } else {
-        const content = JSON.stringify(res, null, 2);
+        const content = JSON.stringify(documentAstJson, null, 2);
         writeFileSync(join(assets, `magnus.json`), content);
       }
       // 这里生成客户端使用的对应的graphql
@@ -95,21 +95,13 @@ export async function bootstrap(config: MagnusConfig) {
         if (config.scripts) {
           documentAst.visit(apiVisitor, {});
           let api = ``;
-          // if (apiVisitor.query) {
-          //   apiVisitor.query.list.map((li: string) => (api += `${li}\n`));
-          // }
           if (apiVisitor.mutation) {
             apiVisitor.mutation.list.map((li: string) => (api += `${li}\n`));
           }
-          // if (apiVisitor.subscription) {
-          //   apiVisitor.subscription.list.map(
-          //     (li: string) => (api += `${li}\n`)
-          //   );
-          // }
           if (api.length > 0) {
             if (isServer) {
               writeFileSync(join(assets, `magnus.server-api.graphql`), api);
-              const schema = buildASTSchema(res);
+              const schema = buildASTSchema(documentAstJson);
               writeFileSync(
                 join(assets, "magnus.server-schema.json"),
                 JSON.stringify(introspectionFromSchema(schema), null, 2)

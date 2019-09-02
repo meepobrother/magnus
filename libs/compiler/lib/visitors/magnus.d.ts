@@ -7,7 +7,6 @@ export interface ClassDef {
     name: string;
     relations: string[];
 }
-export declare const entitySet: Set<string>;
 export declare class MagnusTopContext {
     querys: Map<string, MagnusContext>;
     mutations: Map<string, MagnusContext>;

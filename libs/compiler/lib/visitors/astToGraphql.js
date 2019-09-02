@@ -152,7 +152,7 @@ class AstToGraphqlVisitor {
                     if (ast) {
                         const existIndex = mutations.findIndex(q => q.name.value === ast.name.value);
                         if (existIndex > -1) {
-                            mutations.splice(existIndex, 1, ast);
+                            // mutations.splice(existIndex, 1, ast);
                         }
                         else {
                             mutations.push(ast);
@@ -236,7 +236,7 @@ class AstToGraphqlVisitor {
             });
         });
         const queryRes = this.createObjectTypeDefinitionAst("Query", querys);
-        const mutationRes = this.createObjectTypeDefinitionAst("Mutation", mutations.sort());
+        const mutationRes = this.createObjectTypeDefinitionAst("Mutation", mutations);
         const subscriptionRes = this.createObjectTypeDefinitionAst("Subscription", subscriptions);
         Object.keys(this.protos).map(key => {
             const protos = this.protos[key];
@@ -270,12 +270,17 @@ class AstToGraphqlVisitor {
             scalarDef.name = this.tsToGraphqlVisitor.visitIdentifier(node.name, context);
             if (this.documentAst) {
                 if (!this.documentAst.hasDefinitionAst(scalarDef.name.value)) {
-                    this.documentAst.definitions.push(scalarDef);
+                    const index = this.documentAst.getDefinitionAstIndex(scalarDef.name.value);
+                    if (index > -1) {
+                        this.documentAst.definitions.splice(index, 1, scalarDef);
+                    }
+                    else {
+                        this.documentAst.definitions.push(scalarDef);
+                    }
                 }
             }
-            return scalarDef;
         }
-        if (resolver !== null) {
+        else if (resolver !== null) {
             if (resolver) {
                 const ctx = new magnus_1.MagnusContext();
                 ctx.currentName = resolver;
@@ -284,16 +289,16 @@ class AstToGraphqlVisitor {
                 if (this.documentAst && type) {
                     const index = this.documentAst.getDefinitionAstIndex(type.name.value);
                     if (index > -1) {
-                        this.documentAst.definitions.push(type);
+                        this.documentAst.definitions.splice(index, 1, type);
                     }
                     else {
-                        this.documentAst.definitions.splice(index, 1, type);
+                        this.documentAst.definitions.push(type);
                     }
                 }
                 return type;
             }
         }
-        if (entity !== null) {
+        else if (entity !== null) {
             const ctx = new magnus_1.MagnusContext();
             ctx.name = node.name.visit(expression_1.expressionVisitor, ``);
             ctx.typeParameters = new Set(node.typeParameters.map(t => t.visit(expression_1.expressionVisitor, ``)));

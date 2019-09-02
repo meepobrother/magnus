@@ -451,17 +451,6 @@ class TypeReferenceNode extends Node {
     }
 }
 exports.TypeReferenceNode = TypeReferenceNode;
-class EntityName extends Node {
-    visit(visitor, context) {
-        if (visitor.visitEntityName) {
-            return visitor.visitEntityName(this, context);
-        }
-        else {
-            throw new Error(`${visitor.name} 没有 visitEntityName 方法`);
-        }
-    }
-}
-exports.EntityName = EntityName;
 class QualifiedName extends Node {
     visit(visitor, context) {
         if (visitor.visitQualifiedName) {
@@ -3015,7 +3004,7 @@ class TsVisitor {
         node.isTypeOf = !!context.isTypeOf;
         node.argument = this.visitTypeNode(undefined, context.argument);
         if (context.qualifier) {
-            node.qualifier = this.visitEntityName(new EntityName(), context.qualifier);
+            node.qualifier = this.visitEntityName(undefined, context.qualifier);
         }
         return node;
     }
@@ -3105,7 +3094,7 @@ class TsVisitor {
         if (context.typeArguments) {
             node.typeArguments = context.typeArguments.map(type => this.visitTypeNode(undefined, type));
         }
-        node.typeName = this.visitEntityName(new EntityName(), context.typeName);
+        node.typeName = this.visitEntityName(undefined, context.typeName);
         return node;
     }
     /**
@@ -3147,7 +3136,6 @@ class TsVisitor {
      * type node end
      */
     visitEntityName(node, context) {
-        node.node = context;
         if (ts.isIdentifier(context)) {
             return this.visitIdentifier(new Identifier(), context);
         }
@@ -3157,6 +3145,8 @@ class TsVisitor {
     }
     visitQualifiedName(node, context) {
         node.node = context;
+        node.left = this.visitEntityName(undefined, context.left);
+        node.right = this.visitIdentifier(new Identifier(), context.right);
         return node;
     }
     visitPropertyName(node, context) {

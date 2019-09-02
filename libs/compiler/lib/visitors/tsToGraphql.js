@@ -6,6 +6,7 @@ const magnus_1 = require("./magnus");
 const magnus_graphql_1 = require("@notadd/magnus-graphql");
 const lodash_1 = require("lodash");
 const expression_1 = require("./expression");
+const visitor3_1 = require("../visitor3/visitor3");
 exports.toString = new magnus_graphql_1.ToString();
 exports.WhereMap = {
     Not: `不等于`,
@@ -582,34 +583,12 @@ class TsToGraphqlVisitor {
         if (!node) {
             return;
         }
-        const graphqlType = node.visit(this, context);
-        const fullName = graphqlType.name ? graphqlType.name.value : ``;
-        if (node instanceof ast.TypeReferenceNode) {
-            const type = expression_1.expressionVisitor.visitTypeReferenceNode(node, ``);
-            const typeName = fullName.replace(type, ``);
-            if (type === "Promise") {
-                return this.createTypeNode(node.typeArguments[0], context);
-            }
-            else if (type === "Observable") {
-                return this.createTypeNode(node.typeArguments[0], context);
-            }
-            else {
-                return {
-                    type,
-                    fullName: typeName,
-                    isEntity: graphqlType.isEntity,
-                    typeArguments: node.typeArguments.map(arg => this.createTypeNode(arg, context))
-                };
-            }
-        }
-        else if (node instanceof ast.ArrayTypeNode) {
-            return {
-                type: this.createTypeNode(node.elementType, context),
-                isEntity: graphqlType.isEntity,
-                fullName,
-                typeArguments: []
-            };
-        }
+        const typeVisitor = new visitor3_1.TypeVisitor();
+        const typeContext = new visitor3_1.TypeContext();
+        typeVisitor.typeArguments = context.parent.typeParameters;
+        typeVisitor.currentEntity = context.currentEntity;
+        const type = node.visit(typeVisitor, typeContext);
+        return type;
     }
     createMetadate(res, context, node) {
         const type = this.createTypeNode(node.type, context);
@@ -637,30 +616,7 @@ class TsToGraphqlVisitor {
         if (context.isInput) {
             return undefined;
         }
-        const proto = node.getDecorator(`GrpcMethod`)(expression_1.expressionVisitor) ||
-            node.getDecorator(`Proto`)(expression_1.expressionVisitor);
-        const permission = node.getDecorator(`Permission`)(expression_1.expressionVisitor);
         const ResolveProperty = node.getDecorator(`ResolveProperty`)(expression_1.expressionVisitor);
-        if (permission !== null) {
-            if (proto !== null && permission) {
-                if (typeof proto === "string") {
-                    if (permission) {
-                        permission.namespace = proto;
-                        this.permission.push(permission);
-                    }
-                }
-                else {
-                    permission.namespace = context.parentName;
-                    this.permission.push(permission);
-                }
-            }
-            else {
-                if (permission) {
-                    permission.namespace = context.parentName;
-                    this.permission.push(permission);
-                }
-            }
-        }
         // 判断return type是否包含 parameter
         node.type && node.type.visit(this, context);
         // 完善信息
@@ -686,9 +642,6 @@ class TsToGraphqlVisitor {
         // 返回值
         context.isNonNull = false;
         const type = this.visitTypeNode(node.type, context);
-        if (type.name.value === "Message") {
-            console.log(context.currentEntity || "Message");
-        }
         if (type)
             res.type = type;
         if (context.currentEntity.length > 0 &&
@@ -1215,11 +1168,11 @@ class TsToGraphqlVisitor {
         if (description)
             res.description = description;
         // name过后初始化
-        const type = this.visitTypeNode(node.type, context);
         const decorator = node.getDecorators()(expression_1.expressionVisitor);
         if (decorator)
             res.decorator = decorator;
         res.index = node.index;
+        const type = this.visitTypeNode(node.type, context);
         if (node.questionToken || !!node.initializer) {
             res.type = type;
         }

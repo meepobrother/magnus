@@ -228,7 +228,6 @@ export class ToJsonVisitor<C = any> implements ast.Visitor<C, l.ASTNode> {
         type: node.type && node.type.visit(this, context),
         directives: node.directives.map(dir => dir.visit(this, context))
       };
-      console.log(name);
       return item;
     } catch (e) {
       throw e;

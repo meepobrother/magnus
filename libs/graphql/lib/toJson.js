@@ -165,7 +165,6 @@ class ToJsonVisitor {
                 type: node.type && node.type.visit(this, context),
                 directives: node.directives.map(dir => dir.visit(this, context))
             };
-            console.log(name);
             return item;
         }
         catch (e) {

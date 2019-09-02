@@ -523,16 +523,12 @@ export class TypeReferenceNode extends Node<ts.TypeReferenceNode> {
     }
   }
 }
-export class EntityName extends Node<ts.EntityName> {
-  visit(visitor: Visitor, context: any) {
-    if (visitor.visitEntityName) {
-      return visitor.visitEntityName(this, context);
-    } else {
-      throw new Error(`${visitor.name} 没有 visitEntityName 方法`);
-    }
-  }
-}
+export type EntityName = Identifier | QualifiedName;
+
 export class QualifiedName extends Node<ts.QualifiedName> {
+  kind: ts.SyntaxKind.QualifiedName;
+  left: EntityName;
+  right: Identifier;
   visit(visitor: Visitor, context: any) {
     if (visitor.visitQualifiedName) {
       return visitor.visitQualifiedName(this, context);
@@ -3585,10 +3581,7 @@ export class TsVisitor implements Visitor {
     node.isTypeOf = !!context.isTypeOf;
     node.argument = this.visitTypeNode(undefined, context.argument);
     if (context.qualifier) {
-      node.qualifier = this.visitEntityName(
-        new EntityName(),
-        context.qualifier
-      );
+      node.qualifier = this.visitEntityName(undefined, context.qualifier);
     }
     return node;
   }
@@ -3719,7 +3712,7 @@ export class TsVisitor implements Visitor {
         this.visitTypeNode(undefined, type)
       );
     }
-    node.typeName = this.visitEntityName(new EntityName(), context.typeName);
+    node.typeName = this.visitEntityName(undefined, context.typeName);
     return node;
   }
   /**
@@ -3764,8 +3757,7 @@ export class TsVisitor implements Visitor {
   /**
    * type node end
    */
-  visitEntityName(node: EntityName, context: ts.EntityName) {
-    node.node = context;
+  visitEntityName(node: any, context: ts.EntityName) {
     if (ts.isIdentifier(context)) {
       return this.visitIdentifier(new Identifier(), context);
     } else {
@@ -3774,6 +3766,8 @@ export class TsVisitor implements Visitor {
   }
   visitQualifiedName(node: QualifiedName, context: ts.QualifiedName) {
     node.node = context;
+    node.left = this.visitEntityName(undefined, context.left);
+    node.right = this.visitIdentifier(new Identifier(), context.right);
     return node;
   }
   visitPropertyName(node: any, context: ts.PropertyName): PropertyName {

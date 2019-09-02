@@ -10,6 +10,7 @@ import {
 } from "@notadd/magnus-core";
 import { expressionVisitor } from "./expression";
 import { CollectionContext } from "./collection";
+import { TypeVisitor, TypeContext } from '../visitor3/visitor3';
 export const toString = new ToString();
 export const WhereMap: { [key: string]: string } = {
     Not: `不等于`,
@@ -623,7 +624,6 @@ export class TsToGraphqlVisitor implements ast.Visitor {
         method.questionToken = node.questionToken;
         method.parameters = node.parameters;
         method.typeParameters = node.typeParameters;
-
         return method;
     }
     createPropertySignature(node: ast.PropertyDeclaration) {
@@ -637,40 +637,19 @@ export class TsToGraphqlVisitor implements ast.Visitor {
         if (!node) {
             return;
         }
-        const graphqlType = node.visit(this, context) as graphql.NamedTypeAst;
-        const fullName = graphqlType.name ? graphqlType.name.value : ``;
-        if (node instanceof ast.TypeReferenceNode) {
-            const type = expressionVisitor.visitTypeReferenceNode(node, ``);
-            const typeName = fullName.replace(type, ``)
-            if (type === "Promise") {
-                return this.createTypeNode(node.typeArguments[0], context);
-            } else if (type === "Observable") {
-                return this.createTypeNode(node.typeArguments[0], context);
-            } else {
-                return {
-                    type,
-                    fullName: typeName,
-                    isEntity: graphqlType.isEntity,
-                    typeArguments: node.typeArguments.map(arg =>
-                        this.createTypeNode(arg, context)
-                    )
-                };
-            }
-        } else if (node instanceof ast.ArrayTypeNode) {
-            return {
-                type: this.createTypeNode(node.elementType, context),
-                isEntity: graphqlType.isEntity,
-                fullName,
-                typeArguments: []
-            };
-        }
+        const typeVisitor = new TypeVisitor();
+        const typeContext = new TypeContext();
+        typeVisitor.typeArguments = context.parent.typeParameters;
+        typeVisitor.currentEntity = context.currentEntity;
+        const type = node.visit(typeVisitor, typeContext);
+        return type;
     }
     createMetadate(
         res: any,
-        context: any,
+        context: MagnusContext,
         node: ast.MethodDeclaration
     ): HandlerDef {
-        const type = this.createTypeNode(node.type, context);
+        const type = this.createTypeNode(node.type,context);
         return [
             res.name.value,
             context.topName,
@@ -698,33 +677,9 @@ export class TsToGraphqlVisitor implements ast.Visitor {
         if (context.isInput) {
             return undefined;
         }
-        const proto =
-            node.getDecorator<string>(`GrpcMethod`)(expressionVisitor) ||
-            node.getDecorator(`Proto`)(expressionVisitor);
-        const permission = node.getDecorator<PermissionOptions>(`Permission`)(
-            expressionVisitor
-        );
         const ResolveProperty = node.getDecorator(`ResolveProperty`)(
             expressionVisitor
         );
-        if (permission !== null) {
-            if (proto !== null && permission) {
-                if (typeof proto === "string") {
-                    if (permission) {
-                        permission.namespace = proto;
-                        this.permission.push(permission);
-                    }
-                } else {
-                    permission.namespace = context.parentName;
-                    this.permission.push(permission);
-                }
-            } else {
-                if (permission) {
-                    permission.namespace = context.parentName;
-                    this.permission.push(permission);
-                }
-            }
-        }
         // 判断return type是否包含 parameter
         node.type && node.type.visit(this, context);
         // 完善信息
@@ -755,9 +710,6 @@ export class TsToGraphqlVisitor implements ast.Visitor {
         // 返回值
         context.isNonNull = false;
         const type = this.visitTypeNode(node.type, context);
-        if ((type as any).name.value === "Message") {
-            console.log(context.currentEntity || "Message");
-        }
         if (type) res.type = type;
         if (
             context.currentEntity.length > 0 &&
@@ -1148,7 +1100,6 @@ export class TsToGraphqlVisitor implements ast.Visitor {
                 node.docs.map(doc => this.visitJSDoc(doc, context))
             );
             if (description) ast.description = description;
-
             if (ast.fields.length > 0) {
                 /**
                  * 构造this.entities
@@ -1178,7 +1129,7 @@ export class TsToGraphqlVisitor implements ast.Visitor {
              * 构造this.entities
              */
             this.addEntity(node, context);
-            return _ast as any;
+            return _ast;
         }
     }
     visitInterfaceDeclaration(
@@ -1332,10 +1283,10 @@ export class TsToGraphqlVisitor implements ast.Visitor {
         );
         if (description) res.description = description;
         // name过后初始化
-        const type = this.visitTypeNode(node.type, context);
         const decorator = node.getDecorators()(expressionVisitor);
         if (decorator) res.decorator = decorator;
         res.index = node.index;
+        const type = this.visitTypeNode(node.type, context);
         if (node.questionToken || !!node.initializer) {
             res.type = type;
         } else {

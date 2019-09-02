@@ -67,7 +67,7 @@ export declare class TsToGraphqlVisitor implements ast.Visitor {
     createMethodSignature(node: ast.MethodDeclaration): ast.MethodSignature;
     createPropertySignature(node: ast.PropertyDeclaration): ast.PropertySignature;
     createTypeNode(node: ast.TypeNode, context: any): any;
-    createMetadate(res: any, context: any, node: ast.MethodDeclaration): HandlerDef;
+    createMetadate(res: any, context: MagnusContext, node: ast.MethodDeclaration): HandlerDef;
     visitMethodDeclaration(node: ast.MethodDeclaration, context: MagnusContext): graphql.FieldDefinitionAst | undefined;
     visitJSDoc(node: ast.JSDoc, context: MagnusContext): string;
     visitTypeNode(node: ast.TypeNode, context: MagnusContext): graphql.TypeAst;
