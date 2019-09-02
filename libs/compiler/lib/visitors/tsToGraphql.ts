@@ -270,7 +270,7 @@ export class Handler {
                                                 needField = true;
                                             }
                                         } else if (key === "Between") {
-                                            if (typeName === "Int") {
+                                            if (typeName === "Int"|| typeName === "String") {
                                                 newField.type = this.visitor.createListTypeAst(
                                                     this.visitor.createNonNullTypeAst(field.type)
                                                 );
@@ -377,12 +377,17 @@ export class Handler {
                                                 needField = true;
                                             }
                                         } else if (key === "Between") {
-                                            if (typeName === "Int") {
-                                                newField.type = this.visitor.createListTypeAst(
-                                                    this.visitor.createNonNullTypeAst(field.type)
-                                                );
-                                                fields.push(newField);
-                                                needField = true;
+                                            if (
+                                              typeName === "Int" ||
+                                              typeName === "String"
+                                            ) {
+                                              newField.type = this.visitor.createListTypeAst(
+                                                this.visitor.createNonNullTypeAst(
+                                                  field.type
+                                                )
+                                              );
+                                              fields.push(newField);
+                                              needField = true;
                                             }
                                         } else if (isNumberOperator) {
                                             if (typeName === "Int") {

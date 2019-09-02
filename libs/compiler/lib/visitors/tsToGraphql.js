@@ -232,7 +232,7 @@ class Handler {
                                             }
                                         }
                                         else if (key === "Between") {
-                                            if (typeName === "Int") {
+                                            if (typeName === "Int" || typeName === "String") {
                                                 newField.type = this.visitor.createListTypeAst(this.visitor.createNonNullTypeAst(field.type));
                                                 fields.push(newField);
                                                 needField = true;
@@ -329,7 +329,8 @@ class Handler {
                                             }
                                         }
                                         else if (key === "Between") {
-                                            if (typeName === "Int") {
+                                            if (typeName === "Int" ||
+                                                typeName === "String") {
                                                 newField.type = this.visitor.createListTypeAst(this.visitor.createNonNullTypeAst(field.type));
                                                 fields.push(newField);
                                                 needField = true;
