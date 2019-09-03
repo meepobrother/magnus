@@ -6,12 +6,10 @@ exports.default = new graphql_1.GraphQLScalarType({
     name: "Date",
     description: "日期类型",
     parseValue(value) {
-        console.log(value);
         return new Date(value); // value from the client
     },
     serialize(value) {
-        console.log(value);
-        return value.getTime(); // value sent to the client
+        return value.toISOString(); // value sent to the client
     },
     parseLiteral(ast) {
         if (ast.kind === graphql_2.Kind.INT) {

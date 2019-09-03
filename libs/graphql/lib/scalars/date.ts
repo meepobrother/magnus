@@ -3,13 +3,11 @@ import { Kind } from 'graphql';
 export default new GraphQLScalarType({
     name: "Date",
     description: "日期类型",
-    parseValue(value: number): Date {
-        console.log(value)
+    parseValue(value: string): Date {
         return new Date(value); // value from the client
     },
-    serialize(value: Date): number {
-        console.log(value)
-        return value.getTime(); // value sent to the client
+    serialize(value: Date): string {
+        return value.toISOString(); // value sent to the client
     },
     parseLiteral(ast): number | null {
         if (ast.kind === Kind.INT) {
