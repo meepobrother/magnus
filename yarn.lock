@@ -946,6 +946,11 @@
   resolved "https://registry.yarnpkg.com/@magnus-plugins/mock/-/mock-0.1.0.tgz#f8801bfb7e2f63603f63644b3bff6006c85aaa18"
   integrity sha512-6XbrWWWetVu4687wQFz+BOKNdV+Z5hyA6Qy0OpD+DfU74m+LOtWbrbjj18oVW2Q92hpiFqSpfpObbwkD3MaSCw==
 
+"@magnus-plugins/nest-resolver@^1.1.6":
+  version "1.1.6"
+  resolved "https://registry.yarnpkg.com/@magnus-plugins/nest-resolver/-/nest-resolver-1.1.6.tgz#492c9edff2af25aede926618e706938c37e24571"
+  integrity sha512-Xg0CcK+URCHqbaGV/il8pJwnICcnkf6u1dnOymav/GtAZbev35I8Y3dkX4yGcoKDHpgyBa7TYg63uNR88bN2Sg==
+
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"
