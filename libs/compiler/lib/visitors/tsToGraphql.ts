@@ -10,7 +10,11 @@ import {
 } from "@notadd/magnus-core";
 import { expressionVisitor } from "./expression";
 import { CollectionContext } from "./collection";
-import { TypeVisitor, TypeContext } from '../visitor3/visitor3';
+import { TypeVisitor, TypeContext } from '../visitor3/typeVisitor';
+import { WhereCreater } from '../visitor3/creater/whereCreater';
+import { OrderCreater } from '../visitor3/creater/orderCreater';
+import { PartialCreater } from '../visitor3/creater/partialCreater';
+import { SimpleCreater } from '../visitor3/creater/simpleCreater';
 export const toString = new ToString();
 export const WhereMap: { [key: string]: string } = {
     Not: `不等于`,
@@ -25,345 +29,100 @@ export const WhereMap: { [key: string]: string } = {
 };
 
 export class Handler {
-         private __partial: Set<string> = new Set();
-         private __order: Set<string> = new Set();
-         private __where: Set<string> = new Set();
-
-         constructor(public visitor: TsToGraphqlVisitor) {}
-
-         Promise(
-           node: ast.TypeReferenceNode | ast.TypeAliasDeclaration,
-           context: any
-         ) {
-           if (node instanceof ast.TypeReferenceNode) {
-             if (node.typeArguments.length === 1) {
-               const typeNode = node.typeArguments[0];
-               return this.visitor.visitTypeNode(typeNode, context);
-             }
-           }
-         }
-         Observable(
-           node: ast.TypeReferenceNode | ast.TypeAliasDeclaration,
-           context: any
-         ) {
-           if (node instanceof ast.TypeReferenceNode) {
-             if (node.typeArguments.length === 1) {
-               const typeNode = node.typeArguments[0];
-               return this.visitor.visitTypeNode(typeNode, context);
-             }
-           }
-         }
-         Order(
-           node: ast.TypeReferenceNode | ast.TypeAliasDeclaration,
-           context: any
-         ) {
-           if (node instanceof ast.TypeReferenceNode) {
-             if (node.typeArguments.length === 1) {
-               const source = node.typeArguments[0];
-               let name = (source as any).typeName.text;
-               if (!context.isEntity) {
-                 const sourceRes = this.visitor.visitTypeNode(source, context);
-                 if (sourceRes && (sourceRes as any).name)
-                   name = (sourceRes as any).name.value;
-               }
-               if (name) {
-                 const sourceAst = this.visitor.collection.findByName(name);
-                 if (sourceAst) {
-                   const res = sourceAst.visit(
-                     this.visitor,
-                     context
-                   ) as graphql.ObjectTypeDefinitionAst;
-                   if (res) {
-                     res.fields = res.fields.map(field => {
-                       const description = this.visitor.createStringValue([
-                         `排序可选值为ASC或者DESC`
-                       ]);
-                       if (field.description && description)
-                         field.description.value += `\n${description.value}`;
-                       field.type = this.visitor.createNamedTypeAst("String");
-                       return field;
-                     });
-                     const astName = res.name.value + "Order";
-                     if (this.__order.has(astName)) {
-                       return this.visitor.createNamedTypeAst(astName);
-                     }
-                     res.name.value = astName;
-                     if (!this.visitor.documentAst.hasDefinitionAst(astName)) {
-                       this.visitor.documentAst.definitions.push(res);
-                     }
-                     this.__order.add(astName);
-                     return this.visitor.createNamedTypeAst(astName);
-                   }
-                 } else {
-                   const item = this.visitor.documentAst.hasDefinitionAst(
-                     name
-                   ) as graphql.ObjectTypeDefinitionAst;
-                   if (item) {
-                     const res = item.copy();
-                     const astName = res.name.value + "Order";
-                     res.fields = res.fields || [];
-                     res.fields = res.fields.map(field => {
-                       const description = this.visitor.createStringValue([
-                         `排序可选值为ASC或者DESC`
-                       ]);
-                       if (field.description && description)
-                         field.description.value += `\n${description.value}`;
-                       field.type = this.visitor.createNamedTypeAst("String");
-                       return field;
-                     });
-                     if (this.__order.has(astName)) {
-                       return this.visitor.createNamedTypeAst(astName);
-                     }
-                     res.name.value = astName;
-                     if (!this.visitor.documentAst.hasDefinitionAst(astName)) {
-                       this.visitor.documentAst.definitions.push(res);
-                     }
-                     this.__order.add(astName);
-                     return this.visitor.createNamedTypeAst(astName);
-                   }
-                 }
-               }
-             }
-           }
-         }
-         DeepPartial(
-           node: ast.TypeReferenceNode | ast.TypeAliasDeclaration,
-           context: any
-         ) {
-           if (node instanceof ast.TypeReferenceNode) {
-             if (node.typeArguments.length === 1) {
-               const source = node.typeArguments[0];
-               const sourceRes = this.visitor.visitTypeNode(source, context);
-               if (sourceRes instanceof graphql.NamedTypeAst) {
-                 const sourceAst = this.visitor.collection.findByName(
-                   context.currentEntity
-                 );
-                 if (sourceAst) {
-                   const res = sourceAst.visit(
-                     this.visitor,
-                     context
-                   ) as graphql.ObjectTypeDefinitionAst;
-                   res.fields = res.fields.map(field => {
-                     if (field.type instanceof graphql.NonNullTypeAst) {
-                       field.type = field.type.type;
-                     }
-                     return field;
-                   });
-                   const astName = res.name.value + "DeepPartial";
-                   if (this.__partial.has(astName)) {
-                     return this.visitor.createNamedTypeAst(astName);
-                   }
-                   res.name.value = astName;
-                   if (!this.visitor.documentAst.hasDefinitionAst(astName)) {
-                     this.visitor.documentAst.definitions.push(res);
-                   }
-                   this.__partial.add(astName);
-                   return this.visitor.createNamedTypeAst(astName);
-                 }
-               }
-             }
-           }
-         }
-         Partial(
-           node: ast.TypeReferenceNode | ast.TypeAliasDeclaration,
-           context: any
-         ) {
-           if (node instanceof ast.TypeReferenceNode) {
-             if (node.typeArguments.length === 1) {
-               const source = node.typeArguments[0];
-               const sourceRes = this.visitor.visitTypeNode(source, context);
-               // debugger;
-               if (sourceRes instanceof graphql.NamedTypeAst) {
-                 const sourceAst = this.visitor.collection.findByName(
-                   context.currentEntity
-                 );
-                 if (sourceAst) {
-                   const res = sourceAst.visit(
-                     this.visitor,
-                     context
-                   ) as graphql.ObjectTypeDefinitionAst;
-                   res.fields = res.fields.map(field => {
-                     if (field.type instanceof graphql.NonNullTypeAst) {
-                       field.type = field.type.type;
-                     }
-                     return field;
-                   });
-                   const astName = res.name.value + "Partial";
-                   const old = this.visitor.documentAst.hasDefinitionAst(
-                     astName
-                   );
-                   if (!old) {
-                     res.name.value = astName;
-                     this.visitor.documentAst.definitions.push(res);
-                   }
-                   return this.visitor.createNamedTypeAst(astName);
-                 }
-               }
-             }
-           }
-         }
-         private createWhereKey(
-           field: any,
-           key: string,
-         ): any {
-             let dest:any;
-             let needField = false;
-            const type = field.type.copy();
-           const typeName = (type as any).name.value;
-           if (["Int", "String", "Boolean"].includes(typeName)) {
-             const newField = field.copy();
-             const desc1 = this.visitor.createStringValue([`${WhereMap[key]}`]);
-             newField.description =
-               newField.description || this.visitor.createStringValue([``]);
-             if (field.description && desc1)
-               newField.description.value =
-                 field.description.value + ` ${desc1.value}`;
-             if (newField.name)
-               newField.name.value = `${newField.name.value}_${key}`;
-             if (["Between", "In"].includes(key)) {
-               if (typeName === "Int" || typeName === "String") {
-                 newField.type = this.visitor.createListTypeAst(
-                   this.visitor.createNonNullTypeAst(field.type)
-                 );
-                 dest=newField;
-                 needField = true;
-               }
-             } else if (["Lt", "Lte", "Gt", "Gte", "Not"].includes(key)) {
-               if (typeName === "Int") {
-                 newField.type = type;
-                  dest = newField;
-                 needField = true;
-               }
-             } else if (["IsNull"]) {
-               if (typeName === "Int" || typeName === "String") {
-                 newField.type = new graphql.NamedTypeAst();
-                 newField.type.name = this.visitor.createNameAst(
-                   "Boolean"
-                 );
-                  dest = newField;
-                 needField = true;
-               }
-             } else if (["Like"].includes(key)) {
-               if (typeName === "String") {
-                 newField.type = new graphql.NamedTypeAst();
-                 newField.type.name = this.visitor.createNameAst(typeName);
-                  dest = newField;
-                 needField = true;
-               }
-             }
-           }
-           return { needField, dest };
-         }
-         Where(
-           node: ast.TypeReferenceNode | ast.TypeAliasDeclaration,
-           context: any
-         ) {
-           if (node instanceof ast.TypeReferenceNode) {
-             if (node.typeArguments.length === 1) {
-               const source = node.typeArguments[0];
-               let name = (source as any).typeName.text;
-               if (!context.isEntity) {
-                 const sourceRes = this.visitor.visitTypeNode(source, context);
-                 if (sourceRes) {
-                   if ((sourceRes as any).name) {
-                     name = (sourceRes as any).name.value;
-                   }
-                 }
-               }
-               if (name) {
-                 const sourceAst = this.visitor.collection.findByName(name);
-                 if (sourceAst) {
-                   const res = sourceAst.visit(
-                     this.visitor,
-                     context
-                   ) as graphql.ObjectTypeDefinitionAst;
-                   const fields: any[] = [];
-                   if (res) {
-                     const astName = res.name.value + "Where";
-                     if (this.__where.has(astName)) {
-                       return this.visitor.createNamedTypeAst(astName);
-                     }
-                     res.fields.map(field => {
-                       let type = field.type;
-                       let needField = false;
-                       if (type instanceof graphql.ListTypeAst) {
-                         return;
-                       } else if (type instanceof graphql.NonNullTypeAst) {
-                         if (type.type instanceof graphql.ListTypeAst) {
-                           return;
-                         }
-                         type = type.type;
-                       }
-                       Object.keys(WhereMap).map((key: string) => {
-                         const {
-                           needField: need,
-                           dest
-                         } = this.createWhereKey(field, key);
-                         needField = need;
-                         if (dest) fields.push(dest);
-                       });
-                       if (needField) {
-                         field.type = type;
-                         fields.push(field);
-                       }
-                     });
-                     res.fields = fields;
-                     res.name.value = astName;
-                     if (!this.visitor.documentAst.hasDefinitionAst(astName)) {
-                       this.visitor.documentAst.definitions.push(res);
-                     }
-                     this.__where.add(astName);
-                     return this.visitor.createNamedTypeAst(astName);
-                   }
-                 } else {
-                   const item = this.visitor.documentAst.hasDefinitionAst(
-                     name
-                   ) as graphql.ObjectTypeDefinitionAst;
-                   if (item) {
-                     const res = item.copy();
-                     const fields: any[] = [];
-                     const astName = res.name.value + "Where";
-                     if (this.__where.has(astName)) {
-                       return this.visitor.createNamedTypeAst(astName);
-                     }
-                     res.fields.map(field => {
-                       let needField = false;
-                       let type = field.type.copy();
-                       if (type instanceof graphql.ListTypeAst) {
-                         return;
-                       } else if (type instanceof graphql.NonNullTypeAst) {
-                         if (type.type instanceof graphql.ListTypeAst) {
-                           return;
-                         }
-                         type = type.type;
-                       }
-                       Object.keys(WhereMap).map((key: string) => {
-                         const {
-                           needField: need,
-                           dest
-                         } = this.createWhereKey(field, key);
-                         needField = need;
-                         if (dest) fields.push(dest);
-                       });
-                       if (needField) {
-                         field.type = type;
-                         fields.push(field);
-                       }
-                     });
-                     res.fields = fields;
-                     res.name.value = astName;
-                     if (!this.visitor.documentAst.hasDefinitionAst(astName)) {
-                       this.visitor.documentAst.definitions.push(res);
-                     }
-                     this.__where.add(astName);
-                     return this.visitor.createNamedTypeAst(astName);
-                   }
-                 }
-               }
-             }
-           }
-         }
-       }
+    constructor(public visitor: TsToGraphqlVisitor) { }
+    Promise(
+        node: ast.TypeReferenceNode | ast.TypeAliasDeclaration,
+        context: any
+    ) {
+        if (node instanceof ast.TypeReferenceNode) {
+            if (node.typeArguments.length === 1) {
+                const typeNode = node.typeArguments[0];
+                return this.visitor.visitTypeNode(typeNode, context);
+            }
+        }
+    }
+    Observable(
+        node: ast.TypeReferenceNode | ast.TypeAliasDeclaration,
+        context: any
+    ) {
+        if (node instanceof ast.TypeReferenceNode) {
+            if (node.typeArguments.length === 1) {
+                const typeNode = node.typeArguments[0];
+                return this.visitor.visitTypeNode(typeNode, context);
+            }
+        }
+    }
+    Order(
+        node: ast.TypeReferenceNode | ast.TypeAliasDeclaration,
+        context: any
+    ) {
+        if (node instanceof ast.TypeReferenceNode) {
+            const orderCreater = new OrderCreater('Order');
+            orderCreater.collection = this.visitor.collection;
+            const order = orderCreater.createName(node, context);
+            if (order) {
+                const { name, namedType, entity } = order;
+                if (!this.visitor.documentAst.hasDefinitionAst(name)) {
+                    this.visitor.documentAst.definitions.push(entity)
+                }
+                return namedType;
+            }
+        }
+    }
+    Partial(
+        node: ast.TypeReferenceNode | ast.TypeAliasDeclaration,
+        context: any
+    ) {
+        if (node instanceof ast.TypeReferenceNode) {
+            const partialCreater = new PartialCreater('Partial');
+            partialCreater.collection = this.visitor.collection;
+            partialCreater.documentAst = this.visitor.documentAst;
+            const partial = partialCreater.createName(node, context);
+            if (partial) {
+                const { name, namedType, entity } = partial;
+                if (!this.visitor.documentAst.hasDefinitionAst(name)) {
+                    this.visitor.documentAst.definitions.push(entity)
+                }
+                return namedType;
+            }
+        }
+    }
+    Simple(
+        node: ast.TypeReferenceNode | ast.TypeAliasDeclaration,
+        context: any
+    ) {
+        if (node instanceof ast.TypeReferenceNode) {
+            const simpleCreater = new SimpleCreater('Simple');
+            simpleCreater.collection = this.visitor.collection;
+            simpleCreater.documentAst = this.visitor.documentAst;
+            const simple = simpleCreater.createName(node, context);
+            if (simple) {
+                const { name, namedType, entity } = simple;
+                if (!this.visitor.documentAst.hasDefinitionAst(name)) {
+                    this.visitor.documentAst.definitions.push(entity)
+                }
+                return namedType;
+            }
+        }
+    }
+    Where(
+        node: ast.TypeReferenceNode | ast.TypeAliasDeclaration,
+        context: any
+    ) {
+        if (node instanceof ast.TypeReferenceNode) {
+            const whereCreater = new WhereCreater('Where');
+            whereCreater.collection = this.visitor.collection;
+            const where = whereCreater.createName(node, context);
+            if (where) {
+                const { name, namedType, entity } = where;
+                if (!this.visitor.documentAst.hasDefinitionAst(name)) {
+                    this.visitor.documentAst.definitions.push(entity)
+                }
+                return namedType;
+            }
+        }
+    }
+}
 interface Metadata {
     name: string;
     decorators: string[];
@@ -581,7 +340,7 @@ export class TsToGraphqlVisitor implements ast.Visitor {
         context: MagnusContext,
         node: ast.MethodDeclaration
     ): HandlerDef {
-        const type = this.createTypeNode(node.type,context);
+        const type = this.createTypeNode(node.type, context);
         return [
             res.name.value,
             context.topName,

@@ -6,7 +6,11 @@ const magnus_1 = require("./magnus");
 const magnus_graphql_1 = require("@notadd/magnus-graphql");
 const lodash_1 = require("lodash");
 const expression_1 = require("./expression");
-const visitor3_1 = require("../visitor3/visitor3");
+const typeVisitor_1 = require("../visitor3/typeVisitor");
+const whereCreater_1 = require("../visitor3/creater/whereCreater");
+const orderCreater_1 = require("../visitor3/creater/orderCreater");
+const partialCreater_1 = require("../visitor3/creater/partialCreater");
+const simpleCreater_1 = require("../visitor3/creater/simpleCreater");
 exports.toString = new magnus_graphql_1.ToString();
 exports.WhereMap = {
     Not: `不等于`,
@@ -22,9 +26,6 @@ exports.WhereMap = {
 class Handler {
     constructor(visitor) {
         this.visitor = visitor;
-        this.__partial = new Set();
-        this.__order = new Set();
-        this.__where = new Set();
     }
     Promise(node, context) {
         if (node instanceof ast.TypeReferenceNode) {
@@ -44,273 +45,59 @@ class Handler {
     }
     Order(node, context) {
         if (node instanceof ast.TypeReferenceNode) {
-            if (node.typeArguments.length === 1) {
-                const source = node.typeArguments[0];
-                let name = source.typeName.text;
-                if (!context.isEntity) {
-                    const sourceRes = this.visitor.visitTypeNode(source, context);
-                    if (sourceRes && sourceRes.name)
-                        name = sourceRes.name.value;
+            const orderCreater = new orderCreater_1.OrderCreater('Order');
+            orderCreater.collection = this.visitor.collection;
+            const order = orderCreater.createName(node, context);
+            if (order) {
+                const { name, namedType, entity } = order;
+                if (!this.visitor.documentAst.hasDefinitionAst(name)) {
+                    this.visitor.documentAst.definitions.push(entity);
                 }
-                if (name) {
-                    const sourceAst = this.visitor.collection.findByName(name);
-                    if (sourceAst) {
-                        const res = sourceAst.visit(this.visitor, context);
-                        if (res) {
-                            res.fields = res.fields.map(field => {
-                                const description = this.visitor.createStringValue([
-                                    `排序可选值为ASC或者DESC`
-                                ]);
-                                if (field.description && description)
-                                    field.description.value += `\n${description.value}`;
-                                field.type = this.visitor.createNamedTypeAst("String");
-                                return field;
-                            });
-                            const astName = res.name.value + "Order";
-                            if (this.__order.has(astName)) {
-                                return this.visitor.createNamedTypeAst(astName);
-                            }
-                            res.name.value = astName;
-                            if (!this.visitor.documentAst.hasDefinitionAst(astName)) {
-                                this.visitor.documentAst.definitions.push(res);
-                            }
-                            this.__order.add(astName);
-                            return this.visitor.createNamedTypeAst(astName);
-                        }
-                    }
-                    else {
-                        const item = this.visitor.documentAst.hasDefinitionAst(name);
-                        if (item) {
-                            const res = item.copy();
-                            const astName = res.name.value + "Order";
-                            res.fields = res.fields || [];
-                            res.fields = res.fields.map(field => {
-                                const description = this.visitor.createStringValue([
-                                    `排序可选值为ASC或者DESC`
-                                ]);
-                                if (field.description && description)
-                                    field.description.value += `\n${description.value}`;
-                                field.type = this.visitor.createNamedTypeAst("String");
-                                return field;
-                            });
-                            if (this.__order.has(astName)) {
-                                return this.visitor.createNamedTypeAst(astName);
-                            }
-                            res.name.value = astName;
-                            if (!this.visitor.documentAst.hasDefinitionAst(astName)) {
-                                this.visitor.documentAst.definitions.push(res);
-                            }
-                            this.__order.add(astName);
-                            return this.visitor.createNamedTypeAst(astName);
-                        }
-                    }
-                }
-            }
-        }
-    }
-    DeepPartial(node, context) {
-        if (node instanceof ast.TypeReferenceNode) {
-            if (node.typeArguments.length === 1) {
-                const source = node.typeArguments[0];
-                const sourceRes = this.visitor.visitTypeNode(source, context);
-                if (sourceRes instanceof magnus_graphql_1.ast.NamedTypeAst) {
-                    const sourceAst = this.visitor.collection.findByName(context.currentEntity);
-                    if (sourceAst) {
-                        const res = sourceAst.visit(this.visitor, context);
-                        res.fields = res.fields.map(field => {
-                            if (field.type instanceof magnus_graphql_1.ast.NonNullTypeAst) {
-                                field.type = field.type.type;
-                            }
-                            return field;
-                        });
-                        const astName = res.name.value + "DeepPartial";
-                        if (this.__partial.has(astName)) {
-                            return this.visitor.createNamedTypeAst(astName);
-                        }
-                        res.name.value = astName;
-                        if (!this.visitor.documentAst.hasDefinitionAst(astName)) {
-                            this.visitor.documentAst.definitions.push(res);
-                        }
-                        this.__partial.add(astName);
-                        return this.visitor.createNamedTypeAst(astName);
-                    }
-                }
+                return namedType;
             }
         }
     }
     Partial(node, context) {
         if (node instanceof ast.TypeReferenceNode) {
-            if (node.typeArguments.length === 1) {
-                const source = node.typeArguments[0];
-                const sourceRes = this.visitor.visitTypeNode(source, context);
-                // debugger;
-                if (sourceRes instanceof magnus_graphql_1.ast.NamedTypeAst) {
-                    const sourceAst = this.visitor.collection.findByName(context.currentEntity);
-                    if (sourceAst) {
-                        const res = sourceAst.visit(this.visitor, context);
-                        res.fields = res.fields.map(field => {
-                            if (field.type instanceof magnus_graphql_1.ast.NonNullTypeAst) {
-                                field.type = field.type.type;
-                            }
-                            return field;
-                        });
-                        const astName = res.name.value + "Partial";
-                        const old = this.visitor.documentAst.hasDefinitionAst(astName);
-                        if (!old) {
-                            res.name.value = astName;
-                            this.visitor.documentAst.definitions.push(res);
-                        }
-                        return this.visitor.createNamedTypeAst(astName);
-                    }
+            const partialCreater = new partialCreater_1.PartialCreater('Partial');
+            partialCreater.collection = this.visitor.collection;
+            partialCreater.documentAst = this.visitor.documentAst;
+            const partial = partialCreater.createName(node, context);
+            if (partial) {
+                const { name, namedType, entity } = partial;
+                if (!this.visitor.documentAst.hasDefinitionAst(name)) {
+                    this.visitor.documentAst.definitions.push(entity);
                 }
+                return namedType;
             }
         }
     }
-    createWhereKey(field, key) {
-        let dest;
-        let needField = false;
-        const type = field.type.copy();
-        const typeName = type.name.value;
-        if (["Int", "String", "Boolean"].includes(typeName)) {
-            const newField = field.copy();
-            const desc1 = this.visitor.createStringValue([`${exports.WhereMap[key]}`]);
-            newField.description =
-                newField.description || this.visitor.createStringValue([``]);
-            if (field.description && desc1)
-                newField.description.value =
-                    field.description.value + ` ${desc1.value}`;
-            if (newField.name)
-                newField.name.value = `${newField.name.value}_${key}`;
-            if (["Between", "In"].includes(key)) {
-                if (typeName === "Int" || typeName === "String") {
-                    newField.type = this.visitor.createListTypeAst(this.visitor.createNonNullTypeAst(field.type));
-                    dest = newField;
-                    needField = true;
+    Simple(node, context) {
+        if (node instanceof ast.TypeReferenceNode) {
+            const simpleCreater = new simpleCreater_1.SimpleCreater('Simple');
+            simpleCreater.collection = this.visitor.collection;
+            simpleCreater.documentAst = this.visitor.documentAst;
+            const simple = simpleCreater.createName(node, context);
+            if (simple) {
+                const { name, namedType, entity } = simple;
+                if (!this.visitor.documentAst.hasDefinitionAst(name)) {
+                    this.visitor.documentAst.definitions.push(entity);
                 }
-            }
-            else if (["Lt", "Lte", "Gt", "Gte", "Not"].includes(key)) {
-                if (typeName === "Int") {
-                    newField.type = type;
-                    dest = newField;
-                    needField = true;
-                }
-            }
-            else if (["IsNull"]) {
-                if (typeName === "Int" || typeName === "String") {
-                    newField.type = new magnus_graphql_1.ast.NamedTypeAst();
-                    newField.type.name = this.visitor.createNameAst("Boolean");
-                    dest = newField;
-                    needField = true;
-                }
-            }
-            else if (["Like"].includes(key)) {
-                if (typeName === "String") {
-                    newField.type = new magnus_graphql_1.ast.NamedTypeAst();
-                    newField.type.name = this.visitor.createNameAst(typeName);
-                    dest = newField;
-                    needField = true;
-                }
+                return namedType;
             }
         }
-        return { needField, dest };
     }
     Where(node, context) {
         if (node instanceof ast.TypeReferenceNode) {
-            if (node.typeArguments.length === 1) {
-                const source = node.typeArguments[0];
-                let name = source.typeName.text;
-                if (!context.isEntity) {
-                    const sourceRes = this.visitor.visitTypeNode(source, context);
-                    if (sourceRes) {
-                        if (sourceRes.name) {
-                            name = sourceRes.name.value;
-                        }
-                    }
+            const whereCreater = new whereCreater_1.WhereCreater('Where');
+            whereCreater.collection = this.visitor.collection;
+            const where = whereCreater.createName(node, context);
+            if (where) {
+                const { name, namedType, entity } = where;
+                if (!this.visitor.documentAst.hasDefinitionAst(name)) {
+                    this.visitor.documentAst.definitions.push(entity);
                 }
-                if (name) {
-                    const sourceAst = this.visitor.collection.findByName(name);
-                    if (sourceAst) {
-                        const res = sourceAst.visit(this.visitor, context);
-                        const fields = [];
-                        if (res) {
-                            const astName = res.name.value + "Where";
-                            if (this.__where.has(astName)) {
-                                return this.visitor.createNamedTypeAst(astName);
-                            }
-                            res.fields.map(field => {
-                                let type = field.type;
-                                let needField = false;
-                                if (type instanceof magnus_graphql_1.ast.ListTypeAst) {
-                                    return;
-                                }
-                                else if (type instanceof magnus_graphql_1.ast.NonNullTypeAst) {
-                                    if (type.type instanceof magnus_graphql_1.ast.ListTypeAst) {
-                                        return;
-                                    }
-                                    type = type.type;
-                                }
-                                Object.keys(exports.WhereMap).map((key) => {
-                                    const { needField: need, dest } = this.createWhereKey(field, key);
-                                    needField = need;
-                                    if (dest)
-                                        fields.push(dest);
-                                });
-                                if (needField) {
-                                    field.type = type;
-                                    fields.push(field);
-                                }
-                            });
-                            res.fields = fields;
-                            res.name.value = astName;
-                            if (!this.visitor.documentAst.hasDefinitionAst(astName)) {
-                                this.visitor.documentAst.definitions.push(res);
-                            }
-                            this.__where.add(astName);
-                            return this.visitor.createNamedTypeAst(astName);
-                        }
-                    }
-                    else {
-                        const item = this.visitor.documentAst.hasDefinitionAst(name);
-                        if (item) {
-                            const res = item.copy();
-                            const fields = [];
-                            const astName = res.name.value + "Where";
-                            if (this.__where.has(astName)) {
-                                return this.visitor.createNamedTypeAst(astName);
-                            }
-                            res.fields.map(field => {
-                                let needField = false;
-                                let type = field.type.copy();
-                                if (type instanceof magnus_graphql_1.ast.ListTypeAst) {
-                                    return;
-                                }
-                                else if (type instanceof magnus_graphql_1.ast.NonNullTypeAst) {
-                                    if (type.type instanceof magnus_graphql_1.ast.ListTypeAst) {
-                                        return;
-                                    }
-                                    type = type.type;
-                                }
-                                Object.keys(exports.WhereMap).map((key) => {
-                                    const { needField: need, dest } = this.createWhereKey(field, key);
-                                    needField = need;
-                                    if (dest)
-                                        fields.push(dest);
-                                });
-                                if (needField) {
-                                    field.type = type;
-                                    fields.push(field);
-                                }
-                            });
-                            res.fields = fields;
-                            res.name.value = astName;
-                            if (!this.visitor.documentAst.hasDefinitionAst(astName)) {
-                                this.visitor.documentAst.definitions.push(res);
-                            }
-                            this.__where.add(astName);
-                            return this.visitor.createNamedTypeAst(astName);
-                        }
-                    }
-                }
+                return namedType;
             }
         }
     }
@@ -515,8 +302,8 @@ class TsToGraphqlVisitor {
         if (!node) {
             return;
         }
-        const typeVisitor = new visitor3_1.TypeVisitor();
-        const typeContext = new visitor3_1.TypeContext();
+        const typeVisitor = new typeVisitor_1.TypeVisitor();
+        const typeContext = new typeVisitor_1.TypeContext();
         typeVisitor.typeArguments = context.parent.typeParameters;
         typeVisitor.currentEntity = context.currentEntity;
         const type = node.visit(typeVisitor, typeContext);

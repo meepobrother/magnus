@@ -64,6 +64,9 @@ class ExpressionVisitor {
     visitTypeReferenceNode(node, context) {
         return node.typeName.visit(this, context);
     }
+    visitLeftHandSideExpression(node, context) {
+        return node;
+    }
     //
     visitImportDeclaration(node, context) {
         const moduleSpecifier = node.moduleSpecifier.visit(this, context);
@@ -115,27 +118,71 @@ class ExpressionVisitor {
     visitKeywordTypeNode(node, context) {
         return node.name;
     }
-    visitPropertyAccessExpression(node, context) { }
-    visitQualifiedName(node, context) { }
-    visitArrayBindingPattern(node, context) { }
-    visitArrowFunction(node, context) { }
-    visitAsExpression(node, context) { }
-    visitAsteriskToken(node, context) { }
-    visitAwaitExpression(node, context) { }
-    visitAwaitKeywordToken(node, context) { }
-    visitBigIntLiteral(node, context) { }
-    visitBinaryExpression(node, context) { }
-    visitBinaryOperatorToken(node, context) { }
-    visitNewExpression(node, context) { }
+    visitPropertyAccessExpression(node, context) {
+        const name = node.name.visit(this, context);
+        const expression = node.expression.visit(this, context);
+        return {
+            name,
+            expression
+        };
+    }
+    visitQualifiedName(node, context) {
+        const left = node.left.visit(this, context);
+        const right = node.right.visit(this, context);
+        return {
+            left,
+            right
+        };
+    }
+    visitArrayBindingPattern(node, context) {
+        console.log(`visitArrayBindingPattern`);
+    }
+    visitArrowFunction(node, context) {
+        if (node.body) {
+            const body = node.body.visit(this, context);
+            return body;
+        }
+    }
+    visitConciseBody(node, context) {
+        console.log(`visitConciseBody`);
+    }
+    visitAsExpression(node, context) {
+        console.log(`visitAsExpression`);
+    }
+    visitAsteriskToken(node, context) {
+        console.log(`visitAsteriskToken`);
+    }
+    visitAwaitExpression(node, context) {
+        console.log(`visitAwaitExpression`);
+    }
+    visitAwaitKeywordToken(node, context) {
+        console.log(`visitAwaitKeywordToken`);
+    }
+    visitBigIntLiteral(node, context) {
+        console.log(`visitBigIntLiteral`);
+    }
+    visitBinaryExpression(node, context) {
+        console.log(`visitBinaryExpression`);
+    }
+    visitBinaryOperatorToken(node, context) {
+        console.log(`visitBinaryOperatorToken`);
+    }
+    visitNewExpression(node, context) {
+        console.log(`visitNewExpression`);
+    }
     visitUnionTypeNode(node, context) {
         return {
             kind: 'UnionTypeNode',
             type: node.types.map(type => this.visitTypeNode(type, context))
         };
     }
-    visitNullLiteral(node, context) { }
+    visitNullLiteral(node, context) {
+        return;
+    }
     visitShorthandPropertyAssignment(node, context) {
         //
+        const name = node.name.visit(this, context);
+        return name;
     }
     visitTypeNode(node, context) {
         if (node instanceof ast.TypeReferenceNode) {

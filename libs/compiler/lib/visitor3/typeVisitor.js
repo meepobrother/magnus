@@ -90,6 +90,7 @@ class TypeVisitor {
     visitArrayTypeNode(node, context) {
         return {
             kind: "ArrayType",
+            isArray: true,
             type: node.elementType.visit(this, context)
         };
     }
@@ -137,4 +138,4 @@ class TypeVisitor {
     }
 }
 exports.TypeVisitor = TypeVisitor;
-//# sourceMappingURL=visitor3.js.map
+//# sourceMappingURL=typeVisitor.js.map

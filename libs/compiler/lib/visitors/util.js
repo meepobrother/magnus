@@ -108,6 +108,12 @@ function isSuperExpression(node) {
     return node.kind === ts.SyntaxKind.SuperKeyword;
 }
 exports.isSuperExpression = isSuperExpression;
+function isLeftHandSideExpression(node) {
+    return [
+        ts.SyntaxKind.PropertyAccessExpression
+    ].includes(node.kind);
+}
+exports.isLeftHandSideExpression = isLeftHandSideExpression;
 function isNullLiteral(node) {
     return node.kind === ts.SyntaxKind.NullKeyword;
 }

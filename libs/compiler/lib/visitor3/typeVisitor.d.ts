@@ -1,20 +1,24 @@
 import * as ast from "../visitors/visitor";
 export declare class TypeContext {
 }
+export interface TypeVisitorType {
+    type: string;
+    isEntity?: boolean;
+    isArray?: boolean;
+    typeArguments: TypeVisitorType[];
+    currentEntity?: string;
+}
 export declare class TypeVisitor implements ast.Visitor {
     name: string;
     typeArguments: Set<string>;
     currentEntity: string;
-    visitTypeNode(node: ast.TypeNode, context: TypeContext): any;
+    visitTypeNode(node: ast.TypeNode, context: TypeContext): TypeVisitorType;
     private hasTypeArguments;
-    visitTypeReferenceNode(node: ast.TypeReferenceNode, context: TypeContext): any;
+    visitTypeReferenceNode(node: ast.TypeReferenceNode, context: TypeContext): TypeVisitorType;
     visitEntityName(node: ast.EntityName, context: TypeContext): any;
     visitIdentifier(node: ast.Identifier, context: TypeContext): string;
     visitQualifiedName(node: ast.QualifiedName, context: TypeContext): any;
-    visitKeywordTypeNode(node: ast.KeywordTypeNode, context: TypeContext): {
-        type: string;
-        typeArguments: never[];
-    };
+    visitKeywordTypeNode(node: ast.KeywordTypeNode, context: TypeContext): TypeVisitorType;
     visitArrayTypeNode(node: ast.ArrayTypeNode, context: TypeContext): any;
     visitTupleTypeNode(node: ast.TupleTypeNode, context: TypeContext): void;
     visitUnionTypeNode(node: ast.UnionTypeNode, context: TypeContext): void;

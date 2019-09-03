@@ -234,17 +234,17 @@ class SpreadAssignment extends Node {
     }
 }
 exports.SpreadAssignment = SpreadAssignment;
-class ObjectLiteralElementLike extends Node {
+class AccessorDeclaration extends Node {
     visit(visitor, context) {
-        if (visitor.visitObjectLiteralElementLike) {
-            return visitor.visitObjectLiteralElementLike(this, context);
+        if (visitor.visitAccessorDeclaration) {
+            return visitor.visitAccessorDeclaration(this, context);
         }
         else {
-            throw new Error(`${visitor.name} 没有 visitObjectLiteralElementLike 方法`);
+            throw new Error(`${visitor.name} 没有 visitAccessorDeclaration 方法`);
         }
     }
 }
-exports.ObjectLiteralElementLike = ObjectLiteralElementLike;
+exports.AccessorDeclaration = AccessorDeclaration;
 class PropertyAssignment extends Node {
     visit(visitor, context) {
         if (visitor.visitPropertyAssignment) {
@@ -917,17 +917,6 @@ class ArrowFunction extends Node {
     }
 }
 exports.ArrowFunction = ArrowFunction;
-class ConciseBody extends Node {
-    visit(visitor, context) {
-        if (visitor.visitConciseBody) {
-            return visitor.visitConciseBody(this, context);
-        }
-        else {
-            throw new Error(`${visitor.name} 没有 visitConciseBody 方法`);
-        }
-    }
-}
-exports.ConciseBody = ConciseBody;
 class EqualsGreaterThanToken extends Node {
     visit(visitor, context) {
         if (visitor.visitEqualsGreaterThanToken) {
@@ -1234,17 +1223,6 @@ class ImportSpecifier extends Node {
     }
 }
 exports.ImportSpecifier = ImportSpecifier;
-class LeftHandSideExpression extends Node {
-    visit(visitor, context) {
-        if (visitor.visitLeftHandSideExpression) {
-            return visitor.visitLeftHandSideExpression(this, context);
-        }
-        else {
-            throw new Error(`${visitor.name} 没有 visitLeftHandSideExpression 方法`);
-        }
-    }
-}
-exports.LeftHandSideExpression = LeftHandSideExpression;
 class ExpressionWithTypeArguments extends Node {
     constructor() {
         super(...arguments);
@@ -1775,7 +1753,12 @@ class TsVisitor {
         }
     }
     visitConciseBody(node, context) {
-        return node;
+        if (ts.isBlock(context)) {
+            return this.visitFunctionBody(new FunctionBody(), context);
+        }
+        else {
+            return this.visitExpression(new Expression(), context);
+        }
     }
     visitEqualsGreaterThanToken(node, context) {
         return node;
@@ -2230,7 +2213,7 @@ class TsVisitor {
     }
     visitExpressionWithTypeArguments(node, context) {
         node.node = context;
-        node.expression = this.visitLeftHandSideExpression(new LeftHandSideExpression(), context.expression);
+        node.expression = this.visitLeftHandSideExpression(undefined, context.expression);
         if (context.typeArguments) {
             node.typeArguments = context.typeArguments.map(type => this.visitTypeNode(undefined, type));
         }
@@ -2852,7 +2835,6 @@ class TsVisitor {
     visitDeleteExpression(node, context) {
         return node;
     }
-    visitNonNullExpression(node, context) { }
     visitSpreadElement(node, context) {
         return node;
     }
@@ -3191,12 +3173,11 @@ class TsVisitor {
     }
     visitDecorator(node, context) {
         node.node = context;
-        node.expression = this.visitLeftHandSideExpression(new LeftHandSideExpression(), context.expression);
+        node.expression = this.visitLeftHandSideExpression(undefined, context.expression);
         return node;
     }
     visitLeftHandSideExpression(node, context) {
         try {
-            node.node = context;
             if (ts.isNumericLiteral(context)) {
                 return this.visitNumericLiteral(new NumericLiteral(), context);
             }
@@ -3227,6 +3208,12 @@ class TsVisitor {
             else if (util.isSuperExpression(context)) {
                 return this.visitSuperExpression(new SuperExpression(), context);
             }
+            else if (ts.isPropertyAccessExpression(context)) {
+                return this.visitPropertyAccessExpression(new PropertyAccessExpression(), context);
+            }
+            else if (ts.isNonNullExpression(context)) {
+                return this.visitNonNullExpression(new NonNullExpression(), context);
+            }
             else {
                 console.log(`visitLeftHandSideExpression ${context.kind}`);
             }
@@ -3235,6 +3222,10 @@ class TsVisitor {
         catch (e) {
             throw e;
         }
+    }
+    visitNonNullExpression(node, context) {
+        node.expression = this.visitExpression(new Expression(), context.expression);
+        return node;
     }
     visitSuperExpression(node, context) {
         return node;
@@ -3248,7 +3239,7 @@ class TsVisitor {
     visitPropertyAccessExpression(node, context) {
         node.node = context;
         if (context.expression) {
-            node.expression = this.visitLeftHandSideExpression(new LeftHandSideExpression(), context.expression);
+            node.expression = this.visitLeftHandSideExpression(undefined, context.expression);
         }
         node.name = this.visitIdentifier(new Identifier(), context.name);
         return node;
@@ -3256,7 +3247,7 @@ class TsVisitor {
     visitCallExpression(node, context) {
         node.node = context;
         if (context.expression) {
-            node.expression = this.visitLeftHandSideExpression(new LeftHandSideExpression(), context.expression);
+            node.expression = this.visitLeftHandSideExpression(undefined, context.expression);
         }
         node.arguments = context.arguments.map(arg => this.visitExpression(new Expression(), arg));
         if (context.typeArguments) {
@@ -3266,12 +3257,10 @@ class TsVisitor {
     }
     visitObjectLiteralExpression(node, context) {
         node.node = context;
-        node.properties = context.properties.map(pro => this.visitObjectLiteralElementLike(new ObjectLiteralElementLike(), pro));
+        node.properties = context.properties.map(pro => this.visitObjectLiteralElementLike(undefined, pro));
         return node;
     }
     visitObjectLiteralElementLike(node, context) {
-        node.node = context;
-        node.docs = this.createJsDocs(context.jsDoc);
         if (ts.isPropertyAssignment(context)) {
             return this.visitPropertyAssignment(new PropertyAssignment(), context);
         }
@@ -3295,6 +3284,16 @@ class TsVisitor {
     visitShorthandPropertyAssignment(node, context) {
         node.node = context;
         node.docs = this.createJsDocs(context.jsDoc);
+        node.kind = context.kind;
+        node.name = this.visitIdentifier(new Identifier(), context.name);
+        if (context.questionToken)
+            node.questionToken = this.visitQuestionToken(new QuestionToken(), context.questionToken);
+        if (context.exclamationToken)
+            node.exclamationToken = this.visitExclamationToken(new ExclamationToken(), context.exclamationToken);
+        if (context.questionToken)
+            node.equalsToken = context.equalsToken;
+        if (context.objectAssignmentInitializer)
+            node.objectAssignmentInitializer = this.visitExpression(new Expression(), context.objectAssignmentInitializer);
         return node;
     }
     visitSpreadAssignment(node, context) {

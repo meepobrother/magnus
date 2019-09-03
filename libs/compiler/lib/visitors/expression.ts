@@ -64,7 +64,10 @@ export class ExpressionVisitor implements ast.Visitor {
         };
     }
     visitTypeReferenceNode(node: ast.TypeReferenceNode, context: any): any {
-       return node.typeName.visit(this, context);
+        return node.typeName.visit(this, context);
+    }
+    visitLeftHandSideExpression(node: ast.LeftHandSideExpression, context: any) {
+        return node;
     }
     //
     visitImportDeclaration(node: ast.ImportDeclaration, context: any) {
@@ -122,30 +125,74 @@ export class ExpressionVisitor implements ast.Visitor {
     visitPropertyAccessExpression(
         node: ast.PropertyAccessExpression,
         context: any
-    ) { }
-    visitQualifiedName(node: ast.QualifiedName, context: any) { }
-    visitArrayBindingPattern(node: ast.ArrayBindingPattern, context: any) { }
-    visitArrowFunction(node: ast.ArrowFunction, context: any) { }
-    visitAsExpression(node: ast.AsExpression, context: any) { }
-    visitAsteriskToken(node: ast.AsteriskToken, context: any) { }
-    visitAwaitExpression(node: ast.AwaitExpression, context: any) { }
-    visitAwaitKeywordToken(node: ast.AwaitKeywordToken, context: any) { }
-    visitBigIntLiteral(node: ast.BigIntLiteral, context: any) { }
-    visitBinaryExpression(node: ast.BinaryExpression, context: any) { }
-    visitBinaryOperatorToken(node: ast.BinaryOperatorToken, context: any) { }
-    visitNewExpression(node: ast.NewExpression, context: any) { }
+    ): any {
+        const name = node.name.visit(this, context)
+        const expression = node.expression.visit(this, context)
+        return {
+            name,
+            expression
+        }
+    }
+    visitQualifiedName(node: ast.QualifiedName, context: any): any {
+        const left = node.left.visit(this, context)
+        const right = node.right.visit(this, context)
+        return {
+            left,
+            right
+        }
+    }
+    visitArrayBindingPattern(node: ast.ArrayBindingPattern, context: any) {
+        console.log(`visitArrayBindingPattern`)
+    }
+    visitArrowFunction(node: ast.ArrowFunction, context: any): any {
+        if (node.body) {
+            const body = node.body.visit(this, context);
+            return body;
+        }
+    }
+    visitConciseBody(node: ast.ConciseBody, context: any) {
+        console.log(`visitConciseBody`)
+    }
+    visitAsExpression(node: ast.AsExpression, context: any) {
+        console.log(`visitAsExpression`)
+    }
+    visitAsteriskToken(node: ast.AsteriskToken, context: any) {
+        console.log(`visitAsteriskToken`)
+    }
+    visitAwaitExpression(node: ast.AwaitExpression, context: any) {
+        console.log(`visitAwaitExpression`)
+    }
+    visitAwaitKeywordToken(node: ast.AwaitKeywordToken, context: any) {
+        console.log(`visitAwaitKeywordToken`)
+    }
+    visitBigIntLiteral(node: ast.BigIntLiteral, context: any) {
+        console.log(`visitBigIntLiteral`)
+    }
+    visitBinaryExpression(node: ast.BinaryExpression, context: any) {
+        console.log(`visitBinaryExpression`)
+    }
+    visitBinaryOperatorToken(node: ast.BinaryOperatorToken, context: any) {
+        console.log(`visitBinaryOperatorToken`)
+    }
+    visitNewExpression(node: ast.NewExpression, context: any) {
+        console.log(`visitNewExpression`)
+    }
     visitUnionTypeNode(node: ast.UnionTypeNode, context: any): any {
         return {
             kind: 'UnionTypeNode',
             type: node.types.map(type => this.visitTypeNode(type, context))
         }
     }
-    visitNullLiteral(node: ast.NullLiteral, context: any) { }
+    visitNullLiteral(node: ast.NullLiteral, context: any) {
+        return;
+    }
     visitShorthandPropertyAssignment(
         node: ast.ShorthandPropertyAssignment,
         context: any
     ) {
         //
+        const name = node.name.visit(this, context)
+        return name;
     }
     visitTypeNode(node: ast.TypeNode, context: any) {
         if (node instanceof ast.TypeReferenceNode) {

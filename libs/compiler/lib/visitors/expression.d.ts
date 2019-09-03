@@ -15,6 +15,7 @@ export declare class ExpressionVisitor implements ast.Visitor {
     visitDecorator(node: ast.Decorator, context: any): any;
     visitCallExpression(node: ast.CallExpression, context: any): any;
     visitTypeReferenceNode(node: ast.TypeReferenceNode, context: any): any;
+    visitLeftHandSideExpression(node: ast.LeftHandSideExpression, context: any): ast.LeftHandSideExpression;
     visitImportDeclaration(node: ast.ImportDeclaration, context: any): {
         kind: string;
         moduleSpecifier: any;
@@ -27,10 +28,11 @@ export declare class ExpressionVisitor implements ast.Visitor {
     visitArrayTypeNode(node: ast.ArrayTypeNode, context: any): any;
     visitNoSubstitutionTemplateLiteral(node: ast.NoSubstitutionTemplateLiteral, context: any): string;
     visitKeywordTypeNode(node: ast.KeywordTypeNode, context: any): import("./util").KeywordType;
-    visitPropertyAccessExpression(node: ast.PropertyAccessExpression, context: any): void;
-    visitQualifiedName(node: ast.QualifiedName, context: any): void;
+    visitPropertyAccessExpression(node: ast.PropertyAccessExpression, context: any): any;
+    visitQualifiedName(node: ast.QualifiedName, context: any): any;
     visitArrayBindingPattern(node: ast.ArrayBindingPattern, context: any): void;
-    visitArrowFunction(node: ast.ArrowFunction, context: any): void;
+    visitArrowFunction(node: ast.ArrowFunction, context: any): any;
+    visitConciseBody(node: ast.ConciseBody, context: any): void;
     visitAsExpression(node: ast.AsExpression, context: any): void;
     visitAsteriskToken(node: ast.AsteriskToken, context: any): void;
     visitAwaitExpression(node: ast.AwaitExpression, context: any): void;
@@ -41,7 +43,7 @@ export declare class ExpressionVisitor implements ast.Visitor {
     visitNewExpression(node: ast.NewExpression, context: any): void;
     visitUnionTypeNode(node: ast.UnionTypeNode, context: any): any;
     visitNullLiteral(node: ast.NullLiteral, context: any): void;
-    visitShorthandPropertyAssignment(node: ast.ShorthandPropertyAssignment, context: any): void;
+    visitShorthandPropertyAssignment(node: ast.ShorthandPropertyAssignment, context: any): any;
     visitTypeNode(node: ast.TypeNode, context: any): any;
 }
 export declare const expressionVisitor: ExpressionVisitor;

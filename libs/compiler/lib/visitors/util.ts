@@ -107,6 +107,12 @@ export function isSuperExpression(node: ts.Node): node is ts.SuperExpression {
     return node.kind === ts.SyntaxKind.SuperKeyword;
 }
 
+export function isLeftHandSideExpression(node: ts.Node): node is ts.LeftHandSideExpression {
+    return [
+        ts.SyntaxKind.PropertyAccessExpression
+    ].includes(node.kind)
+}
+
 export function isNullLiteral(node: ts.Node): node is ts.NullLiteral {
     return node.kind === ts.SyntaxKind.NullKeyword
 }

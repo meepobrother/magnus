@@ -9,17 +9,13 @@ export declare const WhereMap: {
 };
 export declare class Handler {
     visitor: TsToGraphqlVisitor;
-    private __partial;
-    private __order;
-    private __where;
     constructor(visitor: TsToGraphqlVisitor);
     Promise(node: ast.TypeReferenceNode | ast.TypeAliasDeclaration, context: any): graphql.NamedTypeAst<any, any> | graphql.ListTypeAst<any, any> | graphql.NonNullTypeAst<any, any> | undefined;
     Observable(node: ast.TypeReferenceNode | ast.TypeAliasDeclaration, context: any): graphql.NamedTypeAst<any, any> | graphql.ListTypeAst<any, any> | graphql.NonNullTypeAst<any, any> | undefined;
-    Order(node: ast.TypeReferenceNode | ast.TypeAliasDeclaration, context: any): graphql.NamedTypeAst<any, any> | undefined;
-    DeepPartial(node: ast.TypeReferenceNode | ast.TypeAliasDeclaration, context: any): graphql.NamedTypeAst<any, any> | undefined;
-    Partial(node: ast.TypeReferenceNode | ast.TypeAliasDeclaration, context: any): graphql.NamedTypeAst<any, any> | undefined;
-    private createWhereKey;
-    Where(node: ast.TypeReferenceNode | ast.TypeAliasDeclaration, context: any): graphql.NamedTypeAst<any, any> | undefined;
+    Order(node: ast.TypeReferenceNode | ast.TypeAliasDeclaration, context: any): graphql.NameAst<any, any> | graphql.NamedTypeAst<any, any> | undefined;
+    Partial(node: ast.TypeReferenceNode | ast.TypeAliasDeclaration, context: any): graphql.NameAst<any, any> | graphql.NamedTypeAst<any, any> | undefined;
+    Simple(node: ast.TypeReferenceNode | ast.TypeAliasDeclaration, context: any): graphql.NameAst<any, any> | graphql.NamedTypeAst<any, any> | undefined;
+    Where(node: ast.TypeReferenceNode | ast.TypeAliasDeclaration, context: any): graphql.NameAst<any, any> | graphql.NamedTypeAst<any, any> | undefined;
 }
 interface Metadata {
     name: string;
