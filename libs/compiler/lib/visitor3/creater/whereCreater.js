@@ -34,6 +34,9 @@ class WhereCreater extends baseCreater_1.BaseCreater {
             const isDate = !!['CreateDateColumn', 'UpdateDateColumn', 'Time'].find(it => decorators.includes(it));
             const isColumn = !!['Column', 'PrimaryGeneratedColumn', 'PrimaryColumn', 'ObjectIdColumn'].find(it => decorators.includes(it));
             const type = it.type.visit(expression_1.expressionVisitor, ``);
+            if (it.type instanceof ast.ArrayTypeNode) {
+                return;
+            }
             const name = it.name.visit(expression_1.expressionVisitor, ``);
             const dec = it.docs.map(doc => doc.comment).join(' ');
             const isPrimaryGeneratedColumn = !!['PrimaryGeneratedColumn'].find(it => decorators.includes(it));
