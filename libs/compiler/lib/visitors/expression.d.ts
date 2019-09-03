@@ -27,7 +27,7 @@ export declare class ExpressionVisitor implements ast.Visitor {
     visitNamedImports(node: ast.NamedImports, context: any): any;
     visitArrayTypeNode(node: ast.ArrayTypeNode, context: any): any;
     visitNoSubstitutionTemplateLiteral(node: ast.NoSubstitutionTemplateLiteral, context: any): string;
-    visitKeywordTypeNode(node: ast.KeywordTypeNode, context: any): import("./util").KeywordType;
+    visitKeywordTypeNode(node: ast.KeywordTypeNode, context: any): import("../../../ts-visitor/lib/util").KeywordType;
     visitPropertyAccessExpression(node: ast.PropertyAccessExpression, context: any): any;
     visitQualifiedName(node: ast.QualifiedName, context: any): any;
     visitArrayBindingPattern(node: ast.ArrayBindingPattern, context: any): void;

@@ -54,7 +54,7 @@ class WhereCreater extends baseCreater_1.BaseCreater {
                 input.fields.push(graphql_1.createInputValue(`${name}_Lte`, opt, false, false, `${dec} ` + this.description['Lte']));
                 input.fields.push(graphql_1.createInputValue(`${name}_Gt`, opt, false, false, `${dec} ` + this.description['Gt']));
                 input.fields.push(graphql_1.createInputValue(`${name}_Gte`, opt, false, false, `${dec} ` + this.description['Gte']));
-                input.fields.push(graphql_1.createInputValue(`${name}_Between`, opt, false, false, `${dec} ` + this.description['Between']));
+                input.fields.push(graphql_1.createInputValue(`${name}_Between`, opt, false, true, `${dec} ` + this.description['Between']));
             }
             if (isColumn) {
                 // 列

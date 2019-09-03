@@ -57,7 +57,7 @@ export class WhereCreater extends BaseCreater {
                     createInputValue(`${name}_Gte`, opt, false, false, `${dec} ` + this.description['Gte'])
                 );
                 input.fields.push(
-                    createInputValue(`${name}_Between`, opt, false, false, `${dec} ` + this.description['Between'])
+                    createInputValue(`${name}_Between`, opt, false, true, `${dec} ` + this.description['Between'])
                 );
             }
             if (isColumn) {
