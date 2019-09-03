@@ -3,7 +3,7 @@ import { Kind } from 'graphql';
 export default new GraphQLScalarType({
     name: "Date",
     description: "日期类型",
-    parseValue(value: string): Date {
+    parseValue(value: string | number): Date {
         return new Date(value); // value from the client
     },
     serialize(value: Date): string {

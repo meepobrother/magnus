@@ -10,7 +10,7 @@ class TimestampScalar extends util_1.BaseScalar {
         this.description = `Timestamp`;
     }
     serialize(value) {
-        return typeorm_1.Timestamp.fromInt(value);
+        return typeorm_1.Timestamp.fromString(value);
     }
     parseValue(value) {
         return value.toString();

@@ -4,8 +4,8 @@ import { Timestamp as TypeormTimestamp } from 'typeorm';
 class TimestampScalar extends BaseScalar implements GraphQLScalarTypeConfig<any, object>{
     name: string = `Timestamp`;
     description: string = `Timestamp`;
-    serialize(value: number): TypeormTimestamp {
-        return TypeormTimestamp.fromInt(value);
+    serialize(value: string): TypeormTimestamp {
+        return TypeormTimestamp.fromString(value);
     }
     parseValue(value: TypeormTimestamp): string {
         return value.toString();

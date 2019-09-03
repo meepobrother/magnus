@@ -26,7 +26,7 @@
   "bugs": {
     "url": "https://github.com/notadd/magnus/issues"
   },
-  "gitHead": "acbf551528e935fe60bc728c46992f3671bfe140",
+  "gitHead": "a121cae02a96ceef0b96790953b22e0a2a25ed62",
   "dependencies": {
     "graphql": "^14.4.2",
     "tslib": "^1.10.0",
