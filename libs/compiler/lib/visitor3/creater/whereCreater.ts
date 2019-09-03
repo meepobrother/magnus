@@ -35,7 +35,10 @@ export class WhereCreater extends BaseCreater {
                 // 日期 time>:start And time<:end
                 // Lt,Lte,Gt,Gte,Between
                 let opt = `String`;
-                if (type === 'number') {
+                if (isDate) {
+                    opt = 'Date';
+                }
+                else if (type === 'number') {
                     opt = 'Int';
                 }
                 input.fields.push(
