@@ -19,7 +19,7 @@ export type DeepPartial<T> = { [P in keyof T]?: DeepPartial<T[P]> };
 
 export type Order<T> = { [P in keyof T]?: "ASC" | "DESC" };
 export type Where<T> = {
-    [key in keyof T]: any;
-}; 
+    [key: string]: any;
+};
 
 export type ID = string | number;

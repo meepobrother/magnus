@@ -21,6 +21,6 @@ export declare type Order<T> = {
     [P in keyof T]?: "ASC" | "DESC";
 };
 export declare type Where<T> = {
-    [key in keyof T]: any;
+    [key: string]: any;
 };
 export declare type ID = string | number;
