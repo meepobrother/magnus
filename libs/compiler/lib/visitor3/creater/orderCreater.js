@@ -24,14 +24,8 @@ class OrderCreater extends baseCreater_1.BaseCreater {
             const name = it.name.visit(expression_1.expressionVisitor, ``);
             const dec = it.docs.map(doc => doc.comment).join(' ');
             if (isDate || (isColumn && type === 'number')) {
-                let opt = `String`;
-                if (isDate) {
-                    opt = 'Date';
-                }
-                else if (type === 'number') {
-                    opt = 'Int';
-                }
-                input.fields.push(graphql_1.createInputValue(name, type, false, false, `${dec} ASC 升序 DESC降序`));
+                const opt = `String`;
+                input.fields.push(graphql_1.createInputValue(name, opt, false, false, `${dec} ASC 升序 DESC降序`));
             }
         });
         return input;
