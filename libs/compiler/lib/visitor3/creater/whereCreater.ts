@@ -44,6 +44,11 @@ export class WhereCreater extends BaseCreater {
                 else if (type === 'number') {
                     opt = 'Int';
                 }
+                if (isPrimaryGeneratedColumn) {
+                    input.fields.push(
+                        createInputValue(`${name}_In`, opt, false, true, `${dec} ` + this.description['In'])
+                    );
+                }
                 input.fields.push(
                     createInputValue(`${name}_Lt`, opt, false, false, `${dec} ` + this.description['Lt'])
                 );
