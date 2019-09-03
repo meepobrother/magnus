@@ -30,7 +30,8 @@ export class WhereCreater extends BaseCreater {
             const type = it.type.visit(expressionVisitor, ``)
             const name = it.name.visit(expressionVisitor, ``)
             const dec = it.docs.map(doc => doc.comment).join(' ');
-            if (isDate || (isColumn && type === 'number)')) {
+            const isPrimaryGeneratedColumn = !!['PrimaryGeneratedColumn'].find(it => decorators.includes(it))
+            if (isDate || isPrimaryGeneratedColumn || (isColumn && type === 'number)')) {
                 // 日期 time>:start And time<:end
                 // Lt,Lte,Gt,Gte,Between
                 let opt = `String`;
