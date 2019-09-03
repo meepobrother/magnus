@@ -25,6 +25,13 @@ export class EntityCreater extends BaseCreater {
             if (isAuto) { }
             else if (isDate || (isColumn)) {
                 const type = it.type.visit(expressionVisitor, ``)
+                let opt = `String`;
+                if (isDate) {
+                    opt = 'Date';
+                }
+                else if (type === 'number') {
+                    opt = 'Int';
+                }
                 input.fields.push(
                     createInputValue(name, type, false, false, dec)
                 );

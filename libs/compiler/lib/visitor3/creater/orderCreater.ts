@@ -22,6 +22,13 @@ export class OrderCreater extends BaseCreater {
             const name = it.name.visit(expressionVisitor, ``)
             const dec = it.docs.map(doc => doc.comment).join(' ');
             if (isDate || (isColumn && type === 'number')) {
+                let opt = `String`;
+                if (isDate) {
+                    opt = 'Date';
+                }
+                else if (type === 'number') {
+                    opt = 'Int';
+                }
                 input.fields.push(
                     createInputValue(name, type, false, false, `${dec} ASC 升序 DESC降序`)
                 );

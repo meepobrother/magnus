@@ -1,5 +1,5 @@
 import * as ast from '../../visitors/visitor';
-import {  createName, createInputValue } from '../../utils/graphql';
+import { createName, createInputValue } from '../../utils/graphql';
 import { ast as graphql } from '@notadd/magnus-graphql';
 import { expressionVisitor } from '../../visitors/expression';
 import { BaseCreater } from './baseCreater';
@@ -22,6 +22,13 @@ export class SimpleCreater extends BaseCreater {
             if (isAuto) { }
             else if (isDate || (isColumn)) {
                 const type = it.type.visit(expressionVisitor, ``)
+                let opt = `String`;
+                if (isDate) {
+                    opt = 'Date';
+                }
+                else if (type === 'number') {
+                    opt = 'Int';
+                }
                 input.fields.push(
                     createInputValue(name, type, false, false, dec)
                 );

@@ -24,6 +24,13 @@ class PartialCreater extends baseCreater_1.BaseCreater {
             if (isAuto) { }
             else if (isDate || (isColumn)) {
                 const type = it.type.visit(expression_1.expressionVisitor, ``);
+                let opt = `String`;
+                if (isDate) {
+                    opt = 'Date';
+                }
+                else if (type === 'number') {
+                    opt = 'Int';
+                }
                 input.fields.push(graphql_1.createInputValue(name, type, false, false, dec));
             }
             else if (isRelation) {
