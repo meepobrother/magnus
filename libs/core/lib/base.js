@@ -19,28 +19,6 @@ class MagnusBase {
                 if (keys.length > 1) {
                     type = keys.pop();
                 }
-                else {
-                    type = undefined;
-                    const opt = keys[0];
-                    if (opt === "OR") {
-                        const ors = where[opt];
-                        ors.map((or) => {
-                            this.createWhere(or, "or");
-                        });
-                    }
-                    else if (opt === "AND") {
-                        const ands = where[opt];
-                        ands.map((or) => {
-                            this.createWhere(or, "and");
-                        });
-                    }
-                    else if (opt === "NOT") {
-                        const nots = where[opt];
-                        nots.map((or) => {
-                            this.createWhere(or, "not");
-                        });
-                    }
-                }
                 column = keys.join("_");
                 const value = where[key];
                 switch (type) {
