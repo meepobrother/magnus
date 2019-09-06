@@ -1,8 +1,3 @@
-import { graphql, GraphQLResolveInfo, DocumentNode } from "graphql";
-import { ClientVisitor, ParseVisitor, ast } from "@notadd/magnus-graphql";
-import { upperFirst } from "lodash";
-import { scalars } from "@notadd/magnus-graphql";
-import { makeExecutableSchema } from "graphql-tools";
 interface Type<T> extends Function {
     new(...args: any[]): T;
 }

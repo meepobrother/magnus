@@ -36,6 +36,7 @@
 		"@magnus-plugins/nest-resolver": "^1.1.6",
 		"@nestjs/microservices": "^6.4.1",
 		"@nodeutils/defaults-deep": "^1.1.0",
+		"@notadd/magnus-typeorm": "^0.6.19",
 		"@types/commander": "^2.12.2",
 		"apollo-boost": "^0.4.4",
 		"apollo-server": "^2.6.2",

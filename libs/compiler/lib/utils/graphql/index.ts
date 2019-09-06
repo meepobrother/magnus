@@ -1,4 +1,7 @@
 import { ast } from '@notadd/magnus-graphql';
+import { ParameterDeclaration } from '../../visitors/visitor';
+import { expressionVisitor } from '../../visitors/expression';
+
 export function createStringValue(value: string) {
     const node = new ast.StringValueAst();
     node.value = value;
@@ -50,10 +53,7 @@ export function createTypeByName(name: string) {
             return createNamedType(name)
     }
 }
-export function createInputValue(name: string, type: string | ast.TypeAst | ast.NameAst, isNonNull: boolean = false, isList: boolean = false, description: string) {
-    const node = new ast.InputValueDefinitionAst();
-    node.name = createName(name);
-    node.description = createStringValue(description);
+export function createTypeNode(type: any, isList: boolean, isNonNull: boolean) {
     let namedType: ast.TypeAst = type as ast.TypeAst;
     if (typeof type === 'string') {
         namedType = createTypeByName(type)
@@ -80,6 +80,42 @@ export function createInputValue(name: string, type: string | ast.TypeAst | ast.
     if (isNonNull) {
         namedType = createNonNullType(namedType);
     }
-    node.type = namedType;
+    return namedType;
+}
+export function createInputValue(name: string, type: string | ast.TypeAst | ast.NameAst, isNonNull: boolean = false, isList: boolean = false, description: string) {
+    const node = new ast.InputValueDefinitionAst();
+    node.name = createName(name);
+    node.description = createStringValue(description);
+    node.type = createTypeNode(type, isList, isNonNull);
     return node;
+}
+
+export interface ArgumentOptions {
+    name: string;
+    type: string | ast.TypeAst | ast.NameAst;
+    isNonNull: boolean;
+    isList: boolean;
+    description: string
+}
+export function createFieldDefinition(name: string, args: ArgumentOptions[], type: string | ast.TypeAst | ast.NameAst, isList: boolean, isNonNull: boolean, description: string) {
+    const node = new ast.FieldDefinitionAst();
+    node.name = createName(name);
+    node.arguments = args.map(arg => createInputValue(arg.name, arg.type, arg.isNonNull, arg.isList, arg.description))
+    node.type = createTypeNode(type, isList, isNonNull);
+    node.description = createStringValue(description);
+    return node;
+}
+export function createParameters(node: ParameterDeclaration): ArgumentOptions {
+    const type = node.type.visit(expressionVisitor, ``)
+    let opt = `String`;
+    if (type === 'number') {
+        opt = 'Int';
+    }
+    return {
+        name: node.name.visit(expressionVisitor, ``),
+        type: opt,
+        isNonNull: false,
+        isList: false,
+        description: ``
+    }
 }

@@ -5,9 +5,9 @@ import { ast as graphql } from '@notadd/magnus-graphql';
 import { expressionVisitor } from '../../visitors/expression';
 import { BaseCreater } from './baseCreater';
 /**
- * entity
+ * magnus
  */
-export class EntityCreater extends BaseCreater {
+export class MagnusCreater extends BaseCreater {
     context: MagnusContext;
     documentAst: graphql.DocumentAst;
     createClassDeclaration(name: string, node: ast.ClassDeclaration) {
@@ -29,7 +29,7 @@ export class EntityCreater extends BaseCreater {
             input.fields.push(
                 createFieldDefinition(name, args, type, false, false, dec)
             );
-        });
+        })
         return input;
     }
 }

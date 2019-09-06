@@ -1049,6 +1049,11 @@
   dependencies:
     lodash "^4.15.0"
 
+"@notadd/magnus-typeorm@^0.6.19":
+  version "0.6.19"
+  resolved "https://registry.yarnpkg.com/@notadd/magnus-typeorm/-/magnus-typeorm-0.6.19.tgz#67f39b31189b8db2f82dc1e6b61da4e554b382bc"
+  integrity sha512-Rjlqq1SsZC0Ks97TzPGX2hbvsjinmQbStVDnxj5QkNxzOt4ET1mMUoTc4voDUqtfiVUJeQTeb3dhVS9/8BwZWw==
+
 "@nuxtjs/opencollective@0.2.2":
   version "0.2.2"
   resolved "https://registry.yarnpkg.com/@nuxtjs/opencollective/-/opencollective-0.2.2.tgz#26a761ebf588cc92a422d7cee996a66bd6e2761e"

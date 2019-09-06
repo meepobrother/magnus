@@ -7,9 +7,9 @@ const magnus_graphql_1 = require("@notadd/magnus-graphql");
 const expression_1 = require("../../visitors/expression");
 const baseCreater_1 = require("./baseCreater");
 /**
- * entity
+ * magnus
  */
-class EntityCreater extends baseCreater_1.BaseCreater {
+class MagnusCreater extends baseCreater_1.BaseCreater {
     createClassDeclaration(name, node) {
         const input = new magnus_graphql_1.ast.ObjectTypeDefinitionAst();
         input.name = graphql_1.createName(name);
@@ -31,5 +31,5 @@ class EntityCreater extends baseCreater_1.BaseCreater {
         return input;
     }
 }
-exports.EntityCreater = EntityCreater;
-//# sourceMappingURL=entityCreater.js.map
+exports.MagnusCreater = MagnusCreater;
+//# sourceMappingURL=magnusCreater.js.map
