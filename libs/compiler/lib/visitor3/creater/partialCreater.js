@@ -7,7 +7,7 @@ const magnus_graphql_1 = require("@notadd/magnus-graphql");
 const expression_1 = require("../../visitors/expression");
 const baseCreater_1 = require("./baseCreater");
 class PartialCreater extends baseCreater_1.BaseCreater {
-    createClassDeclaration(name, node) {
+    createClassDeclaration(name, node, context) {
         const input = new magnus_graphql_1.ast.InputObjectTypeDefinitionAst();
         input.name = graphql_1.createName(name);
         const members = node.members
@@ -40,7 +40,7 @@ class PartialCreater extends baseCreater_1.BaseCreater {
                 //     oneToMany
                 // })
                 if (it.type instanceof ast.TypeReferenceNode) {
-                    const createName = this.createName(it.type, this.context);
+                    const createName = this.createName(it.type, context);
                     if (createName) {
                         const { name: astName, entity, namedType } = createName;
                         if (!this.documentAst.hasDefinitionAst(astName)) {
@@ -50,7 +50,7 @@ class PartialCreater extends baseCreater_1.BaseCreater {
                     }
                 }
                 else if (it.type instanceof ast.ArrayTypeNode) {
-                    const createName = this.createName(it.type.elementType, this.context);
+                    const createName = this.createName(it.type.elementType, context);
                     if (createName) {
                         const { name: astName, entity, namedType } = createName;
                         if (!this.documentAst.hasDefinitionAst(astName)) {

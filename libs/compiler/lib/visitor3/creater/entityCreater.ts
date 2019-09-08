@@ -1,5 +1,4 @@
 import * as ast from '../../visitors/visitor';
-import { MagnusContext } from '../../visitors/magnus';
 import { createName, createFieldDefinition, createParameters } from '../../utils/graphql';
 import { ast as graphql } from '@notadd/magnus-graphql';
 import { expressionVisitor } from '../../visitors/expression';
@@ -8,8 +7,9 @@ import { BaseCreater } from './baseCreater';
  * entity
  */
 export class EntityCreater extends BaseCreater {
-    context: MagnusContext;
-    documentAst: graphql.DocumentAst;
+    constructor() {
+        super(``)
+    }
     createClassDeclaration(name: string, node: ast.ClassDeclaration) {
         const input = new graphql.ObjectTypeDefinitionAst();
         input.name = createName(name)

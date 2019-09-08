@@ -10,6 +10,9 @@ const baseCreater_1 = require("./baseCreater");
  * entity
  */
 class EntityCreater extends baseCreater_1.BaseCreater {
+    constructor() {
+        super(``);
+    }
     createClassDeclaration(name, node) {
         const input = new magnus_graphql_1.ast.ObjectTypeDefinitionAst();
         input.name = graphql_1.createName(name);

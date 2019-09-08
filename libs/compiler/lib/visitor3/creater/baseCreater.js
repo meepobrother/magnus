@@ -10,7 +10,6 @@ class BaseCreater {
         this.name = name;
     }
     createName(node, context) {
-        this.context = context;
         if (node instanceof ast.TypeReferenceNode) {
             let type = asts_1.createTypeNode(node, context);
             const currentType = asts_1.findCurrentEntity(type);
@@ -46,15 +45,15 @@ class BaseCreater {
                 const nameAst = this.collection.findByName(current);
                 let entity;
                 if (nameAst) {
-                    entity = this.createEntity(name, nameAst);
+                    entity = this.createEntity(name, nameAst, context);
                 }
                 return { name, namedType: graphql_1.createNamedType(name), entity };
             }
         }
     }
-    createEntity(name, node) {
+    createEntity(name, node, context) {
         if (node instanceof ast.ClassDeclaration) {
-            return this.createClassDeclaration(name, node);
+            return this.createClassDeclaration(name, node, context);
         }
         if (node instanceof ast.InterfaceDeclaration) {
             return this.createInterfaceDeclaration(name, node);

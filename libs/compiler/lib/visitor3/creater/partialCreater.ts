@@ -1,14 +1,12 @@
 import * as ast from '../../visitors/visitor';
-import { MagnusContext } from '../../visitors/magnus';
 import { createName, createInputValue } from '../../utils/graphql';
 import { ast as graphql } from '@notadd/magnus-graphql';
 import { expressionVisitor } from '../../visitors/expression';
 import { BaseCreater } from './baseCreater';
+import { MagnusContext } from '../../visitors/magnus';
 
 export class PartialCreater extends BaseCreater {
-    context: MagnusContext;
-    documentAst: graphql.DocumentAst;
-    createClassDeclaration(name: string, node: ast.ClassDeclaration) {
+    createClassDeclaration(name: string, node: ast.ClassDeclaration, context: MagnusContext) {
         const input = new graphql.InputObjectTypeDefinitionAst();
         input.name = createName(name)
         const members = node.members
@@ -42,7 +40,7 @@ export class PartialCreater extends BaseCreater {
                 //     oneToMany
                 // })
                 if (it.type instanceof ast.TypeReferenceNode) {
-                    const createName = this.createName(it.type, this.context)
+                    const createName = this.createName(it.type, context)
                     if (createName) {
                         const { name: astName, entity, namedType } = createName;
                         if (!this.documentAst.hasDefinitionAst(astName)) {
@@ -53,7 +51,7 @@ export class PartialCreater extends BaseCreater {
                         );
                     }
                 } else if (it.type instanceof ast.ArrayTypeNode) {
-                    const createName = this.createName(it.type.elementType as any, this.context)
+                    const createName = this.createName(it.type.elementType as any, context)
                     if (createName) {
                         const { name: astName, entity, namedType } = createName;
                         if (!this.documentAst.hasDefinitionAst(astName)) {

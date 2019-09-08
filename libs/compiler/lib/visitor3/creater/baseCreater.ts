@@ -3,16 +3,17 @@ import { createTypeNode, findCurrentEntity, createTypeName, isSimpleType } from 
 import { MagnusContext } from '../../visitors/magnus';
 import { createNamedType, createName } from '../../utils/graphql';
 import { CollectionContext } from '../../visitors/collection';
+import { ast as graphql } from '@notadd/magnus-graphql';
+
 export abstract class BaseCreater {
     name: string;
     collection: CollectionContext;
-    context: MagnusContext;
+    documentAst: graphql.DocumentAst;
     hasUsed: Set<string> = new Set();
     constructor(name: string) {
         this.name = name;
     }
     createName(node: ast.TypeReferenceNode, context: MagnusContext) {
-        this.context = context;
         if (node instanceof ast.TypeReferenceNode) {
             let type = createTypeNode(node, context)
             const currentType = findCurrentEntity(type);
@@ -46,23 +47,23 @@ export abstract class BaseCreater {
                 const nameAst = this.collection.findByName(current) as any;
                 let entity: any;
                 if (nameAst) {
-                    entity = this.createEntity(name, nameAst)
+                    entity = this.createEntity(name, nameAst, context)
                 }
                 return { name, namedType: createNamedType(name), entity };
             }
         }
     }
 
-    createEntity(name: string, node: ast.ClassDeclaration | ast.InterfaceDeclaration) {
+    createEntity(name: string, node: ast.ClassDeclaration | ast.InterfaceDeclaration, context: MagnusContext) {
         if (node instanceof ast.ClassDeclaration) {
-            return this.createClassDeclaration(name, node)
+            return this.createClassDeclaration(name, node, context)
         }
         if (node instanceof ast.InterfaceDeclaration) {
             return this.createInterfaceDeclaration(name, node)
         }
     }
 
-    abstract createClassDeclaration(name: string, node: ast.ClassDeclaration): any;
+    abstract createClassDeclaration(name: string, node: ast.ClassDeclaration, context: MagnusContext): any;
 
     createInterfaceDeclaration(name: string, node: ast.InterfaceDeclaration) {
         throw new Error(`can not support interface to create where, please use typeorm entity and column class!`);

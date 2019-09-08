@@ -57,7 +57,13 @@ class AstToGraphqlVisitor {
         this.documentAst.definitions.push(this.createScalar(`Date`));
         this.documentAst.definitions.push(this.createScalar(`ID`));
         this.protos = {};
+        /**
+         * 新版的magnus算法
+         */
         this.collection.classes.map(cls => this.collectCls(cls, collection));
+        /**
+        * 新版的magnus算法end
+        */
         const querys = [];
         const mutations = [];
         const subscriptions = [];
@@ -261,6 +267,9 @@ class AstToGraphqlVisitor {
         return this.documentAst;
     }
     collectCls(node, context) {
+        /**
+         * scalar
+         */
         const scalar = node.getDecorator(`Scalar`)(expression_1.expressionVisitor);
         const resolver = node.getDecorator(`Resolver`)(expression_1.expressionVisitor);
         const entity = node.getDecorator(`Entity`)(expression_1.expressionVisitor);

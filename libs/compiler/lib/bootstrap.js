@@ -41,8 +41,6 @@ async function bootstrap(config) {
         async function compile(isServer = false) {
             const project = new morph.Project();
             project.addSourceFilesFromTsConfig(path_1.join(process.cwd(), "tsconfig.json"));
-            const languageService = project.getLanguageService();
-            // languageService.getDefinitions()
             const manager = new magnus_1.MangusContextManager();
             manager.isServer = isServer;
             const magnus = new magnus_1.MagnusVisitor(manager);
