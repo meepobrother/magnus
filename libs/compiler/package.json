@@ -30,7 +30,7 @@
 	"bugs": {
 		"url": "https://github.com/notadd/magnus/issues"
 	},
-	"gitHead": "a121cae02a96ceef0b96790953b22e0a2a25ed62",
+	"gitHead": "03d7b8873b54eb32d02ec1b814a56873e11f7c1a",
 	"dependencies": {
 		"@graphql-codegen/add": "^1.5.0",
 		"@graphql-codegen/cli": "^1.5.0",
