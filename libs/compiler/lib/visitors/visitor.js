@@ -234,17 +234,17 @@ class SpreadAssignment extends Node {
     }
 }
 exports.SpreadAssignment = SpreadAssignment;
-class ObjectLiteralElementLike extends Node {
+class AccessorDeclaration extends Node {
     visit(visitor, context) {
-        if (visitor.visitObjectLiteralElementLike) {
-            return visitor.visitObjectLiteralElementLike(this, context);
+        if (visitor.visitAccessorDeclaration) {
+            return visitor.visitAccessorDeclaration(this, context);
         }
         else {
-            throw new Error(`${visitor.name} 没有 visitObjectLiteralElementLike 方法`);
+            throw new Error(`${visitor.name} 没有 visitAccessorDeclaration 方法`);
         }
     }
 }
-exports.ObjectLiteralElementLike = ObjectLiteralElementLike;
+exports.AccessorDeclaration = AccessorDeclaration;
 class PropertyAssignment extends Node {
     visit(visitor, context) {
         if (visitor.visitPropertyAssignment) {
@@ -341,15 +341,6 @@ class ObjectLiteralExpression extends Node {
     }
 }
 exports.ObjectLiteralExpression = ObjectLiteralExpression;
-// export class TypeNode extends Node<ts.TypeNode>{
-//     visit(visitor: Visitor, context: any) {
-//         if (visitor.visitTypeNode) {
-//             return visitor.visitTypeNode(this, context)
-//         } else {
-//             throw new Error(`${visitor.name} 没有 visitTypeNode 方法`)
-//         }
-//     }
-// }
 class QuestionToken extends Node {
     visit(visitor, context) {
         if (visitor.visitQuestionToken) {
@@ -394,6 +385,17 @@ class NonNullExpression extends Expression {
     }
 }
 exports.NonNullExpression = NonNullExpression;
+class DeleteExpression extends Expression {
+    visit(visitor, context) {
+        if (visitor.visitDeleteExpression) {
+            return visitor.visitDeleteExpression(this, context);
+        }
+        else {
+            throw new Error(`${visitor.name} 没有 visitDeleteExpression 方法`);
+        }
+    }
+}
+exports.DeleteExpression = DeleteExpression;
 class MethodDeclaration extends Node {
     constructor() {
         super(...arguments);
@@ -449,17 +451,6 @@ class TypeReferenceNode extends Node {
     }
 }
 exports.TypeReferenceNode = TypeReferenceNode;
-class EntityName extends Node {
-    visit(visitor, context) {
-        if (visitor.visitEntityName) {
-            return visitor.visitEntityName(this, context);
-        }
-        else {
-            throw new Error(`${visitor.name} 没有 visitEntityName 方法`);
-        }
-    }
-}
-exports.EntityName = EntityName;
 class QualifiedName extends Node {
     visit(visitor, context) {
         if (visitor.visitQualifiedName) {
@@ -531,6 +522,30 @@ class ConstructorDeclaration extends Node {
         else {
             throw new Error(`${visitor.name} 没有 visitConstructorDeclaration 方法`);
         }
+    }
+    getDecorators() {
+        return (visitor) => {
+            const decorators = this.decorators.map(dec => dec.visit(visitor, {}));
+            return decorators.map(dec => dec.name);
+        };
+    }
+    getDecorator(name) {
+        return (visitor) => {
+            const decorators = this.decorators.map(dec => dec.visit(visitor, {}));
+            const item = decorators.find(dec => dec.name === name);
+            if (item) {
+                if (item.arguments.length === 1) {
+                    return item.arguments[0];
+                }
+                else if (item.arguments.length === 0) {
+                    return undefined;
+                }
+                else {
+                    return item.arguments;
+                }
+            }
+            return null;
+        };
     }
 }
 exports.ConstructorDeclaration = ConstructorDeclaration;
@@ -902,17 +917,6 @@ class ArrowFunction extends Node {
     }
 }
 exports.ArrowFunction = ArrowFunction;
-class ConciseBody extends Node {
-    visit(visitor, context) {
-        if (visitor.visitConciseBody) {
-            return visitor.visitConciseBody(this, context);
-        }
-        else {
-            throw new Error(`${visitor.name} 没有 visitConciseBody 方法`);
-        }
-    }
-}
-exports.ConciseBody = ConciseBody;
 class EqualsGreaterThanToken extends Node {
     visit(visitor, context) {
         if (visitor.visitEqualsGreaterThanToken) {
@@ -1219,17 +1223,6 @@ class ImportSpecifier extends Node {
     }
 }
 exports.ImportSpecifier = ImportSpecifier;
-class LeftHandSideExpression extends Node {
-    visit(visitor, context) {
-        if (visitor.visitLeftHandSideExpression) {
-            return visitor.visitLeftHandSideExpression(this, context);
-        }
-        else {
-            throw new Error(`${visitor.name} 没有 visitLeftHandSideExpression 方法`);
-        }
-    }
-}
-exports.LeftHandSideExpression = LeftHandSideExpression;
 class ExpressionWithTypeArguments extends Node {
     constructor() {
         super(...arguments);
@@ -1760,7 +1753,12 @@ class TsVisitor {
         }
     }
     visitConciseBody(node, context) {
-        return node;
+        if (ts.isBlock(context)) {
+            return this.visitFunctionBody(new FunctionBody(), context);
+        }
+        else {
+            return this.visitExpression(new Expression(), context);
+        }
     }
     visitEqualsGreaterThanToken(node, context) {
         return node;
@@ -2215,7 +2213,7 @@ class TsVisitor {
     }
     visitExpressionWithTypeArguments(node, context) {
         node.node = context;
-        node.expression = this.visitLeftHandSideExpression(new LeftHandSideExpression(), context.expression);
+        node.expression = this.visitLeftHandSideExpression(undefined, context.expression);
         if (context.typeArguments) {
             node.typeArguments = context.typeArguments.map(type => this.visitTypeNode(undefined, type));
         }
@@ -2826,12 +2824,17 @@ class TsVisitor {
         else if (ts.isNonNullExpression(context)) {
             return this.visitNonNullExpression(new NonNullExpression(), context);
         }
+        else if (ts.isDeleteExpression(context)) {
+            return this.visitDeleteExpression(new DeleteExpression(), context);
+        }
         else {
             console.log(`visitExpression Error! ${context.kind}`);
         }
         return node;
     }
-    visitNonNullExpression(node, context) { }
+    visitDeleteExpression(node, context) {
+        return node;
+    }
     visitSpreadElement(node, context) {
         return node;
     }
@@ -2983,7 +2986,7 @@ class TsVisitor {
         node.isTypeOf = !!context.isTypeOf;
         node.argument = this.visitTypeNode(undefined, context.argument);
         if (context.qualifier) {
-            node.qualifier = this.visitEntityName(new EntityName(), context.qualifier);
+            node.qualifier = this.visitEntityName(undefined, context.qualifier);
         }
         return node;
     }
@@ -3073,7 +3076,7 @@ class TsVisitor {
         if (context.typeArguments) {
             node.typeArguments = context.typeArguments.map(type => this.visitTypeNode(undefined, type));
         }
-        node.typeName = this.visitEntityName(new EntityName(), context.typeName);
+        node.typeName = this.visitEntityName(undefined, context.typeName);
         return node;
     }
     /**
@@ -3115,7 +3118,6 @@ class TsVisitor {
      * type node end
      */
     visitEntityName(node, context) {
-        node.node = context;
         if (ts.isIdentifier(context)) {
             return this.visitIdentifier(new Identifier(), context);
         }
@@ -3125,6 +3127,8 @@ class TsVisitor {
     }
     visitQualifiedName(node, context) {
         node.node = context;
+        node.left = this.visitEntityName(undefined, context.left);
+        node.right = this.visitIdentifier(new Identifier(), context.right);
         return node;
     }
     visitPropertyName(node, context) {
@@ -3169,12 +3173,11 @@ class TsVisitor {
     }
     visitDecorator(node, context) {
         node.node = context;
-        node.expression = this.visitLeftHandSideExpression(new LeftHandSideExpression(), context.expression);
+        node.expression = this.visitLeftHandSideExpression(undefined, context.expression);
         return node;
     }
     visitLeftHandSideExpression(node, context) {
         try {
-            node.node = context;
             if (ts.isNumericLiteral(context)) {
                 return this.visitNumericLiteral(new NumericLiteral(), context);
             }
@@ -3205,6 +3208,12 @@ class TsVisitor {
             else if (util.isSuperExpression(context)) {
                 return this.visitSuperExpression(new SuperExpression(), context);
             }
+            else if (ts.isPropertyAccessExpression(context)) {
+                return this.visitPropertyAccessExpression(new PropertyAccessExpression(), context);
+            }
+            else if (ts.isNonNullExpression(context)) {
+                return this.visitNonNullExpression(new NonNullExpression(), context);
+            }
             else {
                 console.log(`visitLeftHandSideExpression ${context.kind}`);
             }
@@ -3213,6 +3222,10 @@ class TsVisitor {
         catch (e) {
             throw e;
         }
+    }
+    visitNonNullExpression(node, context) {
+        node.expression = this.visitExpression(new Expression(), context.expression);
+        return node;
     }
     visitSuperExpression(node, context) {
         return node;
@@ -3226,7 +3239,7 @@ class TsVisitor {
     visitPropertyAccessExpression(node, context) {
         node.node = context;
         if (context.expression) {
-            node.expression = this.visitLeftHandSideExpression(new LeftHandSideExpression(), context.expression);
+            node.expression = this.visitLeftHandSideExpression(undefined, context.expression);
         }
         node.name = this.visitIdentifier(new Identifier(), context.name);
         return node;
@@ -3234,7 +3247,7 @@ class TsVisitor {
     visitCallExpression(node, context) {
         node.node = context;
         if (context.expression) {
-            node.expression = this.visitLeftHandSideExpression(new LeftHandSideExpression(), context.expression);
+            node.expression = this.visitLeftHandSideExpression(undefined, context.expression);
         }
         node.arguments = context.arguments.map(arg => this.visitExpression(new Expression(), arg));
         if (context.typeArguments) {
@@ -3244,12 +3257,10 @@ class TsVisitor {
     }
     visitObjectLiteralExpression(node, context) {
         node.node = context;
-        node.properties = context.properties.map(pro => this.visitObjectLiteralElementLike(new ObjectLiteralElementLike(), pro));
+        node.properties = context.properties.map(pro => this.visitObjectLiteralElementLike(undefined, pro));
         return node;
     }
     visitObjectLiteralElementLike(node, context) {
-        node.node = context;
-        node.docs = this.createJsDocs(context.jsDoc);
         if (ts.isPropertyAssignment(context)) {
             return this.visitPropertyAssignment(new PropertyAssignment(), context);
         }
@@ -3273,6 +3284,16 @@ class TsVisitor {
     visitShorthandPropertyAssignment(node, context) {
         node.node = context;
         node.docs = this.createJsDocs(context.jsDoc);
+        node.kind = context.kind;
+        node.name = this.visitIdentifier(new Identifier(), context.name);
+        if (context.questionToken)
+            node.questionToken = this.visitQuestionToken(new QuestionToken(), context.questionToken);
+        if (context.exclamationToken)
+            node.exclamationToken = this.visitExclamationToken(new ExclamationToken(), context.exclamationToken);
+        if (context.questionToken)
+            node.equalsToken = context.equalsToken;
+        if (context.objectAssignmentInitializer)
+            node.objectAssignmentInitializer = this.visitExpression(new Expression(), context.objectAssignmentInitializer);
         return node;
     }
     visitSpreadAssignment(node, context) {

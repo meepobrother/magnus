@@ -12,7 +12,7 @@ export declare class ParseVisitor implements ast.Visitor {
     visitIntValueAst(node: ast.IntValueAst, context: graphql.IntValueNode): ast.IntValueAst<any, any>;
     visitFloatValueAst(node: ast.FloatValueAst, context: graphql.FloatValueNode): ast.FloatValueAst<any, any>;
     visitBooleanValueAst(node: ast.BooleanValueAst, context: graphql.BooleanValueNode): ast.BooleanValueAst<any, any>;
-    visitValueAst(node: undefined, context: graphql.ValueNode): ast.ValueAst<any, any>;
+    visitValueAst(node: undefined, context: graphql.ValueNode): any;
     visitEnumValueAst(node: ast.EnumValueAst, context: graphql.EnumValueNode): ast.EnumValueAst<any, any>;
     visitListValueAst(node: ast.ListValueAst, context: graphql.ListValueNode): ast.ListValueAst<any, any>;
     visitObjectValueAst(node: ast.ObjectValueAst, context: graphql.ObjectValueNode): ast.ObjectValueAst<any, any>;

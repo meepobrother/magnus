@@ -3,6 +3,7 @@ class ImportCore {
   parent: ImportCore;
   children: ImportCore[] = [];
   parameters: string[] = [];
+  level: number = 0;
   constructor(public name: string) {}
   /**
    * 是否在某个
@@ -35,6 +36,7 @@ class ImportCore {
   create(name: string) {
     const core = new ImportCore(name);
     core.parent = this;
+    core.level = this.level + 1;
     this.children.push(core);
     return core;
   }
@@ -66,11 +68,11 @@ export class ApiObjectTypeVisitor implements ast.Visitor {
 
   visitNamedTypeAst(node: ast.NamedTypeAst, context: ImportCore): any {
     const name = node.name.value;
-    const parent = context.findParent(name);
+    // const parent = context.findParent(name);
     const core = context.create(name);
     const def = this.doc.hasDefinitionAst(name);
     if (def) {
-      if (parent) {
+      if (context.parent && context.level > 1) {
         return `__magnus__parent__`;
       }
       const result = def.visit(this, core);
@@ -97,15 +99,19 @@ export class ApiObjectTypeVisitor implements ast.Visitor {
       return ``;
     }
     if (node.arguments && node.arguments.length > 0) {
-      const args = node.arguments.map(arg => arg.visit(this, context));
-      const topName = context.findTop().name;
-      const items = this.api.parameters.get(topName)!.concat(...args);
-      this.api.parameters.set(topName, items);
-      return `\t\t${node.name.value} (${node.arguments.map(
-        arg => `${arg.name.value}: $${arg.name.value}`
-      )}) ${type} \n`;
+      // const args = node.arguments.map(arg => arg.visit(this, context));
+      // const topName = context.findTop().name;
+      // const items = this.api.parameters.get(topName)!.concat(...args);
+      // this.api.parameters.set(topName, items);
+      // return `\t\t${node.name.value} (${node.arguments.map(
+      //   arg => `${arg.name.value}: $${arg.name.value}`
+      // )}) ${type} \n`;
+      return ``;
     }
-    if (type) {
+    if (context.level > 2) {
+      return ``;
+    }
+    if (type && type.length > 0) {
       return `\t\t${node.name.value} ${type} \n`;
     }
     return `\t\t${node.name.value}\n`;

@@ -143,23 +143,11 @@ export class User {
         }
     })
     createDate?: number;
-
-	/**
-	 * 这个用户的创建人是谁
-	 */
-    @ManyToOne(() => User, type => type.createUsers)
-    @JoinTable({
-        name: 'createUserId'
-    })
-    createUser?: User;
     /**
      * 创建人的uid
      */
     createUserId: number;
 
-    // 用户创建的所有用户
-    @OneToMany(() => User, type => type.createUser)
-    createUsers?: User[];
 
 	/**
 	 * 安全分
@@ -168,117 +156,4 @@ export class User {
         default: 100
     })
     safetyScore?: number;
-
-	/**
-	 * 用户的代办事项
-	 */
-    @OneToMany(() => ToDoItem, type => type.toUser)
-    toDoItems?: ToDoItem[];
-
-    /**
-     * 发布者
-     */
-    @OneToMany(() => ToDoItem, type => type.fromUser)
-    mineToDoItems?: ToDoItem[];
-
-    @ResolveProperty()
-    async getToDoItems(@Selection() selection: any, where?: Where<ToDoItem>, order?: Order<ToDoItem>, limit?: PageLimit): Promise<ToDoItem[]> {
-        const copyWhere: any = {
-            ...where,
-            toUserId: this.id
-        }
-        const { page, psize } = limit || { page: 1, psize: 20 }
-        const relations = Object.keys(selection).filter(key => ['toUser'].includes(key))
-        const selects = Object.keys(selection).filter(key => !['toUser'].includes(key))
-        const builder = getRepository(ToDoItem).createQueryBuilder('entity');
-        builder.addSelect(selects);
-        if (relations.length > 0) {
-            throw new Error(`getToDoItems do not support relations!!`)
-        }
-        Object.keys(copyWhere).map(key => {
-            const [column, type] = key.split('_');
-            const value = copyWhere[key];
-            switch (type) {
-                case 'Not':
-                    builder.andWhere(`entity.${column} != :${key}`, { [`${key}`]: value })
-                    break;
-                case 'In':
-                    builder.andWhere(`entity.${column} in :${key}`, { [`${key}`]: value })
-                    break;
-                case 'NotIn':
-                    builder.andWhere(`entity.${column} not in :${key}`, { [`${key}`]: value })
-                    break;
-                case 'Lt':
-                    builder.andWhere(`entity.${column} < :${key}`, { [`${key}`]: value })
-                    break;
-                case 'Lte':
-                    builder.andWhere(`entity.${column} <= :${key}`, { [`${key}`]: value })
-                    break;
-                case 'Gt':
-                    builder.andWhere(`entity.${column} > :${key}`, { [`${key}`]: value })
-                    break;
-                case 'Gte':
-                    builder.andWhere(`entity.${column} >= :${key}`, { [`${key}`]: value })
-                    break;
-                case 'Contains':
-                    builder.andWhere(`entity.${column} like :${key}`, { [`${key}`]: `%${value}%` })
-                    break;
-                case 'NotContains':
-                    builder.andWhere(`entity.${column} not like :${key}`, { [`${key}`]: `%${value}%` })
-                    break;
-                case 'StartsWith':
-                    builder.andWhere(`entity.${column} like :${key}`, { [`${key}`]: `%${value}` })
-                    break;
-                case 'NotStartsWith':
-                    builder.andWhere(`entity.${column} not like :${key}`, { [`${key}`]: `%${value}` })
-                    break;
-                case 'EndsWith':
-                    builder.andWhere(`entity.${column} like :${key}`, { [`${key}`]: `${value}%` })
-                    break;
-                case 'NotEndsWith':
-                    builder.andWhere(`entity.${column} not like :${key}`, { [`${key}`]: `${value}%` })
-                    break;
-                default:
-                    builder.andWhere(`entity.${column} = :${key}`, { [`${key}`]: copyWhere[key] })
-                    break;
-            }
-        })
-        builder.offset((page - 1) * psize);
-        builder.take(psize);
-        return builder.getMany()
-    }
-
-	/**
-	 * 用户岗位
-	 */
-    @ManyToMany(() => Station, type => type.users)
-    stations?: Station[];
-    @ResolveProperty()
-    async getStations(where?: Where<Station>, order?: Order<Station>, limit?: PageLimit): Promise<Station[]> {
-        return getRepository(Station).find();
-    }
-	/**
-	 * 用户的登录记录
-	 */
-    @OneToMany(() => UserLoginLog, type => type.user)
-    loginLogs?: UserLoginLog[];
-    @ResolveProperty()
-    async getUserLoginLogs(where?: Where<UserLoginLog>, order?: Order<UserLoginLog>, limit?: PageLimit): Promise<UserLoginLog[]> {
-        return getRepository(UserLoginLog).find();
-    }
-	/**
-	 * 用户的安全分扣分记录
-	 */
-    @OneToMany(() => SafetyScoreLog, type => type.user)
-    safetyScoreLogs?: SafetyScoreLog[];
-    @ResolveProperty()
-    async getSafetyScoreLogs(where?: Where<SafetyScoreLog>, order?: Order<SafetyScoreLog>, limit?: PageLimit): Promise<SafetyScoreLog[]> {
-        return getRepository(SafetyScoreLog).find();
-    }
-    @OneToMany(() => Station, type => type.createUser)
-    createStations: Station[];
-    @ResolveProperty()
-    async getCreateStations(where?: Where<Station>, order?: Order<Station>, limit?: PageLimit): Promise<Station[]> {
-        return getRepository(Station).find()
-    }
 }

@@ -1,4 +1,5 @@
 export interface MagnusConfig {
+  scripts: boolean;
   /**
    * 根目录
    */

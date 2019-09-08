@@ -1,15 +1,9 @@
 import {
     Entity,
-    ManyToOne,
     PrimaryGeneratedColumn,
     Column,
     CreateDateColumn,
-    OneToMany,
-    JoinTable
 } from 'typeorm';
-import { Station } from './station';
-import { Domain } from './domain';
-import { ResolveProperty } from '@notadd/magnus-core'
 /**
  * 部门表
  */
@@ -50,12 +44,6 @@ export class Department {
     shown?: boolean;
 
 	/**
-	 * 上级部门
-	 */
-    @ManyToOne(() => Department, type => type.children)
-    parent?: Department;
-
-	/**
 	 * 创建时间
 	 */
     @CreateDateColumn({
@@ -74,34 +62,5 @@ export class Department {
         }
     })
     createDate: number;
-
-	/**
-	 * 下级部门
-	 */
-    @OneToMany(() => Department, type => type.parent)
-    children?: Department[];
-
-    @ResolveProperty()
-    async getChildren(): Promise<Department[]> {
-        return [];
-    }
-
-	/**
-	 * 一个部门可以有多个岗位
-	 */
-    @OneToMany(() => Station, type => type.department)
-    stations?: Station[];
-    @ResolveProperty()
-    async getStations(): Promise<Station[]> {
-        return [];
-    }
-	/**
-	 * 域
-	 */
-    @ManyToOne(() => Domain, type => type.departments)
-    @JoinTable({
-        name: 'domainId'
-    })
-    domain?: Domain;
     domainId: number;
 }

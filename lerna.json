@@ -1,21 +1,17 @@
 {
-	"packages": [
-		"libs/*"
-	],
-	"npmClient": "yarn",
-	"publish": {
-		"ignoreChanges": [
-			"ignored-file",
-			"*.ts",
-			"*.md"
-		],
-		"message": "chore(release): publish"
-	},
-	"bootstrap": {
-		"ignore": "component-*",
-		"npmClientArgs": [
-			"--no-package-lock"
-		]
-	},
-	"version": "3.3.7"
+  "packages": [
+    "libs/*"
+  ],
+  "npmClient": "yarn",
+  "publish": {
+    "ignoreChanges": [],
+    "message": "chore(release): publish"
+  },
+  "bootstrap": {
+    "ignore": "component-*",
+    "npmClientArgs": [
+      "--no-package-lock"
+    ]
+  },
+  "version": "3.5.16"
 }

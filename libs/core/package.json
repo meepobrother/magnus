@@ -1,35 +1,35 @@
 {
-	"name": "@notadd/magnus-core",
-	"version": "3.3.7",
-	"description": "> TODO: description",
-	"author": "imeepos <1037483576@qq.com>",
-	"homepage": "https://github.com/notadd/magnus/tree/master/libs/core#readme",
-	"license": "ISC",
-	"main": "lib/index.js",
-	"publishConfig": {
-		"access": "public"
-	},
-	"directories": {
-		"lib": "lib",
-		"test": "__tests__"
-	},
-	"files": [
-		"lib"
-	],
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/notadd/magnus.git"
-	},
-	"scripts": {
-		"test": "echo \"Error: run tests from root\" && exit 1"
-	},
-	"bugs": {
-		"url": "https://github.com/notadd/magnus/issues"
-	},
-	"gitHead": "acbf551528e935fe60bc728c46992f3671bfe140",
-	"dependencies": {
-		"graphql": "^14.4.2",
-		"tslib": "^1.10.0",
-		"typeorm": "^0.2.18"
-	}
+  "name": "@notadd/magnus-core",
+  "version": "3.5.16",
+  "description": "> TODO: description",
+  "author": "imeepos <1037483576@qq.com>",
+  "homepage": "https://github.com/notadd/magnus/tree/master/libs/core#readme",
+  "license": "ISC",
+  "main": "lib/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/notadd/magnus.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "bugs": {
+    "url": "https://github.com/notadd/magnus/issues"
+  },
+  "gitHead": "03d7b8873b54eb32d02ec1b814a56873e11f7c1a",
+  "dependencies": {
+    "graphql": "^14.4.2",
+    "tslib": "^1.10.0",
+    "typeorm": "^0.2.18"
+  }
 }

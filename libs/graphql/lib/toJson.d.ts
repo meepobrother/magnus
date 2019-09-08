@@ -1,5 +1,5 @@
 import * as ast from "./ast";
-import * as l from 'graphql/language';
+import * as l from "graphql/language";
 export declare function toJson(node: ast.DocumentAst): l.DocumentNode;
 export declare class ToJsonVisitor<C = any> implements ast.Visitor<C, l.ASTNode> {
     name: string;

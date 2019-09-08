@@ -1,0 +1,30 @@
+{
+  "name": "@notadd/codegen-nest-client",
+  "version": "3.4.4",
+  "description": "> TODO: description",
+  "author": "meepo <1037483576@qq.com>",
+  "homepage": "https://github.com/notadd/magnus/tree/master/libs/codegen-nest-client#readme",
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/meepobrother/magnus.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "bugs": {
+    "url": "https://github.com/meepobrother/magnus/issues"
+  },
+  "gitHead": "dc50497b6a8f0e3ed0a66ebbb4ddf136fe992788"
+}

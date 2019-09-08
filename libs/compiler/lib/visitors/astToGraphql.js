@@ -55,8 +55,15 @@ class AstToGraphqlVisitor {
         this.documentAst.definitions.push(this.createScalar(`Json`));
         this.documentAst.definitions.push(this.createScalar(`Timestamp`));
         this.documentAst.definitions.push(this.createScalar(`Date`));
+        this.documentAst.definitions.push(this.createScalar(`ID`));
         this.protos = {};
+        /**
+         * 新版的magnus算法
+         */
         this.collection.classes.map(cls => this.collectCls(cls, collection));
+        /**
+        * 新版的magnus算法end
+        */
         const querys = [];
         const mutations = [];
         const subscriptions = [];
@@ -70,8 +77,30 @@ class AstToGraphqlVisitor {
                         query.currentEntity = entity;
                         this.tsToGraphqlVisitor.isEntity = false;
                         const ast = this.tsToGraphqlVisitor.visitMethodDeclaration(query.node, query);
-                        if (ast)
-                            querys.push(ast);
+                        if (ast) {
+                            const existIndex = querys.findIndex(q => q.name.value === ast.name.value);
+                            const desc = this.documentAst.hasDefinitionAst(entity);
+                            if (desc) {
+                                if (desc.description) {
+                                    if (ast.description) {
+                                        const description = this.tsToGraphqlVisitor.createStringValue([ast.description.value, desc.description.value]);
+                                        if (description)
+                                            ast.description = description;
+                                    }
+                                    else {
+                                        const description = this.tsToGraphqlVisitor.createStringValue([desc.description.value]);
+                                        if (description)
+                                            ast.description = description;
+                                    }
+                                }
+                            }
+                            if (existIndex > -1) {
+                                querys.splice(existIndex, 1, ast);
+                            }
+                            else {
+                                querys.push(ast);
+                            }
+                        }
                     });
                 }
                 else {
@@ -96,8 +125,30 @@ class AstToGraphqlVisitor {
                         query.currentEntity = entity;
                         this.tsToGraphqlVisitor.isEntity = false;
                         const ast = this.tsToGraphqlVisitor.visitMethodDeclaration(query.node, query);
-                        if (ast)
-                            mutations.push(ast);
+                        if (ast) {
+                            const existIndex = mutations.findIndex(q => q.name.value === ast.name.value);
+                            const desc = this.documentAst.hasDefinitionAst(entity);
+                            if (desc) {
+                                if (desc.description) {
+                                    if (ast.description) {
+                                        const description = this.tsToGraphqlVisitor.createStringValue([ast.description.value, desc.description.value]);
+                                        if (description)
+                                            ast.description = description;
+                                    }
+                                    else {
+                                        const description = this.tsToGraphqlVisitor.createStringValue([desc.description.value]);
+                                        if (description)
+                                            ast.description = description;
+                                    }
+                                }
+                            }
+                            if (existIndex > -1) {
+                                mutations.splice(existIndex, 1, ast);
+                            }
+                            else {
+                                mutations.push(ast);
+                            }
+                        }
                     });
                 }
                 else {
@@ -107,7 +158,7 @@ class AstToGraphqlVisitor {
                     if (ast) {
                         const existIndex = mutations.findIndex(q => q.name.value === ast.name.value);
                         if (existIndex > -1) {
-                            mutations.splice(existIndex, 1, ast);
+                            // mutations.splice(existIndex, 1, ast);
                         }
                         else {
                             mutations.push(ast);
@@ -122,8 +173,15 @@ class AstToGraphqlVisitor {
                         query.currentEntity = entity;
                         this.tsToGraphqlVisitor.isEntity = false;
                         const ast = this.tsToGraphqlVisitor.visitMethodDeclaration(query.node, query);
-                        if (ast)
-                            subscriptions.push(ast);
+                        if (ast) {
+                            const existIndex = subscriptions.findIndex(q => q.name.value === ast.name.value);
+                            if (existIndex > -1) {
+                                subscriptions.splice(existIndex, 1, ast);
+                            }
+                            else {
+                                subscriptions.push(ast);
+                            }
+                        }
                     });
                 }
                 else {
@@ -209,6 +267,9 @@ class AstToGraphqlVisitor {
         return this.documentAst;
     }
     collectCls(node, context) {
+        /**
+         * scalar
+         */
         const scalar = node.getDecorator(`Scalar`)(expression_1.expressionVisitor);
         const resolver = node.getDecorator(`Resolver`)(expression_1.expressionVisitor);
         const entity = node.getDecorator(`Entity`)(expression_1.expressionVisitor);
@@ -218,12 +279,17 @@ class AstToGraphqlVisitor {
             scalarDef.name = this.tsToGraphqlVisitor.visitIdentifier(node.name, context);
             if (this.documentAst) {
                 if (!this.documentAst.hasDefinitionAst(scalarDef.name.value)) {
-                    this.documentAst.definitions.push(scalarDef);
+                    const index = this.documentAst.getDefinitionAstIndex(scalarDef.name.value);
+                    if (index > -1) {
+                        this.documentAst.definitions.splice(index, 1, scalarDef);
+                    }
+                    else {
+                        this.documentAst.definitions.push(scalarDef);
+                    }
                 }
             }
-            return scalarDef;
         }
-        if (resolver !== null) {
+        else if (resolver !== null) {
             if (resolver) {
                 const ctx = new magnus_1.MagnusContext();
                 ctx.currentName = resolver;
@@ -232,17 +298,19 @@ class AstToGraphqlVisitor {
                 if (this.documentAst && type) {
                     const index = this.documentAst.getDefinitionAstIndex(type.name.value);
                     if (index > -1) {
-                        this.documentAst.definitions.push(type);
+                        this.documentAst.definitions.splice(index, 1, type);
                     }
                     else {
-                        this.documentAst.definitions.splice(index, 1, type);
+                        this.documentAst.definitions.push(type);
                     }
                 }
                 return type;
             }
         }
-        if (entity !== null) {
+        else if (entity !== null) {
             const ctx = new magnus_1.MagnusContext();
+            ctx.name = node.name.visit(expression_1.expressionVisitor, ``);
+            ctx.typeParameters = new Set(node.typeParameters.map(t => t.visit(expression_1.expressionVisitor, ``)));
             this.tsToGraphqlVisitor.visitClassDeclaration(node, ctx);
         }
     }

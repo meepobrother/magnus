@@ -64,6 +64,9 @@ class ExpressionVisitor {
     visitTypeReferenceNode(node, context) {
         return node.typeName.visit(this, context);
     }
+    visitLeftHandSideExpression(node, context) {
+        return node;
+    }
     //
     visitImportDeclaration(node, context) {
         const moduleSpecifier = node.moduleSpecifier.visit(this, context);
@@ -115,22 +118,137 @@ class ExpressionVisitor {
     visitKeywordTypeNode(node, context) {
         return node.name;
     }
-    visitPropertyAccessExpression(node, context) { }
-    visitQualifiedName(node, context) { }
-    visitArrayBindingPattern(node, context) { }
-    visitArrowFunction(node, context) { }
-    visitAsExpression(node, context) { }
-    visitAsteriskToken(node, context) { }
-    visitAwaitExpression(node, context) { }
-    visitAwaitKeywordToken(node, context) { }
-    visitBigIntLiteral(node, context) { }
-    visitBinaryExpression(node, context) { }
-    visitBinaryOperatorToken(node, context) { }
-    visitNewExpression(node, context) { }
-    visitUnionTypeNode(node, context) { }
-    visitNullLiteral(node, context) { }
+    visitPropertyAccessExpression(node, context) {
+        const name = node.name.visit(this, context);
+        const expression = node.expression.visit(this, context);
+        return {
+            name,
+            expression
+        };
+    }
+    visitQualifiedName(node, context) {
+        const left = node.left.visit(this, context);
+        const right = node.right.visit(this, context);
+        return {
+            left,
+            right
+        };
+    }
+    visitArrayBindingPattern(node, context) {
+        console.log(`visitArrayBindingPattern`);
+    }
+    visitArrowFunction(node, context) {
+        if (node.body) {
+            const body = node.body.visit(this, context);
+            return body;
+        }
+    }
+    visitConciseBody(node, context) {
+        console.log(`visitConciseBody`);
+    }
+    visitAsExpression(node, context) {
+        console.log(`visitAsExpression`);
+    }
+    visitAsteriskToken(node, context) {
+        console.log(`visitAsteriskToken`);
+    }
+    visitAwaitExpression(node, context) {
+        console.log(`visitAwaitExpression`);
+    }
+    visitAwaitKeywordToken(node, context) {
+        console.log(`visitAwaitKeywordToken`);
+    }
+    visitBigIntLiteral(node, context) {
+        console.log(`visitBigIntLiteral`);
+    }
+    visitBinaryExpression(node, context) {
+        console.log(`visitBinaryExpression`);
+    }
+    visitBinaryOperatorToken(node, context) {
+        console.log(`visitBinaryOperatorToken`);
+    }
+    visitNewExpression(node, context) {
+        console.log(`visitNewExpression`);
+    }
+    visitUnionTypeNode(node, context) {
+        return {
+            kind: 'UnionTypeNode',
+            type: node.types.map(type => this.visitTypeNode(type, context))
+        };
+    }
+    visitNullLiteral(node, context) {
+        return;
+    }
     visitShorthandPropertyAssignment(node, context) {
         //
+        const name = node.name.visit(this, context);
+        return name;
+    }
+    visitTypeNode(node, context) {
+        if (node instanceof ast.TypeReferenceNode) {
+            return this.visitTypeReferenceNode(node, context);
+        }
+        else if (node instanceof ast.TupleTypeNode) {
+            throw new Error(`${this.name} has no visitTupleTypeNode`);
+            // return this.visitTupleTypeNode(node, context)
+        }
+        else if (node instanceof ast.UnionTypeNode) {
+            return this.visitUnionTypeNode(node, context);
+        }
+        else if (node instanceof ast.KeywordTypeNode) {
+            return this.visitKeywordTypeNode(node, context);
+        }
+        else if (node instanceof ast.FunctionTypeNode) {
+            throw new Error(`${this.name} has no visitFunctionTypeNode`);
+            // return this.visitFunctionTypeNode(node, context)
+        }
+        else if (node instanceof ast.MappedTypeNode) {
+            throw new Error(`${this.name} has no visitMappedTypeNode`);
+            // return this.visitMappedTypeNode(node, context)
+        }
+        else if (node instanceof ast.IndexedAccessTypeNode) {
+            throw new Error(`${this.name} has no visitIndexedAccessTypeNode`);
+            // return this.visitIndexedAccessTypeNode(node, context)
+        }
+        else if (node instanceof ast.TypeOperatorNode) {
+            throw new Error(`${this.name} has no visitTypeOperatorNode`);
+            // return this.visitTypeOperatorNode(node, context)
+        }
+        else if (node instanceof ast.TypeLiteralNode) {
+            throw new Error(`${this.name} has no visitTypeLiteralNode`);
+            // return this.visitTypeLiteralNode(node, context)
+        }
+        else if (node instanceof ast.ArrayTypeNode) {
+            return this.visitArrayTypeNode(node, context);
+        }
+        else if (node instanceof ast.LiteralTypeNode) {
+            throw new Error(`${this.name} has no visitLiteralTypeNode`);
+            // return this.visitLiteralTypeNode(node, context)
+        }
+        else if (node instanceof ast.TypePredicateNode) {
+            throw new Error(`${this.name} has no visitTypePredicateNode`);
+            // return this.visitTypePredicateNode(node, context)
+        }
+        else if (node instanceof ast.ImportTypeNode) {
+            throw new Error(`${this.name} has no visitImportTypeNode`);
+            // return this.visitImportTypeNode(node, context)
+        }
+        else if (node instanceof ast.ParenthesizedTypeNode) {
+            throw new Error(`${this.name} has no visitParenthesizedTypeNode`);
+            // return this.visitParenthesizedTypeNode(node, context)
+        }
+        else if (node instanceof ast.IntersectionTypeNode) {
+            throw new Error(`${this.name} has no visitIntersectionTypeNode`);
+            // return this.visitIntersectionTypeNode(node, context)
+        }
+        else if (node instanceof ast.ExpressionWithTypeArguments) {
+            throw new Error(`${this.name} has no visitExpressionWithTypeArguments`);
+            // return this.visitExpressionWithTypeArguments(node, context)
+        }
+        else if (node instanceof ast.JSDocNullableType) {
+            throw new Error(`${this.name} has no visitJSDocNullableType`);
+            // return this.visitJSDocNullableType(node, context)
+        }
     }
 }
 exports.ExpressionVisitor = ExpressionVisitor;

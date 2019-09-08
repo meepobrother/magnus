@@ -1,12 +1,7 @@
 
 import { runner } from '../runner.ts';
 interface GetUserResult {
-    	getUser: {
-	username: string;
-
-};
-
-
+    
 }
 export async function getUser(ids: number[]): Promise<GetUserResult> {
     const names = ["ids"];

@@ -22,7 +22,7 @@ export declare class ParseVisitor implements ast.Visitor {
     visitModuleDeclaration(node: ast.ModuleDeclaration, context: any): ast.ModuleDeclaration;
     visitStringLiteral(node: ast.StringLiteral, context: any): string;
     visitObjectLiteralExpression(node: ast.ObjectLiteralExpression, context: any): {};
-    visitObjectLiteralElementLike(node: ast.ObjectLiteralElementLike, context: any): void | ast.ShorthandPropertyAssignment | ast.SpreadAssignment | ast.SetAccessorDeclaration | ast.GetAccessorDeclaration | ast.MethodDeclaration;
+    visitObjectLiteralElementLike(node: ast.ObjectLiteralElementLike, context: any): void | ast.MethodDeclaration | ast.GetAccessorDeclaration | ast.SetAccessorDeclaration | ast.ShorthandPropertyAssignment | ast.SpreadAssignment;
     visitShorthandPropertyAssignment(node: ast.ShorthandPropertyAssignment, context: any): ast.ShorthandPropertyAssignment;
     visitSpreadAssignment(node: ast.SpreadAssignment, context: any): ast.SpreadAssignment;
     visitMethodDeclaration(node: ast.MethodDeclaration, context: any): ast.MethodDeclaration;

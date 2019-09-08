@@ -1,6 +1,6 @@
 {
 	"name": "@notadd/magnus",
-	"version": "3.3.7",
+	"version": "3.5.16",
 	"description": "> TODO: description",
 	"author": "imeepos <1037483576@qq.com>",
 	"homepage": "https://github.com/notadd/magnus/tree/master/libs/compiler#readme",
@@ -10,7 +10,8 @@
 	},
 	"main": "lib/index.js",
 	"bin": {
-		"magnus": "./lib/bin.js"
+		"magnus": "./lib/bin.js",
+		"magnus1": "./lib/bin1.js"
 	},
 	"directories": {
 		"lib": "lib",
@@ -29,7 +30,7 @@
 	"bugs": {
 		"url": "https://github.com/notadd/magnus/issues"
 	},
-	"gitHead": "acbf551528e935fe60bc728c46992f3671bfe140",
+	"gitHead": "03d7b8873b54eb32d02ec1b814a56873e11f7c1a",
 	"dependencies": {
 		"@graphql-codegen/add": "^1.5.0",
 		"@graphql-codegen/cli": "^1.5.0",
@@ -40,15 +41,17 @@
 		"@graphql-codegen/typescript-operations": "^1.5.0",
 		"@graphql-codegen/typescript-react-apollo": "^1.6.1",
 		"@nodeutils/defaults-deep": "^1.1.0",
-		"@notadd/magnus-core": "^3.3.7",
-		"@notadd/magnus-graphql": "^3.3.7",
-		"@notadd/magnus-grpc": "^3.3.7",
+		"@notadd/codegen-nest-client": "^3.4.4",
+		"@notadd/magnus-core": "^3.5.16",
+		"@notadd/magnus-graphql": "^3.5.16",
+		"@notadd/magnus-grpc": "^3.4.4",
 		"chokidar": "^3.0.2",
 		"commander": "^2.20.0",
 		"fs-extra": "^8.0.1",
 		"graphql": "^14.4.2",
 		"graphql-tools": "^4.0.5",
 		"libp2p": "^0.25.5",
+		"libp2p-bootstrap": "^0.10.0",
 		"libp2p-kad-dht": "^0.15.2",
 		"libp2p-mdns": "^0.12.3",
 		"libp2p-mplex": "^0.8.5",
@@ -61,6 +64,7 @@
 		"peer-info": "^0.16.0",
 		"ts-morph": "^3.1.0",
 		"tslib": "^1.10.0",
+		"tstypes": "^2.0.0",
 		"typescript": "~3.5.3"
 	}
 }

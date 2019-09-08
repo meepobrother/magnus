@@ -7,7 +7,6 @@ export interface ClassDef {
     name: string;
     relations: string[];
 }
-export declare const entitySet: Set<string>;
 export declare class MagnusTopContext {
     querys: Map<string, MagnusContext>;
     mutations: Map<string, MagnusContext>;
@@ -29,21 +28,23 @@ export declare class MagnusContext {
     type: "query" | "mutation" | "subscription" | "proto" | "entity";
     node: ast.Node;
     name: string;
-    currentEntity: string;
     isSelf: boolean;
     isProperty: boolean;
     isInput: boolean;
     isNonNull: boolean;
     params: any;
     class: ClassDef;
+    _currentEntity: string;
     oldName: string;
-    readonly topName: string;
-    readonly parentName: string;
     _needChangeName: boolean;
-    hasParentName(name: string): boolean;
-    readonly needChangeName: boolean;
     currentName: string;
     isUpperFirst: boolean;
+    currentEntity: string;
+    getNotT(name: string): any;
+    readonly topName: string;
+    readonly parentName: string;
+    hasParentName(name: string): boolean;
+    readonly needChangeName: boolean;
     readonly isQuery: boolean;
     readonly isMutation: boolean;
     readonly isSubscription: boolean;
@@ -66,6 +67,7 @@ export declare class MagnusVisitor implements ast.Visitor {
     name: string;
     collection: CollectionContext;
     constructor(manager: MangusContextManager);
+    visitSemicolonClassElement(node: ast.SemicolonClassElement, context: any): void;
     visitClassDeclaration(node: ast.ClassDeclaration, context: CollectionContext): MagnusTopContext | undefined;
     isNull(val: any): val is null;
     setMagnus(node: ast.GetAccessorDeclaration | ast.SetAccessorDeclaration | ast.MethodDeclaration | ast.PropertyDeclaration, context: MagnusTopContext): void;

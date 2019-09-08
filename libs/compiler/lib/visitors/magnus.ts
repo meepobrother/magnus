@@ -8,7 +8,6 @@ export interface ClassDef {
   name: string;
   relations: string[];
 }
-export const entitySet: Set<string> = new Set();
 export class MagnusTopContext {
   querys: Map<string, MagnusContext> = new Map();
   mutations: Map<string, MagnusContext> = new Map();
@@ -66,8 +65,6 @@ export class MagnusContext {
   type: "query" | "mutation" | "subscription" | "proto" | "entity" = "query";
   node: ast.Node;
   name: string;
-  // 当前操作的entity
-  currentEntity: string = ``;
   isSelf: boolean = false;
   // 是否属性
   isProperty: boolean = false;
@@ -81,16 +78,39 @@ export class MagnusContext {
     name: ``,
     relations: []
   };
+  // 当前操作的entity
+  _currentEntity: string = ``;
   //防止无限循环
   oldName: string;
+  // 是否需要更名
+  _needChangeName: boolean;
+
+  // 新的名字
+  currentName: string;
+
+  // 首字母大写
+  isUpperFirst: boolean;
+  get currentEntity() {
+    return this._currentEntity;
+  }
+  set currentEntity(entity: string) {
+    if (["T", "Message", "Messages", "ListMessages"].includes(entity)) {
+      return;
+    }
+    this._currentEntity = entity;
+  }
+  getNotT(name: string): any {
+    if (this.currentEntity === "T") {
+      return this.contextParent.getNotT(name);
+    }
+    return this.currentEntity === "T" ? name : this.currentEntity;
+  }
   get topName(): string {
     return this.parent && this.parent.name;
   }
   get parentName() {
     return this.topName;
   }
-  // 是否需要更名
-  _needChangeName: boolean;
   // 是否包含上级
   hasParentName(name: string): boolean {
     if (this.parentName === name) {
@@ -102,17 +122,12 @@ export class MagnusContext {
     }
     return false;
   }
-
   get needChangeName(): boolean {
     if (typeof this._needChangeName === "boolean") return this._needChangeName;
     if (!this.currentName) return false;
     return this.currentName !== this.name;
   }
-  // 新的名字
-  currentName: string;
 
-  // 首字母大写
-  isUpperFirst: boolean;
   get isQuery() {
     return this.type === "query";
   }
@@ -129,9 +144,7 @@ export class MagnusContext {
     return this.type === "entity";
   }
   get allEntities(): string[] {
-    const entites: string[] = [];
-    entitySet.forEach(entity => entites.push(entity));
-    return entites;
+    return this.getTop().entities;
   }
   getEntities() {
     if (this.entities.length > 0) {
@@ -172,6 +185,7 @@ export class MagnusVisitor implements ast.Visitor {
   name: string = `MagnusVisitor`;
   collection: CollectionContext;
   constructor(public manager: MangusContextManager) {}
+  visitSemicolonClassElement(node: ast.SemicolonClassElement, context: any) {}
   visitClassDeclaration(
     node: ast.ClassDeclaration,
     context: CollectionContext
@@ -191,7 +205,6 @@ export class MagnusVisitor implements ast.Visitor {
       if (resolver !== null) {
         const ctx = new MagnusTopContext();
         ctx.entities = [];
-        ctx.entities.map(entity => entitySet.add(entity));
         ctx.node = node;
         ctx.name = node.name.visit(expressionVisitor, ``);
         node.typeParameters.map(type => type.visit(this, ctx));
@@ -203,7 +216,6 @@ export class MagnusVisitor implements ast.Visitor {
         if (magnus) {
           const ctx = new MagnusTopContext();
           ctx.entities = magnus.entities || [];
-          ctx.entities.map(entity => entitySet.add(entity));
           ctx.node = node;
           ctx.name = node.name.visit(expressionVisitor, ``);
           node.typeParameters.map(type => type.visit(this, ctx));
@@ -213,7 +225,6 @@ export class MagnusVisitor implements ast.Visitor {
         } else {
           const ctx = new MagnusTopContext();
           ctx.entities = [];
-          ctx.entities.map(entity => entitySet.add(entity));
           ctx.node = node;
           ctx.name = node.name.visit(expressionVisitor, ``);
           node.typeParameters.map(type => type.visit(this, ctx));
@@ -236,7 +247,6 @@ export class MagnusVisitor implements ast.Visitor {
       if (resolver !== null || controller !== null) {
         const ctx = new MagnusTopContext();
         ctx.entities = [];
-        ctx.entities.map(entity => entitySet.add(entity));
         ctx.node = node;
         ctx.name = node.name.visit(expressionVisitor, ``);
         node.typeParameters.map(type => type.visit(this, ctx));
@@ -315,7 +325,6 @@ export class MagnusVisitor implements ast.Visitor {
     if (query) {
       ctx.entities = query.entities || [];
     }
-    ctx.entities.map(entity => entitySet.add(entity));
     ctx.type = type;
     ctx.node = node;
   }

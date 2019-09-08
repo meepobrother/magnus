@@ -19,12 +19,8 @@ export class AstToProtoVisitor implements graphql.Visitor {
     pkg.name = this.config.name || "magnus";
     pkg.syntax = `proto3`;
     pkg.children.push(this.createEmpty());
-    node.definitions.filter(it => !!it).map(def => def.visit(this, pkg));
-    node.protos;
-    console.log({
-      mutation: this.mutation,
-      query: this.query
-    });
+    node.protos.map(pro => pro.visit(this, pkg));
+    // node.definitions.filter(it => !!it).map(def => def.visit(this, pkg));
     root.packages.push(pkg);
     return root;
   }
@@ -196,7 +192,6 @@ export class AstToProtoVisitor implements graphql.Visitor {
       case "Bool":
       case "Boolean":
         return `bool`;
-      case "ID":
       case "Bytes":
         return `bytes`;
       default:

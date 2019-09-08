@@ -15,6 +15,7 @@ export declare function isMinusToken(node: ts.Node): node is ts.MinusToken;
 export declare function isReadonlyToken(node: ts.Node): node is ts.ReadonlyToken;
 export declare function isThisExpression(node: ts.Node): node is ts.ThisExpression;
 export declare function isSuperExpression(node: ts.Node): node is ts.SuperExpression;
+export declare function isLeftHandSideExpression(node: ts.Node): node is ts.LeftHandSideExpression;
 export declare function isNullLiteral(node: ts.Node): node is ts.NullLiteral;
 export declare function isConstructSignatureDeclaration(node: ts.Node): node is ts.ConstructSignatureDeclaration;
 export declare class TypeHelper {

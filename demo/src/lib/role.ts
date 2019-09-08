@@ -3,15 +3,8 @@ import {
     PrimaryGeneratedColumn,
     Column,
     CreateDateColumn,
-    UpdateDateColumn,
-    ManyToMany,
-    ManyToOne,
-    OneToMany
+    UpdateDateColumn
 } from 'typeorm';
-import { Station } from './station';
-import { SystemRight } from './systemRight';
-import { RoleGroup } from './roleGroup';
-import { ResolveProperty } from '@notadd/magnus-core';
 /**
  * 角色表
  */
@@ -43,20 +36,6 @@ export class Role {
     })
     desc?: string;
 
-	/**
-	 * 一个角色可以有多个权限
-	 */
-    @OneToMany(() => SystemRight, type => type.toRoles)
-    rights?: SystemRight[];
-    @ResolveProperty()
-    async getSystemRights(): Promise<SystemRight[]> {
-        return [];
-    }
-	/**
-	 * 一个角色 可以使用某个岗位的职员
-	 */
-    @ManyToMany(() => Station, type => type.canUseRoles)
-    canUseStations?: Station[];
 
 	/**
 	 * 创建时间
@@ -97,10 +76,4 @@ export class Role {
         }
     })
     updateDate?: number;
-
-	/**
-	 * 一个角色 被那几个角色组使用
-	 */
-    @ManyToOne(() => RoleGroup, type => type.roles)
-    group?: RoleGroup;
 }

@@ -6,28 +6,26 @@ const magnus_1 = require("./magnus");
 const magnus_graphql_1 = require("@notadd/magnus-graphql");
 const lodash_1 = require("lodash");
 const expression_1 = require("./expression");
+const typeVisitor_1 = require("../visitor3/typeVisitor");
+const whereCreater_1 = require("../visitor3/creater/whereCreater");
+const orderCreater_1 = require("../visitor3/creater/orderCreater");
+const partialCreater_1 = require("../visitor3/creater/partialCreater");
+const simpleCreater_1 = require("../visitor3/creater/simpleCreater");
 exports.toString = new magnus_graphql_1.ToString();
 exports.WhereMap = {
     Not: `不等于`,
-    In: `在制定内，如[1,2]`,
-    NotIn: `不在制定内,如[1,2]`,
+    In: `在制定内，如[1,2,3,...]`,
     Lt: `小于`,
     Lte: `小于等于`,
     Gt: `大于`,
     Gte: `大于等于`,
-    Contains: `包含`,
-    NotContains: `不包含`,
-    StartsWith: `开头等于`,
-    NotStartsWith: `开头不等于`,
-    EndsWith: `结尾等于`,
-    NotEndsWith: `结尾不等于`
+    Like: `包含,左{title: "a%"} 右边{title: "%a"} 包含{title: "%a%"}`,
+    Between: `指定范围[min,max]`,
+    IsNull: `空`
 };
 class Handler {
     constructor(visitor) {
         this.visitor = visitor;
-        this.__partial = new Set();
-        this.__order = new Set();
-        this.__where = new Set();
     }
     Promise(node, context) {
         if (node instanceof ast.TypeReferenceNode) {
@@ -47,318 +45,59 @@ class Handler {
     }
     Order(node, context) {
         if (node instanceof ast.TypeReferenceNode) {
-            if (node.typeArguments.length === 1) {
-                const source = node.typeArguments[0];
-                let name = source.typeName.text;
-                if (!context.isEntity) {
-                    const sourceRes = this.visitor.visitTypeNode(source, context);
-                    if (sourceRes && sourceRes.name)
-                        name = sourceRes.name.value;
+            const orderCreater = new orderCreater_1.OrderCreater('Order');
+            orderCreater.collection = this.visitor.collection;
+            const order = orderCreater.createName(node, context);
+            if (order) {
+                const { name, namedType, entity } = order;
+                if (!this.visitor.documentAst.hasDefinitionAst(name)) {
+                    this.visitor.documentAst.definitions.push(entity);
                 }
-                if (name) {
-                    const sourceAst = this.visitor.collection.findByName(name);
-                    if (sourceAst) {
-                        const res = sourceAst.visit(this.visitor, context);
-                        if (res) {
-                            res.fields = res.fields.map(field => {
-                                const description = this.visitor.createStringValue([
-                                    `排序可选值为ASC或者DESC`
-                                ]);
-                                if (field.description && description)
-                                    field.description.value += `\n${description.value}`;
-                                field.type = this.visitor.createNamedTypeAst("String");
-                                return field;
-                            });
-                            const astName = res.name.value + "Order";
-                            if (this.__order.has(astName)) {
-                                return this.visitor.createNamedTypeAst(astName);
-                            }
-                            res.name.value = astName;
-                            this.visitor.documentAst.definitions.push(res);
-                            this.__order.add(astName);
-                            return this.visitor.createNamedTypeAst(astName);
-                        }
-                    }
-                    else {
-                        const item = this.visitor.documentAst.hasDefinitionAst(name);
-                        if (item) {
-                            const res = item.copy();
-                            const astName = res.name.value + "Order";
-                            res.fields = res.fields || [];
-                            res.fields = res.fields.map(field => {
-                                const description = this.visitor.createStringValue([
-                                    `排序可选值为ASC或者DESC`
-                                ]);
-                                if (field.description && description)
-                                    field.description.value += `\n${description.value}`;
-                                field.type = this.visitor.createNamedTypeAst("String");
-                                return field;
-                            });
-                            if (this.__order.has(astName)) {
-                                return this.visitor.createNamedTypeAst(astName);
-                            }
-                            res.name.value = astName;
-                            this.visitor.documentAst.definitions.push(res);
-                            this.__order.add(astName);
-                            return this.visitor.createNamedTypeAst(astName);
-                        }
-                    }
-                }
-            }
-        }
-    }
-    DeepPartial(node, context) {
-        if (node instanceof ast.TypeReferenceNode) {
-            if (node.typeArguments.length === 1) {
-                const source = node.typeArguments[0];
-                const sourceRes = this.visitor.visitTypeNode(source, context);
-                if (sourceRes instanceof magnus_graphql_1.ast.NamedTypeAst) {
-                    const sourceAst = this.visitor.collection.findByName(context.currentEntity);
-                    if (sourceAst) {
-                        const res = sourceAst.visit(this.visitor, context);
-                        res.fields = res.fields.map(field => {
-                            if (field.type instanceof magnus_graphql_1.ast.NonNullTypeAst) {
-                                field.type = field.type.type;
-                            }
-                            return field;
-                        });
-                        const astName = res.name.value + "DeepPartial";
-                        if (this.__partial.has(astName)) {
-                            return this.visitor.createNamedTypeAst(astName);
-                        }
-                        res.name.value = astName;
-                        this.visitor.documentAst.definitions.push(res);
-                        this.__partial.add(astName);
-                        return this.visitor.createNamedTypeAst(astName);
-                    }
-                }
+                return namedType;
             }
         }
     }
     Partial(node, context) {
         if (node instanceof ast.TypeReferenceNode) {
-            if (node.typeArguments.length === 1) {
-                const source = node.typeArguments[0];
-                const sourceRes = this.visitor.visitTypeNode(source, context);
-                // debugger;
-                if (sourceRes instanceof magnus_graphql_1.ast.NamedTypeAst) {
-                    const sourceAst = this.visitor.collection.findByName(context.currentEntity);
-                    if (sourceAst) {
-                        const res = sourceAst.visit(this.visitor, context);
-                        res.fields = res.fields.map(field => {
-                            if (field.type instanceof magnus_graphql_1.ast.NonNullTypeAst) {
-                                field.type = field.type.type;
-                            }
-                            return field;
-                        });
-                        const astName = res.name.value + "Partial";
-                        const old = this.visitor.documentAst.hasDefinitionAst(astName);
-                        if (!old) {
-                            res.name.value = astName;
-                            this.visitor.documentAst.definitions.push(res);
-                        }
-                        return this.visitor.createNamedTypeAst(astName);
-                    }
+            const partialCreater = new partialCreater_1.PartialCreater('Partial');
+            partialCreater.collection = this.visitor.collection;
+            partialCreater.documentAst = this.visitor.documentAst;
+            const partial = partialCreater.createName(node, context);
+            if (partial) {
+                const { name, namedType, entity } = partial;
+                if (!this.visitor.documentAst.hasDefinitionAst(name)) {
+                    this.visitor.documentAst.definitions.push(entity);
                 }
+                return namedType;
+            }
+        }
+    }
+    Simple(node, context) {
+        if (node instanceof ast.TypeReferenceNode) {
+            const simpleCreater = new simpleCreater_1.SimpleCreater('Simple');
+            simpleCreater.collection = this.visitor.collection;
+            simpleCreater.documentAst = this.visitor.documentAst;
+            const simple = simpleCreater.createName(node, context);
+            if (simple) {
+                const { name, namedType, entity } = simple;
+                if (!this.visitor.documentAst.hasDefinitionAst(name)) {
+                    this.visitor.documentAst.definitions.push(entity);
+                }
+                return namedType;
             }
         }
     }
     Where(node, context) {
         if (node instanceof ast.TypeReferenceNode) {
-            if (node.typeArguments.length === 1) {
-                const source = node.typeArguments[0];
-                let name = source.typeName.text;
-                if (!context.isEntity) {
-                    const sourceRes = this.visitor.visitTypeNode(source, context);
-                    if (sourceRes) {
-                        if (sourceRes.name) {
-                            name = sourceRes.name.value;
-                        }
-                    }
+            const whereCreater = new whereCreater_1.WhereCreater('Where');
+            whereCreater.collection = this.visitor.collection;
+            const where = whereCreater.createName(node, context);
+            if (where) {
+                const { name, namedType, entity } = where;
+                if (!this.visitor.documentAst.hasDefinitionAst(name)) {
+                    this.visitor.documentAst.definitions.push(entity);
                 }
-                if (name) {
-                    const sourceAst = this.visitor.collection.findByName(name);
-                    if (sourceAst) {
-                        const res = sourceAst.visit(this.visitor, context);
-                        const fields = [];
-                        if (res) {
-                            const astName = res.name.value + "Where";
-                            if (this.__where.has(astName)) {
-                                return this.visitor.createNamedTypeAst(astName);
-                            }
-                            const createField = (name) => {
-                                const ast = new magnus_graphql_1.ast.FieldDefinitionAst();
-                                ast.name = this.visitor.createNameAst(name);
-                                ast.type = this.visitor.createListTypeAst(this.visitor.createNonNullTypeAst(this.visitor.createNamedTypeAst(astName)));
-                                return ast;
-                            };
-                            res.fields.map(field => {
-                                let needField = false;
-                                let type = field.type;
-                                if (type instanceof magnus_graphql_1.ast.ListTypeAst) {
-                                    return;
-                                }
-                                else if (type instanceof magnus_graphql_1.ast.NonNullTypeAst) {
-                                    if (type.type instanceof magnus_graphql_1.ast.ListTypeAst) {
-                                        return;
-                                    }
-                                    type = type.type;
-                                }
-                                Object.keys(exports.WhereMap).map((key) => {
-                                    const typeName = type.name.value;
-                                    if (["Int", "String", "Boolean"].includes(typeName)) {
-                                        const newField = field.copy();
-                                        const desc1 = this.visitor.createStringValue([
-                                            `${exports.WhereMap[key]}`
-                                        ]);
-                                        newField.description =
-                                            newField.description ||
-                                                this.visitor.createStringValue([``]);
-                                        if (field.description && desc1)
-                                            newField.description.value =
-                                                field.description.value + ` ${desc1.value}`;
-                                        if (newField.name)
-                                            newField.name.value = `${newField.name.value}_${key}`;
-                                        if (["In", "NotIn"].includes(key)) {
-                                            if (typeName === "Int" || typeName === "String") {
-                                                newField.type = this.visitor.createListTypeAst(this.visitor.createNonNullTypeAst(field.type));
-                                                fields.push(newField);
-                                                needField = true;
-                                            }
-                                        }
-                                        else if (["Not", "Lt", "Lte", "Gt", "Gte"].includes(key)) {
-                                            if (typeName === "Int" || typeName === "String") {
-                                                newField.type = type;
-                                                fields.push(newField);
-                                                needField = true;
-                                            }
-                                        }
-                                        else if ([
-                                            "Contains",
-                                            "NotContains",
-                                            "StartsWith",
-                                            "NotStartsWith",
-                                            "EndsWith",
-                                            "NotEndsWith"
-                                        ].includes(key)) {
-                                            if (typeName === "String") {
-                                                newField.type = type;
-                                                fields.push(newField);
-                                                needField = true;
-                                            }
-                                        }
-                                        else {
-                                        }
-                                    }
-                                });
-                                if (needField) {
-                                    field.type = type;
-                                    fields.push(field);
-                                }
-                            });
-                            fields.push(createField(`AND`));
-                            fields.push(createField(`OR`));
-                            fields.push(createField(`NOT`));
-                            res.fields = fields;
-                            res.name.value = astName;
-                            this.visitor.documentAst.definitions.push(res);
-                            this.__where.add(astName);
-                            return this.visitor.createNamedTypeAst(astName);
-                        }
-                    }
-                    else {
-                        const item = this.visitor.documentAst.hasDefinitionAst(name);
-                        if (item) {
-                            const res = item.copy();
-                            const fields = [];
-                            const astName = res.name.value + "Where";
-                            if (this.__where.has(astName)) {
-                                return this.visitor.createNamedTypeAst(astName);
-                            }
-                            const createField = (name) => {
-                                const ast = new magnus_graphql_1.ast.FieldDefinitionAst();
-                                ast.name = this.visitor.createNameAst(name);
-                                ast.type = this.visitor.createListTypeAst(this.visitor.createNonNullTypeAst(this.visitor.createNamedTypeAst(astName)));
-                                return ast;
-                            };
-                            res.fields.map(field => {
-                                let needField = false;
-                                let type = field.type;
-                                if (type instanceof magnus_graphql_1.ast.ListTypeAst) {
-                                    return;
-                                }
-                                else if (type instanceof magnus_graphql_1.ast.NonNullTypeAst) {
-                                    if (type.type instanceof magnus_graphql_1.ast.ListTypeAst) {
-                                        return;
-                                    }
-                                    type = type.type;
-                                }
-                                Object.keys(exports.WhereMap).map((key) => {
-                                    const typeName = type.name.value;
-                                    if (["Int", "String", "Boolean", "Timestamp", "Date"].includes(typeName)) {
-                                        const newField = field.copy();
-                                        const desc1 = this.visitor.createStringValue([
-                                            `${exports.WhereMap[key]}`
-                                        ]);
-                                        newField.description =
-                                            newField.description ||
-                                                this.visitor.createStringValue([``]);
-                                        if (field.description && desc1)
-                                            newField.description.value =
-                                                field.description.value + ` ${desc1.value}`;
-                                        if (newField.name)
-                                            newField.name.value = `${newField.name.value}_${key}`;
-                                        if (["In", "NotIn"].includes(key)) {
-                                            if (typeName === "Int" || typeName === "String") {
-                                                newField.type = this.visitor.createListTypeAst(this.visitor.createNonNullTypeAst(field.type));
-                                                fields.push(newField);
-                                                needField = true;
-                                            }
-                                        }
-                                        else if (["Not", "Lt", "Lte", "Gt", "Gte"].includes(key)) {
-                                            if (typeName === "Int" ||
-                                                typeName === "String" ||
-                                                typeName === "Timestamp" ||
-                                                typeName === "Date") {
-                                                newField.type = type;
-                                                fields.push(newField);
-                                                needField = true;
-                                            }
-                                        }
-                                        else if ([
-                                            "Contains",
-                                            "NotContains",
-                                            "StartsWith",
-                                            "NotStartsWith",
-                                            "EndsWith",
-                                            "NotEndsWith"
-                                        ].includes(key)) {
-                                            if (typeName === "String") {
-                                                newField.type = type;
-                                                fields.push(newField);
-                                                needField = true;
-                                            }
-                                        }
-                                        else {
-                                        }
-                                    }
-                                });
-                                if (needField) {
-                                    field.type = type;
-                                    fields.push(field);
-                                }
-                            });
-                            fields.push(createField(`AND`));
-                            fields.push(createField(`OR`));
-                            fields.push(createField(`NOT`));
-                            res.fields = fields;
-                            res.name.value = astName;
-                            this.visitor.documentAst.definitions.push(res);
-                            this.__where.add(astName);
-                            return this.visitor.createNamedTypeAst(astName);
-                        }
-                    }
-                }
+                return namedType;
             }
         }
     }
@@ -399,135 +138,6 @@ class TsToGraphqlVisitor {
     }
     isUndefined(val) {
         return typeof val === "undefined";
-    }
-    visitClassDeclaration(node, context) {
-        const top = new magnus_1.MagnusTopContext();
-        top.name = node.name.visit(expression_1.expressionVisitor, ``);
-        context = context || new magnus_1.MagnusContext();
-        context.parent = context.parent || top;
-        const scalar = node.getDecorator(`Scalar`)(expression_1.expressionVisitor);
-        const directive = node.getDecorator(`Directive`)(expression_1.expressionVisitor);
-        const resolver = node.getDecorator(`Resolver`)(expression_1.expressionVisitor);
-        const entity = node.getDecorator(`Entity`)(expression_1.expressionVisitor);
-        this.isEntity = false;
-        if (entity !== null) {
-            // 搜集字段
-            this.isEntity = true;
-            const name = node.name && node.name.visit(expression_1.expressionVisitor, ``);
-            this.entities[name] = (node.members || []).map((member) => {
-                const name = member.name.visit(expression_1.expressionVisitor, ``);
-                const manyToOne = member.getDecorator(`ManyToOne`)(expression_1.expressionVisitor);
-                const oneToMany = member.getDecorator(`OneToMany`)(expression_1.expressionVisitor);
-                const oneToOne = member.getDecorator(`OneToOne`)(expression_1.expressionVisitor);
-                const manyToMany = member.getDecorator(`ManyToMany`)(expression_1.expressionVisitor);
-                const decorators = member.getDecorators()(expression_1.expressionVisitor);
-                const type = member.type && member.type.visit(expression_1.expressionVisitor, ``);
-                let entity = ``;
-                if (typeof type === "string") {
-                    entity = type;
-                }
-                else if (entity) {
-                    entity = type.elementType;
-                }
-                else {
-                }
-                return {
-                    name,
-                    decorators,
-                    entity
-                };
-            });
-        }
-        if (context.isInput) {
-            // debugger;
-        }
-        const members = node.members
-            .filter(member => {
-            return (!(member instanceof ast.MethodDeclaration) ||
-                member.getDecorator(`ResolveProperty`)(expression_1.expressionVisitor) !== null);
-        })
-            .map(member => {
-            member.questionToken = true;
-            return member;
-        });
-        if (resolver && typeof resolver === "string") {
-            const resolverCls = this.collection.findByName(resolver);
-            const members = node.members.filter(member => member instanceof ast.MethodDeclaration);
-            if (resolverCls instanceof ast.InterfaceDeclaration) {
-                const interfaceMembers = members
-                    .map((member) => {
-                    const isResolveProperty = member.getDecorator(`ResolveProperty`)(expression_1.expressionVisitor);
-                    if (isResolveProperty !== null) {
-                        const node = new ast.MethodSignature();
-                        node.name = new ast.Identifier();
-                        node.name.text = member.name.visit(expression_1.expressionVisitor, ``);
-                        node.type = member.type;
-                        node.docs = member.docs;
-                        node.questionToken = new ast.QuestionToken();
-                        return node;
-                    }
-                })
-                    .filter(node => !!node);
-                resolverCls.members.push(...interfaceMembers);
-                return resolverCls.visit(this, context);
-            }
-            else if (resolverCls instanceof ast.ClassDeclaration) {
-                const interfaceMembers = members
-                    .map((member) => {
-                    const isResolveProperty = member.getDecorator(`ResolveProperty`)(expression_1.expressionVisitor);
-                    if (isResolveProperty !== null)
-                        return member;
-                })
-                    .filter(node => !!node);
-                resolverCls.members.push(...interfaceMembers);
-                const res = resolverCls.visit(this, context);
-                return res;
-            }
-            return;
-        }
-        if (scalar !== null) {
-            const ast = new magnus_graphql_1.ast.ScalarTypeDefinitionAst();
-            ast.name = node.name.visit(this, context);
-            ast.directives = [];
-            const description = this.createStringValue(node.docs.map(doc => this.visitJSDoc(doc, context)));
-            if (description)
-                ast.description = description;
-            return ast;
-        }
-        if (directive !== null) {
-            // 记录
-            return;
-        }
-        if (context.isInput) {
-            const ast = new magnus_graphql_1.ast.InputObjectTypeDefinitionAst();
-            const ctx = context || new magnus_1.MagnusContext();
-            // ctx.contextParent = context;
-            ctx.isUpperFirst = true;
-            ctx.isInput = true;
-            ast.name = node.name.visit(this, ctx);
-            ast.fields = members
-                .map(member => member.visit(this, ctx))
-                .filter(item => !!item);
-            const description = this.createStringValue(node.docs.map(doc => this.visitJSDoc(doc, context)));
-            if (description)
-                ast.description = description;
-            if (ast.fields.length > 0)
-                return ast;
-        }
-        const _ast = new magnus_graphql_1.ast.ObjectTypeDefinitionAst();
-        const description = this.createStringValue(node.docs.map(doc => this.visitJSDoc(doc, context)));
-        if (description)
-            _ast.description = description;
-        const ctx = context || new magnus_1.MagnusContext();
-        // ctx.contextParent = context;
-        ctx.isUpperFirst = true;
-        // ctx.isInput = false;
-        _ast.name = node.name.visit(this, ctx);
-        _ast.fields = members
-            .map(member => member.visit(this, ctx))
-            .filter(item => !!item);
-        if (_ast.fields.length > 0)
-            return _ast;
     }
     visitMethodSignature(node, context) {
         context.isProperty = false;
@@ -580,6 +190,7 @@ class TsToGraphqlVisitor {
                 if (type)
                     res.type = this.createNonNullTypeAst(type);
             }
+            context.currentEntity = context.getNotT(this.lastCurrentEntity);
             context.currentName = node.name.visit(expression_1.expressionVisitor, ``);
             res.name = this.visitPropertyName(node.name, context);
             return res;
@@ -599,6 +210,7 @@ class TsToGraphqlVisitor {
                 if (type)
                     res.type = this.createNonNullTypeAst(type);
             }
+            context.currentEntity = context.getNotT(this.lastCurrentEntity);
             context.currentName = node.name.visit(expression_1.expressionVisitor, ``);
             res.name = this.visitPropertyName(node.name, context);
             return res;
@@ -614,14 +226,21 @@ class TsToGraphqlVisitor {
         // context.name = node.name.visit(expressionVisitor, context);
         const name = node.name.visit(expression_1.expressionVisitor, ``);
         const modifiers = node.modifiers.map(mod => mod.visit(this, context));
+        if (modifiers.some(mod => mod && mod.name === "static")) {
+            return;
+        }
         const res = new magnus_graphql_1.ast.FieldDefinitionAst();
         const description = this.createStringValue(node.docs.map(doc => this.visitJSDoc(doc, context)));
         if (description)
             res.description = description;
         const type = this.visitTypeNode(node.type, context);
+        let isT = false;
+        if (type.name && type.name.value === "T") {
+            isT = true;
+        }
         if (node.questionToken) {
             if (type)
-                res.type = type;
+                res.type = isT ? context.getNotT(this.lastCurrentEntity) : type;
         }
         else {
             if (this.isNotRequired(node)) {
@@ -633,6 +252,7 @@ class TsToGraphqlVisitor {
                     res.type = this.createNonNullTypeAst(type);
             }
         }
+        context.currentEntity = context.getNotT(this.lastCurrentEntity);
         context.currentName = node.name.visit(expression_1.expressionVisitor, context);
         res.name = this.visitPropertyName(node.name, context);
         return res;
@@ -678,7 +298,19 @@ class TsToGraphqlVisitor {
         property.questionToken = node.questionToken;
         return property;
     }
+    createTypeNode(node, context) {
+        if (!node) {
+            return;
+        }
+        const typeVisitor = new typeVisitor_1.TypeVisitor();
+        const typeContext = new typeVisitor_1.TypeContext();
+        typeVisitor.typeArguments = context.parent.typeParameters;
+        typeVisitor.currentEntity = context.currentEntity;
+        const type = node.visit(typeVisitor, typeContext);
+        return type;
+    }
     createMetadate(res, context, node) {
+        const type = this.createTypeNode(node.type, context);
         return [
             res.name.value,
             context.topName,
@@ -694,39 +326,16 @@ class TsToGraphqlVisitor {
                     decorator: arg.decorator
                 };
                 return res;
-            })
+            }),
+            type
         ];
     }
     visitMethodDeclaration(node, context) {
         context.isProperty = false;
         if (context.isInput) {
-            // 完善信息
             return undefined;
         }
-        const proto = node.getDecorator(`GrpcMethod`)(expression_1.expressionVisitor) ||
-            node.getDecorator(`Proto`)(expression_1.expressionVisitor);
-        const permission = node.getDecorator(`Permission`)(expression_1.expressionVisitor);
         const ResolveProperty = node.getDecorator(`ResolveProperty`)(expression_1.expressionVisitor);
-        if (permission !== null) {
-            if (proto !== null && permission) {
-                if (typeof proto === "string") {
-                    if (permission) {
-                        permission.namespace = proto;
-                        this.permission.push(permission);
-                    }
-                }
-                else {
-                    permission.namespace = context.parentName;
-                    this.permission.push(permission);
-                }
-            }
-            else {
-                if (permission) {
-                    permission.namespace = context.parentName;
-                    this.permission.push(permission);
-                }
-            }
-        }
         // 判断return type是否包含 parameter
         node.type && node.type.visit(this, context);
         // 完善信息
@@ -759,6 +368,7 @@ class TsToGraphqlVisitor {
             if (ResolveProperty === null) {
                 context._needChangeName = true;
                 const name = node.name.visit(expression_1.expressionVisitor, ``);
+                context.currentEntity = context.getNotT(this.lastCurrentEntity);
                 context.currentName = lodash_1.camelCase(`${context.currentEntity}_${name}`);
             }
         }
@@ -847,6 +457,9 @@ class TsToGraphqlVisitor {
         return node.comment;
     }
     visitTypeNode(node, context) {
+        if (this.currentEntity !== "T") {
+            this.lastCurrentEntity = context.currentEntity;
+        }
         if (node instanceof ast.ArrayTypeNode) {
             return this.visitArrayTypeNode(node, context);
         }
@@ -905,7 +518,8 @@ class TsToGraphqlVisitor {
                 this.set.add(context.currentName);
                 const graphAst = ast2.visit(this, context);
                 context.currentName = oldName;
-                if (!this.documentAst.hasDefinitionAst(context.currentName)) {
+                const graphqlAstName = graphAst.name.value;
+                if (!this.documentAst.hasDefinitionAst(graphqlAstName)) {
                     this.documentAst.definitions.push(graphAst);
                 }
             }
@@ -914,9 +528,16 @@ class TsToGraphqlVisitor {
             }
         }
     }
+    set lastCurrentEntity(entity) {
+        this._lastCurrentEntity = entity;
+    }
+    get lastCurrentEntity() {
+        return this._lastCurrentEntity;
+    }
     visitTypeReferenceNode(node, context) {
         const typeName = expression_1.expressionVisitor.visitTypeReferenceNode(node, ``);
-        const typeArguments = node.typeArguments.map(t => t.visit(expression_1.expressionVisitor, ``));
+        context.currentEntity = context.getNotT(this.lastCurrentEntity);
+        const typeArguments = node.typeArguments.map(t => expression_1.expressionVisitor.visitTypeNode(t, ``));
         const handler = this.handler[typeName];
         if (handler) {
             const res = handler.bind(this.handler)(node, context);
@@ -931,13 +552,18 @@ class TsToGraphqlVisitor {
         /**
          * 如果有
          */
-        if (context.hasTypeParameter(typeName)) {
-            // 添加一个type
-            ctx.currentName = context.currentEntity;
-            context._needChangeName = true;
-            context.currentName = ctx.currentName;
-            this.addType(ctx.currentEntity, ctx);
-            return this.createNamedTypeAst(ctx.currentName);
+        if (typeName) {
+            if (context.hasTypeParameter(typeName) ||
+                (typeName.length === 1 && context.currentEntity)) {
+                // 添加一个type
+                ctx.currentName = context.currentEntity;
+                context._needChangeName = true;
+                context.currentName = ctx.currentName;
+                this.addType(ctx.currentEntity, ctx);
+                const namedType = this.createNamedTypeAst(ctx.currentName);
+                namedType.isEntity = true;
+                return namedType;
+            }
         }
         if (typeArguments.length > 0) {
             const name = typeArguments
@@ -951,13 +577,24 @@ class TsToGraphqlVisitor {
                         return context.currentEntity;
                     }
                 }
-                else {
-                    if (context.hasTypeParameter(it.elementType)) {
-                        return context.currentEntity;
+                else if (it) {
+                    if (it.kind === "UnionTypeNode") {
+                        if (it.type) {
+                            const types = it.type.filter((it) => it !== "undefined");
+                            if (types.length === 1) {
+                                context.currentEntity = types[0];
+                                return types[0];
+                            }
+                        }
                     }
-                    else {
-                        context.currentEntity = it.elementType;
-                        return context.currentEntity;
+                    else if (it.kind === "ArrayTypeNode") {
+                        if (context.hasTypeParameter(it.elementType)) {
+                            return context.currentEntity;
+                        }
+                        else {
+                            context.currentEntity = it.elementType;
+                            return context.currentEntity;
+                        }
                     }
                 }
             })
@@ -975,10 +612,150 @@ class TsToGraphqlVisitor {
         this.addType(`${typeName}`, ctx);
         return this.createNamedTypeAst(ctx.currentName);
     }
+    addEntity(node, context) {
+        const name = node.name && node.name.visit(expression_1.expressionVisitor, ``);
+        this.entities[name] = (node.members || [])
+            .filter((it) => !!it)
+            .map((member) => {
+            const name = member.name &&
+                member.name.visit(expression_1.expressionVisitor, ``);
+            const decorators = member.getDecorators()(expression_1.expressionVisitor);
+            const method = member;
+            const type = this.createTypeNode(method.type, context);
+            const args = method.parameters &&
+                method.parameters.map((arg, index) => {
+                    const name = arg.name.visit(expression_1.expressionVisitor, ``);
+                    return {
+                        name,
+                        index,
+                        decorator: arg.decorators.map(dec => dec.visit(expression_1.expressionVisitor, ``).name)
+                    };
+                });
+            return {
+                name: name || "controller",
+                decorators,
+                entity: type,
+                parameters: args
+            };
+        });
+    }
+    visitClassDeclaration(node, context) {
+        const top = new magnus_1.MagnusTopContext();
+        top.name = node.name.visit(expression_1.expressionVisitor, ``);
+        context = context || new magnus_1.MagnusContext();
+        context.parent = context.parent || top;
+        context.isProperty = true;
+        context.isUpperFirst = true;
+        const scalar = node.getDecorator(`Scalar`)(expression_1.expressionVisitor);
+        const directive = node.getDecorator(`Directive`)(expression_1.expressionVisitor);
+        const resolver = node.getDecorator(`Resolver`)(expression_1.expressionVisitor);
+        this.isEntity = false;
+        const members = node.members
+            .filter(member => {
+            return (!(member instanceof ast.MethodDeclaration) ||
+                member.getDecorator(`ResolveProperty`)(expression_1.expressionVisitor) !== null);
+        })
+            .map(member => {
+            member.questionToken = true;
+            return member;
+        });
+        if (resolver && typeof resolver === "string") {
+            const resolverCls = this.collection.findByName(resolver);
+            const members = node.members.filter(member => member instanceof ast.MethodDeclaration);
+            if (resolverCls instanceof ast.InterfaceDeclaration) {
+                const interfaceMembers = members
+                    .map((member) => {
+                    const isResolveProperty = member.getDecorator(`ResolveProperty`)(expression_1.expressionVisitor);
+                    if (isResolveProperty !== null) {
+                        const node = new ast.MethodSignature();
+                        node.name = new ast.Identifier();
+                        node.name.text = member.name.visit(expression_1.expressionVisitor, ``);
+                        node.type = member.type;
+                        node.docs = member.docs;
+                        node.questionToken = new ast.QuestionToken();
+                        return node;
+                    }
+                })
+                    .filter(node => !!node);
+                resolverCls.members.push(...interfaceMembers);
+                return resolverCls.visit(this, context);
+            }
+            else if (resolverCls instanceof ast.ClassDeclaration) {
+                const interfaceMembers = members
+                    .map((member) => {
+                    const isResolveProperty = member.getDecorator(`ResolveProperty`)(expression_1.expressionVisitor);
+                    if (isResolveProperty !== null)
+                        return member;
+                })
+                    .filter(node => !!node);
+                resolverCls.members.push(...interfaceMembers);
+                const res = resolverCls.visit(this, context);
+                return res;
+            }
+            return;
+        }
+        if (scalar !== null) {
+            const ast = new magnus_graphql_1.ast.ScalarTypeDefinitionAst();
+            ast.name = node.name.visit(this, context);
+            ast.directives = [];
+            const description = this.createStringValue(node.docs.map(doc => this.visitJSDoc(doc, context)));
+            if (description)
+                ast.description = description;
+            return ast;
+        }
+        if (directive !== null) {
+            // 记录
+            return;
+        }
+        if (context.isInput) {
+            const ast = new magnus_graphql_1.ast.InputObjectTypeDefinitionAst();
+            const ctx = context || new magnus_1.MagnusContext();
+            // ctx.contextParent = context;
+            ctx.isUpperFirst = true;
+            ctx.isInput = true;
+            ast.name = node.name.visit(this, ctx);
+            ast.fields = members
+                .map(member => member.visit(this, ctx))
+                .filter(item => !!item);
+            const description = this.createStringValue(node.docs.map(doc => this.visitJSDoc(doc, context)));
+            if (description)
+                ast.description = description;
+            if (ast.fields.length > 0) {
+                /**
+                 * 构造this.entities
+                 */
+                this.addEntity(node, context);
+                return ast;
+            }
+        }
+        const _ast = new magnus_graphql_1.ast.ObjectTypeDefinitionAst();
+        const description = this.createStringValue(node.docs.map(doc => this.visitJSDoc(doc, context)));
+        if (description)
+            _ast.description = description;
+        const ctx = context || new magnus_1.MagnusContext();
+        // ctx.contextParent = context;
+        ctx.isUpperFirst = true;
+        // ctx.isInput = false;
+        _ast.name = node.name.visit(this, ctx);
+        if (["Message", "Messages", "ListMessages"].includes(_ast.name.value)) {
+            return;
+        }
+        _ast.fields = members
+            .map(member => member.visit(this, ctx))
+            .filter(item => !!item);
+        if (_ast.fields.length > 0) {
+            /**
+             * 构造this.entities
+             */
+            this.addEntity(node, context);
+            return _ast;
+        }
+    }
     visitInterfaceDeclaration(node, context) {
         context.isProperty = true;
         context.isUpperFirst = true;
         node.typeParameters.map(type => context.typeParameters.add(type.visit(expression_1.expressionVisitor, ``)));
+        context.currentEntity = context.getNotT(this.lastCurrentEntity);
         if (context.isInput) {
             const ast = new magnus_graphql_1.ast.InputObjectTypeDefinitionAst();
             const description = this.createStringValue(node.docs.map(doc => this.visitJSDoc(doc, context)));
@@ -1088,19 +865,15 @@ class TsToGraphqlVisitor {
                 // 如果是属性
                 const name = context.currentName || `${context.currentEntity}_${node.text}`;
                 if (context.isUpperFirst) {
-                    // return this.createNameAst(upperFirst(camelCase(name)))
                     return this.createNameAst(name);
                 }
-                // return this.createNameAst(camelCase(name))
                 return this.createNameAst(name);
             }
             else {
                 const name = context.currentName || `${node.text}_${context.currentEntity}`;
                 if (context.isUpperFirst) {
-                    // return this.createNameAst(upperFirst(camelCase(name)))
                     return this.createNameAst(name);
                 }
-                // return this.createNameAst(camelCase(name))
                 return this.createNameAst(name);
             }
         }
@@ -1114,11 +887,11 @@ class TsToGraphqlVisitor {
         if (description)
             res.description = description;
         // name过后初始化
-        const type = this.visitTypeNode(node.type, context);
         const decorator = node.getDecorators()(expression_1.expressionVisitor);
         if (decorator)
             res.decorator = decorator;
         res.index = node.index;
+        const type = this.visitTypeNode(node.type, context);
         if (node.questionToken || !!node.initializer) {
             res.type = type;
         }

@@ -13,15 +13,13 @@ export type Sfixed64 = number;
 export type Bool = boolean;
 export type String = string;
 export type Bytes = number[];
-export type Empty = {}
+export type Empty = {};
 
-export type DeepPartial<T> = {
-    [P in keyof T]?: DeepPartial<T[P]>;
-};
+export type DeepPartial<T> = { [P in keyof T]?: DeepPartial<T[P]> };
 
-export type Order<T> = {
-    [P in keyof T]?: "ASC" | "DESC"
-}
+export type Order<T> = { [P in keyof T]?: "ASC" | "DESC" };
 export type Where<T> = {
     [key: string]: any;
-}
+};
+
+export type ID = string | number;
