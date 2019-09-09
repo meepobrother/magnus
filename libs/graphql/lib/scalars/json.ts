@@ -1,13 +1,70 @@
-import { GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
-import { BaseScalar } from './util';
-class JsonScalar extends BaseScalar implements GraphQLScalarTypeConfig<any, object>{
-    name: string = `Json`;
-    description: string = `Json`;
-    serialize(value: object) {
-        return value
-    }
-    parseValue(value: any) {
-        return value
-    }
+import { GraphQLScalarType } from "graphql";
+import { Kind } from "graphql/language";
+
+function identity(value: any) {
+  return value;
 }
-export const Json = new GraphQLScalarType(new JsonScalar());
+
+function ensureObject(value: any) {
+  if (typeof value !== "object" || value === null || Array.isArray(value)) {
+    throw new TypeError(
+      `JSONObject cannot represent non-object value: ${value}`
+    );
+  }
+  return value;
+}
+
+function parseObject(ast: any, variables: any) {
+  const value = Object.create(null);
+  ast.fields.forEach((field: any) => {
+    // eslint-disable-next-line no-use-before-define
+    value[field.name.value] = parseLiteral(field.value, variables);
+  });
+
+  return value;
+}
+
+function parseLiteral(ast: any, variables: any) {
+  switch (ast.kind) {
+    case Kind.STRING:
+    case Kind.BOOLEAN:
+      return ast.value;
+    case Kind.INT:
+    case Kind.FLOAT:
+      return parseFloat(ast.value);
+    case Kind.OBJECT:
+      return parseObject(ast, variables);
+    case Kind.LIST:
+      return ast.values.map((n: any) => parseLiteral(n, variables));
+    case Kind.NULL:
+      return null;
+    case Kind.VARIABLE: {
+      const name = ast.name.value;
+      return variables ? variables[name] : undefined;
+    }
+    default:
+      return undefined;
+  }
+}
+
+// This named export is intended for users of CommonJS. Users of ES modules
+// should instead use the default export.
+export const GraphQLJSON = new GraphQLScalarType({
+  name: "Json",
+  description:
+    "The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).",
+  serialize: identity,
+  parseValue: identity,
+  parseLiteral
+});
+
+export default GraphQLJSON;
+
+export const JsonObject = new GraphQLScalarType({
+  name: "JsonObject",
+  description:
+    "The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).",
+  serialize: ensureObject,
+  parseValue: ensureObject,
+  parseLiteral: parseObject
+});

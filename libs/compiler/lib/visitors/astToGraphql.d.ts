@@ -18,6 +18,6 @@ export declare class AstToGraphqlVisitor implements ast.Visitor {
     subscriptions: Map<string, ast.FieldDefinitionAst>;
     sourceFile: ts.SourceFile;
     visitContextManager(node: MangusContextManager, collection: CollectionContext): ast.DocumentAst;
-    collectCls(node: ts.ClassDeclaration, context: CollectionContext): ast.ScalarTypeDefinitionAst<any, any> | ast.InputObjectTypeDefinitionAst<any, any> | ast.InterfaceTypeDefinitionAst<any, any> | undefined;
+    collectCls(node: ts.ClassDeclaration, context: CollectionContext): ast.ScalarTypeDefinitionAst<any, any> | ast.InterfaceTypeDefinitionAst<any, any> | ast.InputObjectTypeDefinitionAst<any, any> | undefined;
     createObjectTypeDefinitionAst(name: string, fields: ast.FieldDefinitionAst[]): ast.ObjectTypeDefinitionAst<any, any>;
 }
