@@ -5,7 +5,6 @@ import { expressionVisitor } from '../../visitors/expression';
 import { BaseCreater } from './baseCreater';
 
 export class SimpleCreater extends BaseCreater {
-    documentAst: graphql.DocumentAst;
     createClassDeclaration(name: string, node: ast.ClassDeclaration) {
         const input = new graphql.InputObjectTypeDefinitionAst();
         input.name = createName(name)

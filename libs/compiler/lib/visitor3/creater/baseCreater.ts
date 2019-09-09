@@ -8,11 +8,13 @@ import {
 import { MagnusContext } from "../../visitors/magnus";
 import { createNamedType, createName } from "../../utils/graphql";
 import { CollectionContext } from "../../visitors/collection";
+import { ast as graphql } from "@notadd/magnus-graphql";
 export abstract class BaseCreater {
   name: string;
   collection: CollectionContext;
   context: MagnusContext;
   hasUsed: Set<string> = new Set();
+  documentAst: graphql.DocumentAst;
   constructor(name: string) {
     this.name = name;
   }

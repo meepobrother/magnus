@@ -6,6 +6,7 @@ import { CollectionContext } from "./collection";
 import { MagnusContext } from "./magnus";
 import * as ts from "./visitor";
 import { expressionVisitor } from "./expression";
+import { ScalarCreater } from '../visitor3/creater/scalarCreater';
 const parse = new ParseVisitor();
 export class AstToGraphqlVisitor implements ast.Visitor {
     name: string = `AstToGraphqlVisitor`;
@@ -66,8 +67,14 @@ export class AstToGraphqlVisitor implements ast.Visitor {
         this.documentAst.definitions.push(this.createScalar(`ID`));
 
         this.protos = {};
-        this.collection.classes.map(cls => this.collectCls(cls, collection));
 
+        /**
+         * 新版的magnus算法
+         */
+        this.collection.classes.map(cls => this.collectCls(cls, collection));
+        /**
+        * 新版的magnus算法end
+        */
         const querys: ast.FieldDefinitionAst[] = [];
         const mutations: ast.FieldDefinitionAst[] = [];
         const subscriptions: ast.FieldDefinitionAst[] = [];
@@ -304,7 +311,11 @@ export class AstToGraphqlVisitor implements ast.Visitor {
         this.sourceFile = this.tsToGraphqlVisitor.sourceFile;
         return this.documentAst;
     }
+    
     collectCls(node: ts.ClassDeclaration, context: CollectionContext) {
+        /**
+         * scalar
+         */
         const scalar = node.getDecorator<ScalarOptions>(`Scalar`)(
             expressionVisitor
         );

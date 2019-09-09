@@ -14,6 +14,9 @@ import { BaseCreater } from "./baseCreater";
 export class EntityCreater extends BaseCreater {
   context: MagnusContext;
   documentAst: graphql.DocumentAst;
+  constructor() {
+    super(``);
+  }
   createClassDeclaration(name: string, node: ast.ClassDeclaration) {
     const input = new graphql.ObjectTypeDefinitionAst();
     input.name = createName(name);

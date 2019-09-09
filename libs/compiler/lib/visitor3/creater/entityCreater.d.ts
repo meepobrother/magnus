@@ -8,5 +8,6 @@ import { BaseCreater } from "./baseCreater";
 export declare class EntityCreater extends BaseCreater {
     context: MagnusContext;
     documentAst: graphql.DocumentAst;
+    constructor();
     createClassDeclaration(name: string, node: ast.ClassDeclaration): graphql.ObjectTypeDefinitionAst<any, any>;
 }

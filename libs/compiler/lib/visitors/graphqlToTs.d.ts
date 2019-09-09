@@ -42,7 +42,11 @@ export declare class GraphqlToTs implements ast.Visitor {
         operation: string;
         schema: ObjectTypeDefinitionAst;
     }): any;
+<<<<<<< HEAD
     getSchema(operation: string): ast.ScalarTypeExtensionAst<any, any> | ast.ObjectTypeExtensionAst<any, any> | ast.InterfaceTypeExtensionAst<any, any> | ast.UnionTypeExtensionAst<any, any> | ast.EnumTypeExtensionAst<any, any> | ast.InputObjectTypeExtensionAst<any, any> | ast.OperationDefinitionAst<any, any> | ast.FragmentDefinitionAst<any, any> | ast.SchemaDefinitionAst<any, any> | ast.ScalarTypeDefinitionAst<any, any> | ast.ObjectTypeDefinitionAst<any, any> | ast.InterfaceTypeDefinitionAst<any, any> | ast.UnionTypeDefinitionAst<any, any> | ast.EnumTypeDefinitionAst<any, any> | ast.InputObjectTypeDefinitionAst<any, any> | ast.DirectiveDefinitionAst<any, any> | ast.SchemaExtensionAst<any, any> | undefined;
+=======
+    getSchema(operation: string): ast.ObjectTypeDefinitionAst<any, any> | ast.DirectiveDefinitionAst<any, any> | ast.ScalarTypeExtensionAst<any, any> | ast.ObjectTypeExtensionAst<any, any> | ast.InterfaceTypeExtensionAst<any, any> | ast.UnionTypeExtensionAst<any, any> | ast.EnumTypeExtensionAst<any, any> | ast.InputObjectTypeExtensionAst<any, any> | ast.OperationDefinitionAst<any, any> | ast.FragmentDefinitionAst<any, any> | ast.SchemaDefinitionAst<any, any> | ast.ScalarTypeDefinitionAst<any, any> | ast.InterfaceTypeDefinitionAst<any, any> | ast.UnionTypeDefinitionAst<any, any> | ast.EnumTypeDefinitionAst<any, any> | ast.InputObjectTypeDefinitionAst<any, any> | ast.SchemaExtensionAst<any, any> | undefined;
+>>>>>>> aa362957a67254cecfaa20f382c9693d0886504c
     private __getType;
     visitOperationDefinitionAst(node: OperationDefinitionAst, context: string): string;
 }
