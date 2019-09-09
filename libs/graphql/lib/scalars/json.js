@@ -6,10 +6,17 @@ exports.default = new graphql_1.GraphQLScalarType({
     name: "Json",
     description: "Json",
     parseValue(value) {
-        return JSON.parse(value); // value from the client
+        if (typeof value === 'object') {
+            return JSON.stringify(value); // value from the client
+        }
+        return value;
     },
     serialize(value) {
-        return JSON.stringify(value); // value sent to the client
+        if (typeof value === 'string') {
+            return JSON.parse(value);
+        }
+        return value;
+        // value sent to the client
     },
     parseLiteral(ast) {
         if (ast.kind === graphql_2.Kind.INT) {

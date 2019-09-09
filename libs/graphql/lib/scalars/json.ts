@@ -3,11 +3,18 @@ import { Kind } from 'graphql';
 export default new GraphQLScalarType({
     name: "Json",
     description: "Json",
-    parseValue(value: string): object {
-        return JSON.parse(value); // value from the client
+    parseValue(value: object): string {
+        if (typeof value === 'object') {
+            return JSON.stringify(value); // value from the client
+        }
+        return value;
     },
-    serialize(value: any): string {
-        return JSON.stringify(value); // value sent to the client
+    serialize(value: string): object {
+        if (typeof value === 'string') {
+            return JSON.parse(value);
+        }
+        return value;
+        // value sent to the client
     },
     parseLiteral(ast): number | null {
         if (ast.kind === Kind.INT) {
