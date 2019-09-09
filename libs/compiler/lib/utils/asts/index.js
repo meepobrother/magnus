@@ -24,17 +24,19 @@ function createTypeName(type, currentEntity) {
         return ``;
     if (type.isEntity)
         return currentEntity;
-    return `${type.typeArguments ? type.typeArguments.map(type => createTypeName(type, currentEntity)) : ""}${type.type}`;
+    return `${type.typeArguments
+        ? type.typeArguments.map(type => createTypeName(type, currentEntity))
+        : ""}${type.type}`;
 }
 exports.createTypeName = createTypeName;
 function isSimpleType(type) {
     switch (type) {
-        case 'Int':
-        case 'Boolean':
-        case 'String':
-        case 'Empty':
-        case 'Json':
-        case 'Error':
+        case "Int":
+        case "Boolean":
+        case "String":
+        case "Empty":
+        case "Json":
+        case "Error":
             return true;
         default:
             return false;

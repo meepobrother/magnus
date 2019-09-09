@@ -29,10 +29,13 @@ class BaseCreater {
                     }
                     type = {
                         type: this.name,
-                        typeArguments: [
-                            type,
-                        ]
+                        typeArguments: [type]
                     };
+                }
+                else {
+                    if (type.type === this.name) {
+                        current = type.typeArguments[0].type;
+                    }
                 }
             }
             if (current) {
@@ -56,8 +59,11 @@ class BaseCreater {
         if (node instanceof ast.ClassDeclaration) {
             return this.createClassDeclaration(name, node);
         }
-        if (node instanceof ast.InterfaceDeclaration) {
+        else if (node instanceof ast.InterfaceDeclaration) {
             return this.createInterfaceDeclaration(name, node);
+        }
+        else {
+            console.log(`createEntity Error`);
         }
     }
     createInterfaceDeclaration(name, node) {

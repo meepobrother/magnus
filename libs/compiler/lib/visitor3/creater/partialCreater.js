@@ -12,33 +12,43 @@ class PartialCreater extends baseCreater_1.BaseCreater {
         input.name = graphql_1.createName(name);
         const members = node.members
             .filter(node => node instanceof ast.PropertyDeclaration)
-            .filter(node => !node.modifiers.find(it => ['private', 'static'].includes(it.name)));
+            .filter(node => !node.modifiers.find(it => ["private", "static"].includes(it.name)));
         members.map(it => {
             const decorators = it.getDecorators()(expression_1.expressionVisitor);
-            const isRelation = decorators.find(it => ['ManyToOne', "OneToMany", "OneToOne", "ManyToMany", "TreeParent", "TreeChildren"].includes(it));
-            const isDate = !!['CreateDateColumn', 'UpdateDateColumn', 'Time'].find(it => decorators.includes(it));
-            const isColumn = !!['Column', 'PrimaryGeneratedColumn', 'PrimaryColumn', 'ObjectIdColumn'].find(it => decorators.includes(it));
-            const isAuto = !!['CreateDateColumn', 'UpdateDateColumn'].find(it => decorators.includes(it));
+            const isRelation = decorators.find(it => [
+                "ManyToOne",
+                "OneToMany",
+                "OneToOne",
+                "ManyToMany",
+                "TreeParent",
+                "TreeChildren"
+            ].includes(it));
+            const isDate = !!["CreateDateColumn", "UpdateDateColumn", "Time"].find(it => decorators.includes(it));
+            const isColumn = !![
+                "Column",
+                "PrimaryGeneratedColumn",
+                "PrimaryColumn",
+                "ObjectIdColumn"
+            ].find(it => decorators.includes(it));
+            const isAuto = !!["CreateDateColumn", "UpdateDateColumn"].find(it => decorators.includes(it));
             const name = it.name.visit(expression_1.expressionVisitor, ``);
-            const dec = it.docs.map(doc => doc.comment).join(' ');
-            if (isAuto) { }
-            else if (isDate || (isColumn)) {
+            const dec = it.docs.map(doc => doc.comment).join(" ");
+            if (isAuto) {
+            }
+            else if (isDate || isColumn) {
                 const type = it.type.visit(expression_1.expressionVisitor, ``);
                 let opt = `String`;
                 if (isDate) {
-                    opt = 'Date';
+                    opt = "Date";
                 }
-                else if (type === 'number') {
-                    opt = 'Int';
+                else if (type === "number") {
+                    opt = "Int";
                 }
                 input.fields.push(graphql_1.createInputValue(name, type, false, false, dec));
             }
             else if (isRelation) {
                 // 关系
-                const oneToMany = it.getDecorator('OneToMany')(expression_1.expressionVisitor);
-                // console.log({
-                //     oneToMany
-                // })
+                const oneToMany = it.getDecorator("OneToMany")(expression_1.expressionVisitor);
                 if (it.type instanceof ast.TypeReferenceNode) {
                     const createName = this.createName(it.type, this.context);
                     if (createName) {
@@ -60,7 +70,7 @@ class PartialCreater extends baseCreater_1.BaseCreater {
                     }
                 }
                 else {
-                    console.log(it.type);
+                    console.log(`createClassDeclaration`);
                 }
             }
         });

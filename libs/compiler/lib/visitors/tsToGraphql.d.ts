@@ -12,10 +12,10 @@ export declare class Handler {
     constructor(visitor: TsToGraphqlVisitor);
     Promise(node: ast.TypeReferenceNode | ast.TypeAliasDeclaration, context: any): graphql.NamedTypeAst<any, any> | graphql.ListTypeAst<any, any> | graphql.NonNullTypeAst<any, any> | undefined;
     Observable(node: ast.TypeReferenceNode | ast.TypeAliasDeclaration, context: any): graphql.NamedTypeAst<any, any> | graphql.ListTypeAst<any, any> | graphql.NonNullTypeAst<any, any> | undefined;
-    Order(node: ast.TypeReferenceNode | ast.TypeAliasDeclaration, context: any): graphql.NameAst<any, any> | graphql.NamedTypeAst<any, any> | undefined;
-    Partial(node: ast.TypeReferenceNode | ast.TypeAliasDeclaration, context: any): graphql.NameAst<any, any> | graphql.NamedTypeAst<any, any> | undefined;
-    Simple(node: ast.TypeReferenceNode | ast.TypeAliasDeclaration, context: any): graphql.NameAst<any, any> | graphql.NamedTypeAst<any, any> | undefined;
-    Where(node: ast.TypeReferenceNode | ast.TypeAliasDeclaration, context: any): graphql.NameAst<any, any> | graphql.NamedTypeAst<any, any> | undefined;
+    Order(node: ast.TypeReferenceNode | ast.TypeAliasDeclaration, context: any): graphql.NamedTypeAst<any, any> | graphql.NameAst<any, any> | undefined;
+    Partial(node: ast.TypeReferenceNode | ast.TypeAliasDeclaration, context: any): graphql.NamedTypeAst<any, any> | graphql.NameAst<any, any> | undefined;
+    Simple(node: ast.TypeReferenceNode | ast.TypeAliasDeclaration, context: any): graphql.NamedTypeAst<any, any> | graphql.NameAst<any, any> | undefined;
+    Where(node: ast.TypeReferenceNode | ast.TypeAliasDeclaration, context: any): graphql.NamedTypeAst<any, any> | graphql.NameAst<any, any> | undefined;
 }
 interface Metadata {
     name: string;

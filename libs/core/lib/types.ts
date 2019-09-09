@@ -16,10 +16,11 @@ export type Bytes = number[];
 export type Empty = {};
 
 export type DeepPartial<T> = { [P in keyof T]?: DeepPartial<T[P]> };
+export type Simple<T> = { [P in keyof T]?: T[P] };
 
 export type Order<T> = { [P in keyof T]?: "ASC" | "DESC" };
 export type Where<T> = {
-    [key: string]: any;
+  [key: string]: any;
 };
 
 export type ID = string | number;

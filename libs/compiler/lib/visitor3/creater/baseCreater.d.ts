@@ -1,6 +1,6 @@
-import * as ast from '../../visitors/visitor';
-import { MagnusContext } from '../../visitors/magnus';
-import { CollectionContext } from '../../visitors/collection';
+import * as ast from "../../visitors/visitor";
+import { MagnusContext } from "../../visitors/magnus";
+import { CollectionContext } from "../../visitors/collection";
 export declare abstract class BaseCreater {
     name: string;
     collection: CollectionContext;

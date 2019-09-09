@@ -17,6 +17,9 @@ export declare type Empty = {};
 export declare type DeepPartial<T> = {
     [P in keyof T]?: DeepPartial<T[P]>;
 };
+export declare type Simple<T> = {
+    [P in keyof T]?: T[P];
+};
 export declare type Order<T> = {
     [P in keyof T]?: "ASC" | "DESC";
 };
