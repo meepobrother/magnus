@@ -17,7 +17,7 @@ export declare class CoreFile {
     private __getByNameFromModule;
     private __getByNameFromNamespaceDeclaration;
     private __getByNameFromNamespaceBody;
-    getByName(name: string): ast.ClassDeclaration | ast.ImportDeclaration | ast.VariableStatement | ast.FunctionDeclaration | ast.InterfaceDeclaration | ast.EnumDeclaration | ast.TypeAliasDeclaration | ast.ReturnStatement | ast.IfStatement | ast.SwitchStatement | ast.ForOfStatement | ast.ForInStatement | ast.FunctionBody | ast.ExpressionStatement | ast.BreakStatement | ast.ThrowStatement | ast.DebuggerStatement | ast.ExportDeclaration | ast.ExportAssignment | ast.EmptyStatement | ast.ConditionalExpression | ast.RegularExpressionLiteral | ast.TaggedTemplateExpression | ast.TryStatement | ast.ImportEqualsDeclaration | ast.OtherStatement | undefined;
+    getByName(name: string): ast.ExportAssignment | ast.ExportDeclaration | ast.ImportDeclaration | ast.VariableStatement | ast.FunctionDeclaration | ast.ClassDeclaration | ast.InterfaceDeclaration | ast.EnumDeclaration | ast.TypeAliasDeclaration | ast.ReturnStatement | ast.IfStatement | ast.SwitchStatement | ast.ForOfStatement | ast.ForInStatement | ast.FunctionBody | ast.ExpressionStatement | ast.BreakStatement | ast.ThrowStatement | ast.DebuggerStatement | ast.EmptyStatement | ast.ConditionalExpression | ast.RegularExpressionLiteral | ast.TaggedTemplateExpression | ast.TryStatement | ast.ImportEqualsDeclaration | ast.OtherStatement | undefined;
 }
 export declare class ExportFinderVisitor implements ast.Visitor {
     name: string;

@@ -1,2 +1,3 @@
 import { GraphQLScalarType } from 'graphql';
-export declare const Json: GraphQLScalarType;
+declare const _default: GraphQLScalarType;
+export default _default;
