@@ -60,7 +60,6 @@ export async function createPeerInfo(root: string) {
 export async function createNode(config: MagnusConfig, callback: any) {
   console.log(`欢迎使用 magnus@${pack.version}`);
   const { peerInfo } = await createPeerInfo(config.root);
-  // return node;
   return new Promise<any>((resolve, reject) => {
     const node = new MyBundle({
       peerInfo
@@ -71,10 +70,8 @@ export async function createNode(config: MagnusConfig, callback: any) {
         config.host = ``;
         node.peerInfo.multiaddrs.forEach((ma: any) => {
           const options: { host: string } = ma.toOptions();
-          // console.log(ma.toString())
           if (options.host.startsWith("127")) {
             // 本地
-            // config.host = options.host;
           } else if (options.host.startsWith("192")) {
             if (!config.host.startsWith("192")) {
               config.host = options.host;
@@ -84,11 +81,8 @@ export async function createNode(config: MagnusConfig, callback: any) {
           } else if (options.host.startsWith("170")) {
             config.host = options.host;
           } else {
-            // 外网
-            // config.host = options.host;
           }
         });
-        // writeFileSync(join(config.root, 'magnus.json'), JSON.stringify(config, null, 2))
         resolve(node);
       });
     }
@@ -96,23 +90,18 @@ export async function createNode(config: MagnusConfig, callback: any) {
       callback(peer);
     });
     node.on("peer:disconnect", (peer: any) => {
-      // console.log(`同事下线 %s`, peer.id.toB58String())
     });
     node.on("connection:start", (peer: any) => {
-      // console.log(`connection:start`)
     });
     node.on("connection:end", (peer: any) => {
-      // console.log(`connection:end`)
     });
     node.on(`error`, () => {
-      // console.log(`error`)
     });
     node.on("peer:discovery", async (peer: any) => {
       const peerId = peerInfo.id.toB58String();
       if (peerId !== peer.id.toB58String()) {
         if (!set.has(peer.id.toB58String())) {
           set.add(peer.id.toB58String());
-          console.log(`发现新同事(${set.size}): ${peer.id.toB58String()}`);
         }
       }
     });

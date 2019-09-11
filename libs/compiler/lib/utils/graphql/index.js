@@ -77,9 +77,7 @@ function createTypeNode(type, isList, isNonNull) {
         namedType = createListType(createTypeByName(type.elementType));
     }
     else {
-        console.log({
-            type
-        });
+        namedType = createTypeByName(type.value);
     }
     if (isList) {
         namedType = createListType(namedType);

@@ -70,9 +70,7 @@ export function createTypeNode(type: any, isList: boolean, isNonNull: boolean) {
             )
         )
     } else {
-        console.log({
-            type
-        })
+        namedType = createTypeByName(type.value);
     }
     if (isList) {
         namedType = createListType(namedType)
