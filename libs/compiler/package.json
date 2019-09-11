@@ -1,6 +1,6 @@
 {
   "name": "@notadd/magnus",
-  "version": "3.6.1",
+  "version": "3.6.2",
   "description": "> TODO: description",
   "author": "imeepos <1037483576@qq.com>",
   "homepage": "https://github.com/notadd/magnus/tree/master/libs/compiler#readme",
@@ -43,7 +43,7 @@
     "@nodeutils/defaults-deep": "^1.1.0",
     "@notadd/codegen-nest-client": "^3.6.1",
     "@notadd/magnus-core": "^3.6.1",
-    "@notadd/magnus-graphql": "^3.6.1",
+    "@notadd/magnus-graphql": "^3.6.2",
     "@notadd/magnus-grpc": "^3.6.1",
     "chokidar": "^3.0.2",
     "commander": "^2.20.0",
