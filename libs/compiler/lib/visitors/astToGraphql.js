@@ -72,6 +72,9 @@ class AstToGraphqlVisitor {
         node.contexts.map(ctx => {
             ctx.querys.forEach(query => {
                 const entities = query.getEntities();
+                if (query.name === 'departmentList') {
+                    console.log(query.name);
+                }
                 if (entities.length > 0) {
                     entities.map(entity => {
                         query.currentEntity = entity;
@@ -95,7 +98,7 @@ class AstToGraphqlVisitor {
                                 }
                             }
                             if (existIndex > -1) {
-                                querys.splice(existIndex, 1, ast);
+                                // querys.splice(existIndex, 1, ast);
                             }
                             else {
                                 querys.push(ast);
@@ -143,7 +146,7 @@ class AstToGraphqlVisitor {
                                 }
                             }
                             if (existIndex > -1) {
-                                mutations.splice(existIndex, 1, ast);
+                                // mutations.splice(existIndex, 1, ast);
                             }
                             else {
                                 mutations.push(ast);
@@ -158,7 +161,7 @@ class AstToGraphqlVisitor {
                     if (ast) {
                         const existIndex = mutations.findIndex(q => q.name.value === ast.name.value);
                         if (existIndex > -1) {
-                            // mutations.splice(existIndex, 1, ast);
+                            mutations.splice(existIndex, 1, ast);
                         }
                         else {
                             mutations.push(ast);
@@ -176,7 +179,7 @@ class AstToGraphqlVisitor {
                         if (ast) {
                             const existIndex = subscriptions.findIndex(q => q.name.value === ast.name.value);
                             if (existIndex > -1) {
-                                subscriptions.splice(existIndex, 1, ast);
+                                // subscriptions.splice(existIndex, 1, ast);
                             }
                             else {
                                 subscriptions.push(ast);

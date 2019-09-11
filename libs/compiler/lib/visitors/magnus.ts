@@ -201,7 +201,7 @@ export class MagnusVisitor implements ast.Visitor {
         const entity = node.getDecorator<MagnusOptions>("Entity")(
             expressionVisitor
         );
-        if (resolver !== null) {
+        if (resolver !== null || controller !== null || entity !== null) {
             const ctx = new MagnusTopContext();
             ctx.entities = [];
             ctx.node = node;
@@ -231,16 +231,6 @@ export class MagnusVisitor implements ast.Visitor {
                 this.manager.addContext(ctx);
                 return ctx;
             }
-        }
-        if (entity !== null) {
-            const ctx = new MagnusTopContext();
-            ctx.entities = [];
-            ctx.node = node;
-            ctx.name = node.name.visit(expressionVisitor, ``);
-            node.typeParameters.map(type => type.visit(this, ctx));
-            node.members.map(member => member.visit(this, ctx));
-            this.manager.addContext(ctx);
-            return ctx;
         }
     }
     isNull(val: any): val is null {
@@ -306,8 +296,9 @@ export class MagnusVisitor implements ast.Visitor {
         query: MagnusOptions | undefined,
         type: "query" | "mutation" | "subscription" | "proto" | "entity"
     ) {
-        const ctx = context.addChild(node.name.visit(expressionVisitor, ``), type);
-        ctx.name = node.name.visit(expressionVisitor, ``);
+        const name = node.name.visit(expressionVisitor, ``)
+        const ctx = context.addChild(name, type);
+        ctx.name = name;
         ctx.params = query;
         if (query) {
             ctx.entities = query.entities || [];

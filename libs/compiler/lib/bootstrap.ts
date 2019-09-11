@@ -62,7 +62,7 @@ export async function bootstrap(config: MagnusConfig) {
                 }
             });
             // 处理class
-            collectionContext.classes
+            const classes = collectionContext.classes
                 .map(cls => magnus.visitClassDeclaration(cls, collectionContext))
                 .filter(item => !!item);
             const astToGraphqlVisitor = new AstToGraphqlVisitor();
@@ -72,7 +72,6 @@ export async function bootstrap(config: MagnusConfig) {
             );
             const documentAstJson = toJson(documentAst);
             const content = print(documentAstJson);
-            
             // 搜集metadata entity数据库 类名 依赖名
             if (isServer) {
                 writeFileSync(join(assets, `magnus.server.graphql`), content);
