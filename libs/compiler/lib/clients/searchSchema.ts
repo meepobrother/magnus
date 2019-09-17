@@ -1,7 +1,5 @@
 import { SFSchema } from '@delon/form';
 
-
-
 interface CreateSearchSchema {
     type?: string;
 }
