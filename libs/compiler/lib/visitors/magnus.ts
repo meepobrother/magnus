@@ -212,15 +212,17 @@ export class MagnusVisitor implements ast.Visitor {
             return ctx;
         }
         if (magnus !== null) {
-            if (magnus) {
-                const ctx = new MagnusTopContext();
-                ctx.entities = magnus.entities || [];
-                ctx.node = node;
-                ctx.name = node.name.visit(expressionVisitor, ``);
-                node.typeParameters.map(type => type.visit(this, ctx));
-                node.members.map(member => member.visit(this, ctx));
-                this.manager.addContext(ctx);
-                return ctx;
+            if (magnus && Array.isArray(magnus.entities)) {
+                if (magnus.entities.length > 0) {
+                    const ctx = new MagnusTopContext();
+                    ctx.entities = magnus.entities || [];
+                    ctx.node = node;
+                    ctx.name = node.name.visit(expressionVisitor, ``);
+                    node.typeParameters.map(type => type.visit(this, ctx));
+                    node.members.map(member => member.visit(this, ctx));
+                    this.manager.addContext(ctx);
+                    return ctx;
+                }
             } else {
                 const ctx = new MagnusTopContext();
                 ctx.entities = [];

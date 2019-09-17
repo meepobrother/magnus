@@ -22,6 +22,8 @@
 	"homepage": "https://github.com/notadd/magnus#readme",
 	"dependencies": {
 		"@angular/core": "^8.1.0",
+		"@delon/abc": "^8.4.0",
+		"@delon/form": "^8.4.0",
 		"@graphql-codegen/add": "^1.6.1",
 		"@graphql-codegen/cli": "^1.6.1",
 		"@graphql-codegen/core": "^1.6.1",
