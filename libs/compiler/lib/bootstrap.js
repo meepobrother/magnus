@@ -60,7 +60,6 @@ async function bootstrap(config) {
                 .filter(item => !!item);
             const astToGraphqlVisitor = new astToGraphql_1.AstToGraphqlVisitor();
             const documentAst = astToGraphqlVisitor.visitContextManager(manager, collectionContext);
-            // 这里生成客户端使用的对应的graphql
             const apiVisitor = new api_1.ApiVisitor();
             if (documentAst.definitions.length > 17) {
                 documentAst.visit(apiVisitor, {});
