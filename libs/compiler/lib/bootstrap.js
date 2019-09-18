@@ -60,6 +60,21 @@ async function bootstrap(config) {
                 .filter(item => !!item);
             const astToGraphqlVisitor = new astToGraphql_1.AstToGraphqlVisitor();
             const documentAst = astToGraphqlVisitor.visitContextManager(manager, collectionContext);
+            const documentAstJson = magnus_graphql_1.toJson(documentAst);
+            const content = graphql_1.print(documentAstJson);
+            // 搜集metadata entity数据库 类名 依赖名
+            if (isServer) {
+                fs_extra_1.writeFileSync(path_1.join(assets, `magnus.server.graphql`), content);
+                const metadataContent = JSON.stringify(astToGraphqlVisitor.tsToGraphqlVisitor.def, null, 2);
+                fs_extra_1.writeFileSync(path_1.join(assets, `magnus.metadata.json`), metadataContent);
+                const serverContent = JSON.stringify(documentAstJson, null, 2);
+                fs_extra_1.writeFileSync(path_1.join(assets, `magnus.server.json`), serverContent);
+            }
+            else {
+                const content = JSON.stringify(documentAstJson, null, 2);
+                fs_extra_1.writeFileSync(path_1.join(assets, `magnus.json`), content);
+            }
+            // 这里生成客户端使用的对应的graphql
             const apiVisitor = new api_1.ApiVisitor();
             if (documentAst.definitions.length > 17) {
                 documentAst.visit(apiVisitor, {});
