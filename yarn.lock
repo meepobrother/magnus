@@ -2,6 +2,13 @@
 # yarn lockfile v1
 
 
+"@angular/animations@^8.2.6":
+  version "8.2.6"
+  resolved "https://registry.yarnpkg.com/@angular/animations/-/animations-8.2.6.tgz#f453493c2dd88294911fb1e32a659606621226f2"
+  integrity sha512-beakpSjzF+bP2jCDmeGHwSim04u9x1Uf3dCFAj1CqRwJGb8POpUA1KlnGrEm2pzWzHKVqQH6VQ+8uGPLl17PFA==
+  dependencies:
+    tslib "^1.9.0"
+
 "@angular/cdk@^8.0.0":
   version "8.2.0"
   resolved "https://registry.yarnpkg.com/@angular/cdk/-/cdk-8.2.0.tgz#fe183aaf9907421086e413a80af6ec0995983a9d"
@@ -11,10 +18,38 @@
   optionalDependencies:
     parse5 "^5.0.0"
 
+"@angular/common@^8.2.6":
+  version "8.2.6"
+  resolved "https://registry.yarnpkg.com/@angular/common/-/common-8.2.6.tgz#21d2479875c149ac6b3e0ddc351f14bb6ff01687"
+  integrity sha512-OlU3LCPShHJEsOHS+qczY52P0kWtjJD8N7NDHaGMB6Xp8GMgItjQIeeO6yf8DJyaCIC4qk4G7jPdnQk6IE1SbQ==
+  dependencies:
+    tslib "^1.9.0"
+
 "@angular/core@^8.1.0":
   version "8.1.0"
   resolved "https://registry.yarnpkg.com/@angular/core/-/core-8.1.0.tgz#68bc170b4c041e3c19b9a17c0fff74b88fb37aae"
   integrity sha512-GviWJjOu6LJMYNbukdSK35VaXvSrp5LTNd0FbXoBQF+mhVVV/8cG4hTKKjxG1xwWXI5E1t5U4aUKXrKUNJ1sQg==
+  dependencies:
+    tslib "^1.9.0"
+
+"@angular/forms@^8.2.6":
+  version "8.2.6"
+  resolved "https://registry.yarnpkg.com/@angular/forms/-/forms-8.2.6.tgz#b0dad08073cded208bf4b5b857b396ba32527038"
+  integrity sha512-sYUspJYJGq0OaBuxgdUXPf0TwYyED9OVWNCl9jDJCW//2NAbrZG8BSujvV54Dtg2emY1Uc7EFyQ8Wc8yxS7KSg==
+  dependencies:
+    tslib "^1.9.0"
+
+"@angular/platform-browser@^8.2.6":
+  version "8.2.6"
+  resolved "https://registry.yarnpkg.com/@angular/platform-browser/-/platform-browser-8.2.6.tgz#f22419e41ac20a17fb7c9ca8bfd40122dd877d5b"
+  integrity sha512-wUgcdTXItforNA+6qykPL9SDmV1uSIUQcEZrm3YCoVt7CuwMav3dq9Lg1zZ7HKv0A8It0fAKpXBkamzpRxvZEw==
+  dependencies:
+    tslib "^1.9.0"
+
+"@angular/router@^8.2.6":
+  version "8.2.6"
+  resolved "https://registry.yarnpkg.com/@angular/router/-/router-8.2.6.tgz#b08883950ab580d02fd491729d60e091f8363529"
+  integrity sha512-XAqhrPbU+z/ztf2b0VxFytHPJRpWfhnhCJ2qf9Tie1Cov6zOlgIKInOSF+WtsFEUZAnwSbAfGk4KSXrwBWw8zA==
   dependencies:
     tslib "^1.9.0"
 

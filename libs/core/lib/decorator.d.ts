@@ -9,6 +9,7 @@ export interface MagnusOptions {
 export declare const Magnus: (options?: MagnusOptions | undefined) => (...args: any[]) => void;
 /**
  * module 相关参数
+ * 暂时无用
  */
 export interface ModuleWithProviders<T = any> {
     ngModule: Type<T>;
@@ -60,10 +61,12 @@ export declare const Subscription: (options?: MagnusOptions | undefined) => (...
  * inject
  * @param type 依赖注入
  * 简单依赖注入，只支持全局
+ * 暂时无用
  */
 export declare const Inject: (type?: Type<any> | undefined) => (...args: any[]) => void;
 /**
  * 可注入的对象
+ * 暂时无用
  * @param type
  */
 export interface InjectableOptions {
