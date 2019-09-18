@@ -21,7 +21,7 @@ export declare class TypeVisitor implements ast.Visitor {
     visitKeywordTypeNode(node: ast.KeywordTypeNode, context: TypeContext): TypeVisitorType;
     visitArrayTypeNode(node: ast.ArrayTypeNode, context: TypeContext): any;
     visitTupleTypeNode(node: ast.TupleTypeNode, context: TypeContext): void;
-    visitUnionTypeNode(node: ast.UnionTypeNode, context: TypeContext): void;
+    visitUnionTypeNode(node: ast.UnionTypeNode, context: TypeContext): any;
     visitFunctionTypeNode(node: ast.FunctionTypeNode, context: TypeContext): void;
     visitMappedTypeNode(node: ast.MappedTypeNode, context: TypeContext): void;
     visitIndexedAccessTypeNode(node: ast.IndexedAccessTypeNode, context: TypeContext): void;

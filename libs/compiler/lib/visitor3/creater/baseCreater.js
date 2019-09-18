@@ -10,6 +10,7 @@ class BaseCreater {
         this.name = name;
     }
     createName(node, context) {
+        this.context = context;
         if (node instanceof ast.TypeReferenceNode) {
             let type = asts_1.createTypeNode(node, context);
             const currentType = asts_1.findCurrentEntity(type);
@@ -28,10 +29,13 @@ class BaseCreater {
                     }
                     type = {
                         type: this.name,
-                        typeArguments: [
-                            type,
-                        ]
+                        typeArguments: [type]
                     };
+                }
+                else {
+                    if (type.type === this.name) {
+                        current = type.typeArguments[0].type;
+                    }
                 }
             }
             if (current) {
@@ -45,18 +49,21 @@ class BaseCreater {
                 const nameAst = this.collection.findByName(current);
                 let entity;
                 if (nameAst) {
-                    entity = this.createEntity(name, nameAst, context);
+                    entity = this.createEntity(name, nameAst);
                 }
                 return { name, namedType: graphql_1.createNamedType(name), entity };
             }
         }
     }
-    createEntity(name, node, context) {
+    createEntity(name, node) {
         if (node instanceof ast.ClassDeclaration) {
-            return this.createClassDeclaration(name, node, context);
+            return this.createClassDeclaration(name, node);
         }
-        if (node instanceof ast.InterfaceDeclaration) {
+        else if (node instanceof ast.InterfaceDeclaration) {
             return this.createInterfaceDeclaration(name, node);
+        }
+        else {
+            console.log(`createEntity Error`);
         }
     }
     createInterfaceDeclaration(name, node) {

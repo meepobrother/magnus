@@ -78,6 +78,12 @@ export class WhereCreater extends BaseCreater {
                 createInputValue(name, type, false, false, `${dec} 等于`)
             );
         })
+        input.fields.push(
+            createInputValue("AND", input.name, false, true, ``)
+        );
+        input.fields.push(
+            createInputValue("OR", input.name, false, true, ``)
+        );
         return input;
     }
 

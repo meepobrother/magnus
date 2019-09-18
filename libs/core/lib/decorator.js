@@ -28,6 +28,7 @@ exports.Subscription = (options) => util_1.AnyDecorator;
  * inject
  * @param type 依赖注入
  * 简单依赖注入，只支持全局
+ * 暂时无用
  */
 exports.Inject = (type) => util_1.AnyDecorator;
 exports.Injectable = (options) => util_1.AnyDecorator;

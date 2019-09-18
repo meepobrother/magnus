@@ -64,7 +64,7 @@ export async function bootstrap(config: MagnusConfig) {
                 }
             });
             // 处理class
-            collectionContext.classes
+            const classes = collectionContext.classes
                 .map(cls => magnus.visitClassDeclaration(cls, collectionContext))
                 .filter(item => !!item);
             const astToGraphqlVisitor = new AstToGraphqlVisitor();
@@ -72,6 +72,23 @@ export async function bootstrap(config: MagnusConfig) {
                 manager,
                 collectionContext
             );
+            const documentAstJson = toJson(documentAst);
+            const content = print(documentAstJson);
+            // 搜集metadata entity数据库 类名 依赖名
+            if (isServer) {
+                writeFileSync(join(assets, `magnus.server.graphql`), content);
+                const metadataContent = JSON.stringify(
+                    astToGraphqlVisitor.tsToGraphqlVisitor.def,
+                    null,
+                    2
+                );
+                writeFileSync(join(assets, `magnus.metadata.json`), metadataContent);
+                const serverContent = JSON.stringify(documentAstJson, null, 2);
+                writeFileSync(join(assets, `magnus.server.json`), serverContent);
+            } else {
+                const content = JSON.stringify(documentAstJson, null, 2);
+                writeFileSync(join(assets, `magnus.json`), content);
+            }
             // 这里生成客户端使用的对应的graphql
             const apiVisitor = new ApiVisitor();
             if (documentAst.definitions.length > 17) {

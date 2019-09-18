@@ -175,19 +175,19 @@ class MagnusVisitor {
         const controller = node.getDecorator("Controller")(expression_1.expressionVisitor);
         const magnus = node.getDecorator("Magnus")(expression_1.expressionVisitor);
         const entity = node.getDecorator("Entity")(expression_1.expressionVisitor);
-        if (this.collection.isServer) {
-            if (resolver !== null) {
-                const ctx = new MagnusTopContext();
-                ctx.entities = [];
-                ctx.node = node;
-                ctx.name = node.name.visit(expression_1.expressionVisitor, ``);
-                node.typeParameters.map(type => type.visit(this, ctx));
-                node.members.map(member => member.visit(this, ctx));
-                this.manager.addContext(ctx);
-                return ctx;
-            }
-            if (magnus !== null) {
-                if (magnus) {
+        if (resolver !== null || controller !== null || entity !== null) {
+            const ctx = new MagnusTopContext();
+            ctx.entities = [];
+            ctx.node = node;
+            ctx.name = node.name.visit(expression_1.expressionVisitor, ``);
+            node.typeParameters.map(type => type.visit(this, ctx));
+            node.members.map(member => member.visit(this, ctx));
+            this.manager.addContext(ctx);
+            return ctx;
+        }
+        if (magnus !== null) {
+            if (magnus && Array.isArray(magnus.entities)) {
+                if (magnus.entities.length > 0) {
                     const ctx = new MagnusTopContext();
                     ctx.entities = magnus.entities || [];
                     ctx.node = node;
@@ -197,30 +197,8 @@ class MagnusVisitor {
                     this.manager.addContext(ctx);
                     return ctx;
                 }
-                else {
-                    const ctx = new MagnusTopContext();
-                    ctx.entities = [];
-                    ctx.node = node;
-                    ctx.name = node.name.visit(expression_1.expressionVisitor, ``);
-                    node.typeParameters.map(type => type.visit(this, ctx));
-                    node.members.map(member => member.visit(this, ctx));
-                    this.manager.addContext(ctx);
-                    return ctx;
-                }
             }
-            if (entity !== null) {
-                const ctx = new MagnusTopContext();
-                ctx.entities = [];
-                ctx.node = node;
-                ctx.name = node.name.visit(expression_1.expressionVisitor, ``);
-                node.typeParameters.map(type => type.visit(this, ctx));
-                node.members.map(member => member.visit(this, ctx));
-                this.manager.addContext(ctx);
-                return ctx;
-            }
-        }
-        else {
-            if (resolver !== null || controller !== null) {
+            else {
                 const ctx = new MagnusTopContext();
                 ctx.entities = [];
                 ctx.node = node;
@@ -271,8 +249,9 @@ class MagnusVisitor {
         }
     }
     registe(node, context, query, type) {
-        const ctx = context.addChild(node.name.visit(expression_1.expressionVisitor, ``), type);
-        ctx.name = node.name.visit(expression_1.expressionVisitor, ``);
+        const name = node.name.visit(expression_1.expressionVisitor, ``);
+        const ctx = context.addChild(name, type);
+        ctx.name = name;
         ctx.params = query;
         if (query) {
             ctx.entities = query.entities || [];

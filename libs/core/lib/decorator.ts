@@ -10,6 +10,7 @@ export interface MagnusOptions {
 export const Magnus = (options?: MagnusOptions) => AnyDecorator;
 /**
  * module 相关参数
+ * 暂时无用
  */
 export interface ModuleWithProviders<T = any> {
   ngModule: Type<T>;
@@ -63,10 +64,12 @@ export const Subscription = (options?: MagnusOptions) => AnyDecorator;
  * inject
  * @param type 依赖注入
  * 简单依赖注入，只支持全局
+ * 暂时无用
  */
 export const Inject = (type?: Type<any>) => AnyDecorator;
 /**
  * 可注入的对象
+ * 暂时无用
  * @param type
  */
 export interface InjectableOptions {

@@ -1,2 +1,2 @@
-export interface MagnusV1Config {
-}
+#!/usr/bin/env node
+export {};

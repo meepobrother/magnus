@@ -108,7 +108,27 @@ export class TypeVisitor implements ast.Visitor {
     visitTupleTypeNode(node: ast.TupleTypeNode, context: TypeContext) {
         throw new Error(`can not support TupleTypeNode`);
     }
-    visitUnionTypeNode(node: ast.UnionTypeNode, context: TypeContext) {
+    visitUnionTypeNode(node: ast.UnionTypeNode, context: TypeContext): any {
+        console.log(node.types)
+        if (node.types.length === 2) {
+            const hasUndefined = !!node.types.find(type => {
+                if (type instanceof ast.KeywordTypeNode) {
+                    return type.name === 'undefined'
+                }
+                return false;
+            })
+            if (hasUndefined) {
+                const type = node.types.find(type => {
+                    if (type instanceof ast.KeywordTypeNode) {
+                        return type.name !== 'undefined'
+                    }
+                    return true;
+                });
+                if (type) {
+                    return type.visit(this, context)
+                }
+            }
+        }
         throw new Error(`can not support UnionTypeNode`);
     }
     visitFunctionTypeNode(node: ast.FunctionTypeNode, context: TypeContext) {

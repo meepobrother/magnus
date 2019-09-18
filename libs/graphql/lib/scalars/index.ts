@@ -1,8 +1,8 @@
 export * from "./double";
 export * from "./_float";
 export * from "./int32";
-export * from "./json";
+import { JsonObject as Json } from "./json";
 export * from "./timestrap";
 import Date from "./date";
 export { ID } from "./ID";
-export { Date };
+export { Date, Json };

@@ -55,7 +55,7 @@ async function bootstrap(config) {
                 }
             });
             // 处理class
-            collectionContext.classes
+            const classes = collectionContext.classes
                 .map(cls => magnus.visitClassDeclaration(cls, collectionContext))
                 .filter(item => !!item);
             const astToGraphqlVisitor = new astToGraphql_1.AstToGraphqlVisitor();

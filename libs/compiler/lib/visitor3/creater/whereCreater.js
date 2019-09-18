@@ -68,6 +68,8 @@ class WhereCreater extends baseCreater_1.BaseCreater {
             }
             input.fields.push(graphql_1.createInputValue(name, type, false, false, `${dec} 等于`));
         });
+        input.fields.push(graphql_1.createInputValue("AND", input.name, false, true, ``));
+        input.fields.push(graphql_1.createInputValue("OR", input.name, false, true, ``));
         return input;
     }
 }

@@ -65,9 +65,7 @@ export class AstToGraphqlVisitor implements ast.Visitor {
         this.documentAst.definitions.push(this.createScalar(`Timestamp`));
         this.documentAst.definitions.push(this.createScalar(`Date`));
         this.documentAst.definitions.push(this.createScalar(`ID`));
-
         this.protos = {};
-
         /**
          * 新版的magnus算法
          */
@@ -84,6 +82,9 @@ export class AstToGraphqlVisitor implements ast.Visitor {
         node.contexts.map(ctx => {
             ctx.querys.forEach(query => {
                 const entities = query.getEntities();
+                if (query.name === 'departmentList') {
+                    console.log(query.name)
+                }
                 if (entities.length > 0) {
                     entities.map(entity => {
                         query.currentEntity = entity;
@@ -113,7 +114,7 @@ export class AstToGraphqlVisitor implements ast.Visitor {
                                 }
                             }
                             if (existIndex > -1) {
-                                querys.splice(existIndex, 1, ast);
+                                // querys.splice(existIndex, 1, ast);
                             } else {
                                 querys.push(ast);
                             }
@@ -169,7 +170,7 @@ export class AstToGraphqlVisitor implements ast.Visitor {
                                 }
                             }
                             if (existIndex > -1) {
-                                mutations.splice(existIndex, 1, ast);
+                                // mutations.splice(existIndex, 1, ast);
                             } else {
                                 mutations.push(ast);
                             }
@@ -187,7 +188,7 @@ export class AstToGraphqlVisitor implements ast.Visitor {
                             q => q.name.value === ast.name.value
                         );
                         if (existIndex > -1) {
-                            // mutations.splice(existIndex, 1, ast);
+                            mutations.splice(existIndex, 1, ast);
                         } else {
                             mutations.push(ast);
                         }
@@ -209,7 +210,7 @@ export class AstToGraphqlVisitor implements ast.Visitor {
                                 q => q.name.value === ast.name.value
                             );
                             if (existIndex > -1) {
-                                subscriptions.splice(existIndex, 1, ast);
+                                // subscriptions.splice(existIndex, 1, ast);
                             } else {
                                 subscriptions.push(ast);
                             }
@@ -311,7 +312,7 @@ export class AstToGraphqlVisitor implements ast.Visitor {
         this.sourceFile = this.tsToGraphqlVisitor.sourceFile;
         return this.documentAst;
     }
-    
+
     collectCls(node: ts.ClassDeclaration, context: CollectionContext) {
         /**
          * scalar

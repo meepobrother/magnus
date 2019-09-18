@@ -1,5 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const tslib_1 = require("tslib");
+const ast = tslib_1.__importStar(require("../visitors/visitor"));
 class TypeContext {
 }
 exports.TypeContext = TypeContext;
@@ -98,6 +100,26 @@ class TypeVisitor {
         throw new Error(`can not support TupleTypeNode`);
     }
     visitUnionTypeNode(node, context) {
+        console.log(node.types);
+        if (node.types.length === 2) {
+            const hasUndefined = !!node.types.find(type => {
+                if (type instanceof ast.KeywordTypeNode) {
+                    return type.name === 'undefined';
+                }
+                return false;
+            });
+            if (hasUndefined) {
+                const type = node.types.find(type => {
+                    if (type instanceof ast.KeywordTypeNode) {
+                        return type.name !== 'undefined';
+                    }
+                    return true;
+                });
+                if (type) {
+                    return type.visit(this, context);
+                }
+            }
+        }
         throw new Error(`can not support UnionTypeNode`);
     }
     visitFunctionTypeNode(node, context) {

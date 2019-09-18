@@ -100,7 +100,6 @@ async function start() {
             }));
         });
         node.dialProtocol(peer, `/magnus/connection`, function (err, conn) {
-            // pull(pull.values([config.realname || 'fans']), conn)
             bootstrap_1.sendFile(config);
         });
         bootstrap_1.sendFile(config);

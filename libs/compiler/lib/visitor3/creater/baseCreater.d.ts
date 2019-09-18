@@ -1,12 +1,13 @@
-import * as ast from '../../visitors/visitor';
-import { MagnusContext } from '../../visitors/magnus';
-import { CollectionContext } from '../../visitors/collection';
-import { ast as graphql } from '@notadd/magnus-graphql';
+import * as ast from "../../visitors/visitor";
+import { MagnusContext } from "../../visitors/magnus";
+import { CollectionContext } from "../../visitors/collection";
+import { ast as graphql } from "@notadd/magnus-graphql";
 export declare abstract class BaseCreater {
     name: string;
     collection: CollectionContext;
-    documentAst: graphql.DocumentAst;
+    context: MagnusContext;
     hasUsed: Set<string>;
+    documentAst: graphql.DocumentAst;
     constructor(name: string);
     createName(node: ast.TypeReferenceNode, context: MagnusContext): {
         name: never;
@@ -21,7 +22,7 @@ export declare abstract class BaseCreater {
         namedType: graphql.NamedTypeAst<any, any>;
         entity: any;
     } | undefined;
-    createEntity(name: string, node: ast.ClassDeclaration | ast.InterfaceDeclaration, context: MagnusContext): any;
-    abstract createClassDeclaration(name: string, node: ast.ClassDeclaration, context: MagnusContext): any;
+    createEntity(name: string, node: ast.ClassDeclaration | ast.InterfaceDeclaration): any;
+    abstract createClassDeclaration(name: string, node: ast.ClassDeclaration): any;
     createInterfaceDeclaration(name: string, node: ast.InterfaceDeclaration): void;
 }
