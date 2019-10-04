@@ -18,7 +18,6 @@ const globby = require("globby");
 const graphqlToTs_1 = require("./visitors/graphqlToTs");
 const lodash_1 = require("lodash");
 const api_1 = require("./visitors/api");
-const buildApi_1 = require("./buildApi");
 async function bootstrap(config) {
     const target = config.target || "magnus";
     const sources = config.inputs.map(input => path_1.join(config.root, input));
@@ -101,8 +100,24 @@ async function bootstrap(config) {
                         catch (e) {
                             console.log(e.message);
                         }
-                        buildApi_1.buildNgApi(path_1.join(assets, "magnus.server-schema.json"), path_1.join(assets, `magnus.server-api.graphql`), path_1.join(dist, `magnus.server-angular.v${config.version || `1.0.0`}.ts`), config.name);
-                        buildApi_1.buildReactApi(path_1.join(assets, "magnus.server-schema.json"), path_1.join(assets, `magnus.server-api.graphql`), path_1.join(dist, `magnus.server-react.v${config.version || `1.0.0`}.tsx`), config.name);
+                        // buildNgApi(
+                        //     join(assets, "magnus.server-schema.json"),
+                        //     join(assets, `magnus.server-api.graphql`),
+                        //     join(
+                        //         dist,
+                        //         `magnus.server-angular.v${config.version || `1.0.0`}.ts`
+                        //     ),
+                        //     config.name
+                        // );
+                        // buildReactApi(
+                        //     join(assets, "magnus.server-schema.json"),
+                        //     join(assets, `magnus.server-api.graphql`),
+                        //     join(
+                        //         dist,
+                        //         `magnus.server-react.v${config.version || `1.0.0`}.tsx`
+                        //     ),
+                        //     config.name
+                        // );
                         // create ast
                         const parseGraphqlAst = magnus_graphql_1.parse(api);
                         const astToProtoVisitor = new astToProto_1.AstToProtoVisitor();

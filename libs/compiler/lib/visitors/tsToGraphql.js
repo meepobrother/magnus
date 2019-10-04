@@ -388,58 +388,47 @@ class TsToGraphqlVisitor {
         if (context.isQuery) {
             this.def.query = this.def.query || [];
             const item = this.createMetadate(res, context, node);
-            if (context.currentEntity) {
-                this.def.query.push(item);
-                this.query.members.push(this.createMethodSignature(node));
-            }
-            else {
-                const existIndex = this.def.query.findIndex(it => it[0] === item[0]);
-                if (existIndex > -1) {
+            const existIndex = this.def.query.findIndex(it => it[0] === item[0]);
+            if (existIndex > -1) {
+                console.log({
+                    existIndex,
+                    entities: context.entities,
+                    name: context.name
+                });
+                if (context.entities.length === 0) {
                     this.def.query.splice(existIndex, 1, item);
                     this.query.members.splice(existIndex, 1, this.createMethodSignature(node));
                 }
-                else {
-                    this.def.query.push(item);
-                    this.query.members.push(this.createMethodSignature(node));
-                }
+            }
+            else {
+                this.def.query.push(item);
+                this.query.members.push(this.createMethodSignature(node));
             }
         }
         else if (context.isMutation) {
             this.def.mutation = this.def.mutation || [];
             const item = this.createMetadate(res, context, node);
-            if (context.currentEntity) {
-                this.def.mutation.push(item);
-                this.mutation.members.push(this.createMethodSignature(node));
+            const existIndex = this.def.mutation.findIndex(it => it[0] === item[0]);
+            if (existIndex > -1) {
+                this.def.mutation.splice(existIndex, 1, item);
+                this.mutation.members.splice(existIndex, 1, this.createMethodSignature(node));
             }
             else {
-                const existIndex = this.def.mutation.findIndex(it => it[0] === item[0]);
-                if (existIndex > -1) {
-                    this.def.mutation.splice(existIndex, 1, item);
-                    this.mutation.members.splice(existIndex, 1, this.createMethodSignature(node));
-                }
-                else {
-                    this.def.mutation.push(item);
-                    this.mutation.members.push(this.createMethodSignature(node));
-                }
+                this.def.mutation.push(item);
+                this.mutation.members.push(this.createMethodSignature(node));
             }
         }
         else if (context.isSubscription) {
             this.def.subscription = this.def.subscription || [];
             const item = this.createMetadate(res, context, node);
-            if (context.currentEntity) {
-                this.def.subscription.push(item);
-                this.subscription.members.push(this.createMethodSignature(node));
+            const existIndex = this.def.subscription.findIndex(it => it[0] === item[0]);
+            if (existIndex > -1) {
+                this.def.subscription.splice(existIndex, 1, item);
+                this.subscription.members.splice(existIndex, 1, this.createMethodSignature(node));
             }
             else {
-                const existIndex = this.def.subscription.findIndex(it => it[0] === item[0]);
-                if (existIndex > -1) {
-                    this.def.subscription.splice(existIndex, 1, item);
-                    this.subscription.members.splice(existIndex, 1, this.createMethodSignature(node));
-                }
-                else {
-                    this.def.subscription.push(item);
-                    this.subscription.members.push(this.createMethodSignature(node));
-                }
+                this.def.subscription.push(item);
+                this.subscription.members.push(this.createMethodSignature(node));
             }
         }
         else if (context.isProto) {

@@ -13,7 +13,7 @@ export declare class CollectionContext {
     addTypeAliasDeclaration(node: ast.TypeAliasDeclaration): void;
     addEnumDeclaration(node: ast.EnumDeclaration): void;
     addVariableStatement(node: ast.VariableStatement): void;
-    findByName(name: string): ast.TypeAliasDeclaration | ast.InterfaceDeclaration | ast.EnumDeclaration | ast.ClassDeclaration | undefined;
+    findByName(name: string): ast.InterfaceDeclaration | ast.ClassDeclaration | ast.TypeAliasDeclaration | ast.EnumDeclaration | undefined;
     findInterfaceByName(name: string): ast.InterfaceDeclaration | undefined;
     findTypeByName(name: string): ast.TypeAliasDeclaration | undefined;
     findClassByName(name: string): ast.ClassDeclaration | undefined;
@@ -24,6 +24,7 @@ export declare class CollectionVisitor implements ast.Visitor {
     visitSourceFile(node: ast.SourceFile, context: CollectionContext): void;
     visitImportDeclaration(node: ast.ImportDeclaration, context: CollectionContext): void;
     visitVariableStatement(node: ast.VariableStatement, context: CollectionContext): void;
+    visitOtherStatement(node: ast.OtherStatement, context: CollectionContext): void;
     visitInterfaceDeclaration(node: ast.InterfaceDeclaration, context: CollectionContext): void;
     visitClassDeclaration(node: ast.ClassDeclaration, context: CollectionContext): void;
     visitTypeAliasDeclaration(node: ast.TypeAliasDeclaration, context: CollectionContext): void;

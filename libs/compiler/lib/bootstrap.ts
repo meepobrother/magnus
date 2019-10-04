@@ -118,24 +118,24 @@ export async function bootstrap(config: MagnusConfig) {
                         } catch (e) {
                             console.log(e.message);
                         }
-                        buildNgApi(
-                            join(assets, "magnus.server-schema.json"),
-                            join(assets, `magnus.server-api.graphql`),
-                            join(
-                                dist,
-                                `magnus.server-angular.v${config.version || `1.0.0`}.ts`
-                            ),
-                            config.name
-                        );
-                        buildReactApi(
-                            join(assets, "magnus.server-schema.json"),
-                            join(assets, `magnus.server-api.graphql`),
-                            join(
-                                dist,
-                                `magnus.server-react.v${config.version || `1.0.0`}.tsx`
-                            ),
-                            config.name
-                        );
+                        // buildNgApi(
+                        //     join(assets, "magnus.server-schema.json"),
+                        //     join(assets, `magnus.server-api.graphql`),
+                        //     join(
+                        //         dist,
+                        //         `magnus.server-angular.v${config.version || `1.0.0`}.ts`
+                        //     ),
+                        //     config.name
+                        // );
+                        // buildReactApi(
+                        //     join(assets, "magnus.server-schema.json"),
+                        //     join(assets, `magnus.server-api.graphql`),
+                        //     join(
+                        //         dist,
+                        //         `magnus.server-react.v${config.version || `1.0.0`}.tsx`
+                        //     ),
+                        //     config.name
+                        // );
                         // create ast
                         const parseGraphqlAst = parse(api);
                         const astToProtoVisitor = new AstToProtoVisitor();

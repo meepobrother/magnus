@@ -68,6 +68,8 @@ class CollectionVisitor {
     visitVariableStatement(node, context) {
         context.addVariableStatement(node);
     }
+    visitOtherStatement(node, context) {
+    }
     visitInterfaceDeclaration(node, context) {
         context.addInterfaceDeclaration(node);
     }
