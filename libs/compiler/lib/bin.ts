@@ -22,6 +22,8 @@ if (program.config) {
 }
 config.root = root;
 config.debug = !!program.watch;
+config.host = config.host || 'localhost';
+config.port = typeof config.port === 'string' ? process.env[`${config.port}`] as any : config.port;
 async function start() {
     const node: any = await createNode(config, (peer: any) => {
         node.handle(`/magnus/connection`, (protocol: any, conn: any) => {

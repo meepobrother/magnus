@@ -24,6 +24,8 @@ else {
 }
 config.root = root;
 config.debug = !!program.watch;
+config.host = config.host || 'localhost';
+config.port = typeof config.port === 'string' ? process.env[`${config.port}`] : config.port;
 async function start() {
     const node = await p2p_1.createNode(config, (peer) => {
         node.handle(`/magnus/connection`, (protocol, conn) => {

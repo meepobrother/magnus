@@ -71,25 +71,7 @@ async function createNode(config, callback) {
         if (!isStarted) {
             node.start(() => {
                 config.host = ``;
-                node.peerInfo.multiaddrs.forEach((ma) => {
-                    const options = ma.toOptions();
-                    if (options.host.startsWith("127")) {
-                        // 本地
-                    }
-                    else if (options.host.startsWith("192")) {
-                        if (!config.host.startsWith("192")) {
-                            config.host = options.host;
-                        }
-                    }
-                    else if (options.host.startsWith("10")) {
-                        config.host = options.host;
-                    }
-                    else if (options.host.startsWith("170")) {
-                        config.host = options.host;
-                    }
-                    else {
-                    }
-                });
+                node.peerInfo.multiaddrs.forEach((ma) => { });
                 resolve(node);
             });
         }

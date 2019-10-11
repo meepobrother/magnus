@@ -100,25 +100,6 @@ async function bootstrap(config) {
                         catch (e) {
                             console.log(e.message);
                         }
-                        // buildNgApi(
-                        //     join(assets, "magnus.server-schema.json"),
-                        //     join(assets, `magnus.server-api.graphql`),
-                        //     join(
-                        //         dist,
-                        //         `magnus.server-angular.v${config.version || `1.0.0`}.ts`
-                        //     ),
-                        //     config.name
-                        // );
-                        // buildReactApi(
-                        //     join(assets, "magnus.server-schema.json"),
-                        //     join(assets, `magnus.server-api.graphql`),
-                        //     join(
-                        //         dist,
-                        //         `magnus.server-react.v${config.version || `1.0.0`}.tsx`
-                        //     ),
-                        //     config.name
-                        // );
-                        // create ast
                         const parseGraphqlAst = magnus_graphql_1.parse(api);
                         const astToProtoVisitor = new astToProto_1.AstToProtoVisitor();
                         astToProtoVisitor.config = config;
