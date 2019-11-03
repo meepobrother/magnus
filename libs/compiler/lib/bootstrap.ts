@@ -92,43 +92,43 @@ export async function bootstrap(config: MagnusConfig) {
             const apiVisitor = new ApiVisitor();
             if (documentAst.definitions.length > 17) {
                 documentAst.visit(apiVisitor, {});
-                let api = ``;
-                if (apiVisitor.query) {
-                    apiVisitor.query.list.map((li: string) => (api += `${li}\n`));
-                }
-                if (apiVisitor.mutation) {
-                    apiVisitor.mutation.list.map((li: string) => (api += `${li}\n`));
-                }
-                if (apiVisitor.subscription) {
-                    apiVisitor.subscription.list.map((li: string) => (api += `${li}\n`));
-                }
+                // let api = ``;
+                // if (apiVisitor.query) {
+                //     apiVisitor.query.list.map((li: string) => (api += `${li}\n`));
+                // }
+                // if (apiVisitor.mutation) {
+                //     apiVisitor.mutation.list.map((li: string) => (api += `${li}\n`));
+                // }
+                // if (apiVisitor.subscription) {
+                //     apiVisitor.subscription.list.map((li: string) => (api += `${li}\n`));
+                // }
                 const res = toJson(documentAst);
-                if (api.length > 0) {
-                    if (isServer) {
-                        const content = print(res);
-                        writeFileSync(join(assets, `magnus.server.graphql`), content);
-                        writeFileSync(join(assets, `magnus.server-api.graphql`), api);
-                        try {
-                            const schema = buildASTSchema(res);
-                            writeFileSync(
-                                join(assets, "magnus.server-schema.json"),
-                                JSON.stringify(introspectionFromSchema(schema), null, 2)
-                            );
-                        } catch (e) {
-                            console.log(e.message);
-                        }
-                        const parseGraphqlAst = parse(api);
-                        const astToProtoVisitor = new AstToProtoVisitor();
-                        astToProtoVisitor.config = config;
-                        const proto = parseGraphqlAst.visit(
-                            astToProtoVisitor,
-                            collectionContext
+                // if (api.length > 0) {
+                if (isServer) {
+                    const content = print(res);
+                    writeFileSync(join(assets, `magnus.server.graphql`), content);
+                    // writeFileSync(join(assets, `magnus.server-api.graphql`), api);
+                    try {
+                        const schema = buildASTSchema(res);
+                        writeFileSync(
+                            join(assets, "magnus.server-schema.json"),
+                            JSON.stringify(introspectionFromSchema(schema), null, 2)
                         );
-                        const protoAst = new grpcAst.ParseVisitor();
-                        const protoStr = proto.visit(protoAst, ``);
-                        writeFileSync(join(assets, `magnus.proto`), protoStr);
+                    } catch (e) {
+                        console.log(e.message);
                     }
+                    // const parseGraphqlAst = parse(api);
+                    // const astToProtoVisitor = new AstToProtoVisitor();
+                    // astToProtoVisitor.config = config;
+                    // const proto = parseGraphqlAst.visit(
+                    //     astToProtoVisitor,
+                    //     collectionContext
+                    // );
+                    // const protoAst = new grpcAst.ParseVisitor();
+                    // const protoStr = proto.visit(protoAst, ``);
+                    // writeFileSync(join(assets, `magnus.proto`), protoStr);
                 }
+                // }
                 // 搜集metadata entity数据库 类名 依赖名
                 if (isServer) {
                     const metadataContent = JSON.stringify(
@@ -213,26 +213,18 @@ export const ${camelCase(config.name)}Options: any = {
                         JSON.stringify(entities, null, 2)
                     );
                 } else {
-                    const permissions = astToGraphqlVisitor.tsToGraphqlVisitor.permission;
-                    if (Object.keys(permissions).length > 0) {
-                        writeFileSync(
-                            join(assets, `magnus.permission.json`),
-                            JSON.stringify(permissions, null, 2)
-                        );
-                    }
+                    // const permissions = astToGraphqlVisitor.tsToGraphqlVisitor.permission;
+                    // if (Object.keys(permissions).length > 0) {
+                    //     writeFileSync(
+                    //         join(assets, `magnus.permission.json`),
+                    //         JSON.stringify(permissions, null, 2)
+                    //     );
+                    // }
                 }
-                writeFileSync(
-                    join(assets, `ip.txt`),
-                    `${config.name}前端接口:${config.host}${
-                    config.port ? `:${config.port}` : ""
-                    }`
-                );
                 writeFileSync(
                     join(dist, `api-url.v${config.version}.ts`),
                     `export const apiConfig = {
-  apiUrl: 'http://${config.host}${
-                    config.port ? `:${config.port}` : ""
-                    }/graphql',
+  apiUrl: \`http://\${process.env.${config.hostEnv}}:\${process.env.${config.port}}/graphql\`,
   name: '${config.name}'
 };`
                 );
