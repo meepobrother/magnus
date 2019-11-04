@@ -179,14 +179,3 @@ export class Controller<T> extends MagnusBase<T> {
 
 }
 ```
-
-
-## 使用 编写client.graphql 自动生成对应client.ts文件函数
-```graphql
-query getUser($user: UserInput!){
-    getUser(entity: $user){
-        id,
-        nickname
-    }
-}
-```
