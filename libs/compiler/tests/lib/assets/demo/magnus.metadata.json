@@ -9,12 +9,17 @@
       null
     ],
     [
-      "get",
+      "memberGet",
       "Demo2",
       "Member",
       "get",
       [],
-      null
+      {
+        "type": "T",
+        "isEntity": true,
+        "typeArguments": [],
+        "currentEntity": "Member"
+      }
     ]
   ],
   "mutation": [

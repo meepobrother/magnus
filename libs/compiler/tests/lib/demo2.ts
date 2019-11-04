@@ -12,8 +12,10 @@ export class Member {
 @Magnus({
     entities: [Member]
 })
-export class Demo2 {
+export class Demo2<T> {
     @Query()
-    get() { }
+    get(): T {
+        return {} as any;
+    }
 }
 

@@ -38,9 +38,13 @@ scalar Date
 
 scalar ID
 
+type Member {
+  id: Int
+}
+
 type Query {
   query: Empty
-  get: Empty
+  memberGet: Member
 }
 
 type Mutation {
