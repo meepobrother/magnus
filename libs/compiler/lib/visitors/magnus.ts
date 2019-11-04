@@ -190,6 +190,7 @@ export class MagnusVisitor implements ast.Visitor {
         node: ast.ClassDeclaration,
         context: CollectionContext
     ) {
+        context.addClassDeclaration(node)
         this.collection = context;
         const resolver = node.getDecorator<string>("Resolver")(expressionVisitor);
         const controller = node.getDecorator<string>("Controller")(
@@ -211,7 +212,7 @@ export class MagnusVisitor implements ast.Visitor {
             this.manager.addContext(ctx);
             return ctx;
         }
-        if (magnus !== null) {
+        else if (magnus !== null) {
             if (magnus && Array.isArray(magnus.entities)) {
                 if (magnus.entities.length > 0) {
                     const ctx = new MagnusTopContext();
@@ -251,7 +252,7 @@ export class MagnusVisitor implements ast.Visitor {
         const ResolveProperty = node.getDecorator<MagnusOptions>("ResolveProperty")(
             expressionVisitor
         );
-        const subscription = node.getDecorator<MagnusOptions>("Supscription")(
+        const subscription = node.getDecorator<MagnusOptions>("Subscription")(
             expressionVisitor
         );
         const mutation = node.getDecorator<MagnusOptions>("Mutation")(
@@ -307,6 +308,7 @@ export class MagnusVisitor implements ast.Visitor {
         }
         ctx.type = type;
         ctx.node = node;
+        return ctx;
     }
     visitGetAccessorDeclaration(
         node: ast.GetAccessorDeclaration,

@@ -76,9 +76,6 @@ export class AstToGraphqlVisitor implements ast.Visitor {
         const querys: ast.FieldDefinitionAst[] = [];
         const mutations: ast.FieldDefinitionAst[] = [];
         const subscriptions: ast.FieldDefinitionAst[] = [];
-
-        const protos: ast.TypeDefinitionAst[] = [];
-        // const protos: ast.FieldDefinitionAst[] = [];
         node.contexts.map(ctx => {
             ctx.querys.forEach(query => {
                 const entities = query.getEntities();
@@ -197,6 +194,7 @@ export class AstToGraphqlVisitor implements ast.Visitor {
             });
             ctx.subscriptions.forEach(query => {
                 const entities = query.getEntities();
+
                 if (entities.length > 0) {
                     entities.map(entity => {
                         query.currentEntity = entity;
@@ -259,7 +257,6 @@ export class AstToGraphqlVisitor implements ast.Visitor {
                         } else {
                             if (ast) this.protos[name] = [ast];
                         }
-                        if (ast) protos.push(ast);
                     });
                 } else {
                     query.currentEntity = ``;
@@ -281,6 +278,7 @@ export class AstToGraphqlVisitor implements ast.Visitor {
             "Mutation",
             mutations
         );
+
         const subscriptionRes = this.createObjectTypeDefinitionAst(
             "Subscription",
             subscriptions

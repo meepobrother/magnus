@@ -1,0 +1,9 @@
+{
+	"inputs": [ "lib/*.ts", "lib/**/*.ts" ],
+	"output": "lib/magnus",
+	"assets": "lib/assets",
+    "name": "demo",
+    "version": "1.0.0",
+    "hostEnv": "HOST",
+    "port": "PORT"
+}

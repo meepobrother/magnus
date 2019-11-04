@@ -169,7 +169,7 @@ export class ApiToProto implements graphql.Visitor {
         field.type = node.type.visit(this, field);
         context.fields.push(field);
     }
-    
+
     visitListTypeAst(node: graphql.ListTypeAst, context: ast.Field): any {
         context.decorator.unshift("repeated");
         const type = node.type.visit(this, context);

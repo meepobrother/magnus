@@ -1,0 +1,45 @@
+{
+  "query": [
+    [
+      "query",
+      "Demo",
+      "",
+      "query",
+      [],
+      null
+    ],
+    [
+      "memberGet",
+      "Demo2",
+      "Member",
+      "get",
+      [],
+      {
+        "type": "T",
+        "isEntity": true,
+        "typeArguments": [],
+        "currentEntity": "Member"
+      }
+    ]
+  ],
+  "mutation": [
+    [
+      "mutation",
+      "Demo",
+      "",
+      "mutation",
+      [],
+      null
+    ]
+  ],
+  "subscription": [
+    [
+      "subscription",
+      "Demo",
+      "",
+      "subscription",
+      [],
+      null
+    ]
+  ]
+}
