@@ -7,25 +7,7 @@
 - 根据 Typescript 自动生成`.graphql`和`.proto`配置文件（灵活）
 - 生成自动支持按条件搜索、分页、排序的增删改查
 - 自动更新数据库结构
-- 局域网内项目 proto 同步
 - 支持微服务架构
-
-<p align="center">
-<img style="margin: 0 auto;" width="650px" src="./static/Functional-structure-CN.svg"/>
-</p>
-
-<p align="center">
-<img style="margin: 0 auto;" width="900px" src="./static/Functional-diciaion-CN.svg"/>
-</p>
-
-<p align="center">
-<img style="margin: 0 auto;" width="450px" src="./static/sync-CN.svg"/>
-</p>
-
-<p align="center">
-<img style="margin: 0 auto;" width="900px" src="static/magnus-graphql-CN.png"/>
-</p>
-
 
 ## install
 
