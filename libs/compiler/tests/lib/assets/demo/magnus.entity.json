@@ -1,0 +1,14 @@
+{
+  "Member": [
+    {
+      "name": "id",
+      "decorators": [
+        "Column"
+      ],
+      "entity": {
+        "type": "Int",
+        "typeArguments": []
+      }
+    }
+  ]
+}

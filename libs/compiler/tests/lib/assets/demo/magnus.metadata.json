@@ -1,0 +1,40 @@
+{
+  "query": [
+    [
+      "query",
+      "Demo",
+      "",
+      "query",
+      [],
+      null
+    ],
+    [
+      "get",
+      "Demo2",
+      "Member",
+      "get",
+      [],
+      null
+    ]
+  ],
+  "mutation": [
+    [
+      "mutation",
+      "Demo",
+      "",
+      "mutation",
+      [],
+      null
+    ]
+  ],
+  "subscription": [
+    [
+      "subscription",
+      "Demo",
+      "",
+      "subscription",
+      [],
+      null
+    ]
+  ]
+}
