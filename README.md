@@ -11,15 +11,15 @@
 - 支持微服务架构
 
 <p align="center">
-<img style="margin: 0 auto;" width="650px" src="static/Functional-structure-CN.svg"/>
+<img style="margin: 0 auto;" width="650px" src="./static/Functional-structure-CN.svg"/>
 </p>
 
 <p align="center">
-<img style="margin: 0 auto;" width="900px" src="static/Functional-diciaion-CN.svg"/>
+<img style="margin: 0 auto;" width="900px" src="./static/Functional-diciaion-CN.svg"/>
 </p>
 
 <p align="center">
-<img style="margin: 0 auto;" width="450px" src="static/sync-CN.svg"/>
+<img style="margin: 0 auto;" width="450px" src="./static/sync-CN.svg"/>
 </p>
 
 <p align="center">
@@ -36,24 +36,13 @@ npm install -g @notadd/magnus
 ## add magnus.json
 ```json
 {
-  "prefix": "", // 前缀
   "inputs": [// 输入
     "demo/src/**/*.ts"
   ],
   "output": "demo/config",// 输出
   "assets": "demo/assets",// 静态资源
   "debug": false,// 调试
-  "name": "demo",// 名称
-  "client": [//客户端
-    "demo/src/**/*.graphql"
-  ],
-  "hasGrpc": true,// 是否提供grpc
-  "runner": {// magnus runner目录
-    "name": "runner",
-    "path": "../runner"
-  },// 定义文件
-  "types": "../../config/demo/magnus.server",
-  "def": "demo/assets/demo/magnus.server.graphql"// 定义graphql文件
+  "name": "demo"// 名称
 }
 ```
 
@@ -64,7 +53,23 @@ magnus --watch 监听文件变化
 magnus 单次运行
 ```
 
-### orm
+### 生成单个接口
+```ts
+@Magnus()
+export class Controller2 extends MagnusBase<User> {
+    tablename: string = 'User';
+    /**
+     * 覆盖Controller中的getUser，单独处理
+     **/
+    @Query()
+    getUser(): User {
+        return {
+            id: 1,
+        };
+    }
+}
+```
+### 批量生成通用接口
 
 ```ts
 import { Magnus, MagnusBase, Mutation, Query, Where, Order } from '@notadd/magnus-core';
@@ -175,22 +180,6 @@ export class Controller<T> extends MagnusBase<T> {
 }
 ```
 
-### 覆盖orm
-```ts
-@Magnus()
-export class Controller2 extends MagnusBase<User> {
-    tablename: string = 'User';
-    /**
-     * 覆盖Controller中的getUser，单独处理
-     **/
-    @Query()
-    getUser(): User {
-        return {
-            id: 1,
-        };
-    }
-}
-```
 
 ## 使用 编写client.graphql 自动生成对应client.ts文件函数
 ```graphql
@@ -200,12 +189,4 @@ query getUser($user: UserInput!){
         nickname
     }
 }
-```
-
-```ts
-import { getUser } from './client.ts'
-getUser({id: 1}).then(res=>res.getUser).then(res=>({
-    id: res.id,
-    nickname: res.nickname
-}))
 ```
