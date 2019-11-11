@@ -424,7 +424,9 @@ export class TsToGraphqlVisitor implements ast.Visitor {
             const item = this.createMetadate(res, ctx, node);
             const index = this.def[context.topName].findIndex(it => it[0] === item[0])
             if (index > -1) {
-                this.def[context.topName].splice(index, 1, item)
+                // if (context.entities.length === 0) {
+                //     this.def[context.topName].splice(index, 1, item)
+                // }
             } else {
                 this.def[context.topName].push(item);
             }
@@ -435,14 +437,12 @@ export class TsToGraphqlVisitor implements ast.Visitor {
             const item = this.createMetadate(res, context, node);
             const existIndex = this.def.query.findIndex(it => it[0] === item[0]);
             if (existIndex > -1) {
-                if (context.entities.length === 0) {
-                    this.def.query.splice(existIndex, 1, item);
-                    this.query.members.splice(
-                        existIndex,
-                        1,
-                        this.createMethodSignature(node)
-                    );
-                }
+                // this.def.query.splice(existIndex, 1, item);
+                // this.query.members.splice(
+                //     existIndex,
+                //     1,
+                //     this.createMethodSignature(node)
+                // );
             } else {
                 this.def.query.push(item);
                 this.query.members.push(this.createMethodSignature(node));
@@ -452,12 +452,14 @@ export class TsToGraphqlVisitor implements ast.Visitor {
             const item = this.createMetadate(res, context, node);
             const existIndex = this.def.mutation.findIndex(it => it[0] === item[0]);
             if (existIndex > -1) {
-                this.def.mutation.splice(existIndex, 1, item);
-                this.mutation.members.splice(
-                    existIndex,
-                    1,
-                    this.createMethodSignature(node)
-                );
+                // if (context.entities.length === 0) {
+                //     this.def.mutation.splice(existIndex, 1, item);
+                //     this.mutation.members.splice(
+                //         existIndex,
+                //         1,
+                //         this.createMethodSignature(node)
+                //     );
+                // }
             } else {
                 this.def.mutation.push(item);
                 this.mutation.members.push(this.createMethodSignature(node));
@@ -469,12 +471,12 @@ export class TsToGraphqlVisitor implements ast.Visitor {
                 it => it[0] === item[0]
             );
             if (existIndex > -1) {
-                this.def.subscription.splice(existIndex, 1, item);
-                this.subscription.members.splice(
-                    existIndex,
-                    1,
-                    this.createMethodSignature(node)
-                );
+                // this.def.subscription.splice(existIndex, 1, item);
+                // this.subscription.members.splice(
+                //     existIndex,
+                //     1,
+                //     this.createMethodSignature(node)
+                // );
             } else {
                 this.def.subscription.push(item);
                 this.subscription.members.push(this.createMethodSignature(node));
