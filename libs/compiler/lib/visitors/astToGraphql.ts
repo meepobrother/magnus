@@ -6,7 +6,6 @@ import { CollectionContext } from "./collection";
 import { MagnusContext } from "./magnus";
 import * as ts from "./visitor";
 import { expressionVisitor } from "./expression";
-import { ScalarCreater } from '../visitor3/creater/scalarCreater';
 const parse = new ParseVisitor();
 export class AstToGraphqlVisitor implements ast.Visitor {
     name: string = `AstToGraphqlVisitor`;

@@ -422,7 +422,12 @@ export class TsToGraphqlVisitor implements ast.Visitor {
             ctx.parent = context.parent;
             ctx.currentEntity = context.topName;
             const item = this.createMetadate(res, ctx, node);
-            this.def[context.topName].push(item);
+            const index = this.def[context.topName].findIndex(it => it[0] === item[0])
+            if (index > -1) {
+                this.def[context.topName].splice(index, 1, item)
+            } else {
+                this.def[context.topName].push(item);
+            }
             return res;
         }
         if (context.isQuery) {
@@ -430,11 +435,6 @@ export class TsToGraphqlVisitor implements ast.Visitor {
             const item = this.createMetadate(res, context, node);
             const existIndex = this.def.query.findIndex(it => it[0] === item[0]);
             if (existIndex > -1) {
-                console.log({
-                    existIndex,
-                    entities: context.entities,
-                    name: context.name
-                })
                 if (context.entities.length === 0) {
                     this.def.query.splice(existIndex, 1, item);
                     this.query.members.splice(
