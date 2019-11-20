@@ -175,6 +175,9 @@ export class TypeHelper {
             isVoidLike: this.isVoidLike(val),
         }
     }
+    isClassDeclaration(val: ts.Node): val is ts.ClassDeclaration {
+        return val.kind === ts.SyntaxKind.ClassDeclaration
+    }
     isAny(val: ts.Type): boolean {
         return val.flags === ts.TypeFlags.Any;
     }

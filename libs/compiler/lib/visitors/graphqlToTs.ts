@@ -50,28 +50,28 @@ export class GraphqlToTs implements ast.Visitor {
   schema: DocumentAst;
   visitDocumentAst(node: ast.DocumentAst, context: string): string {
     context += `\n`;
-    if (this.config) {
-      context += `import { ${this.config.runner.name} } from '${
-        this.config.runner.path
-      }';\n`;
-    }
-    const res = node.definitions
-      .filter(def => !(def instanceof ast.ScalarTypeDefinitionAst) && !!def)
-      .map(def => def.visit(this, ``))
-      .filter(it => !!it)
-      .join(`\n`);
-    const types: string[] = [];
-    this.types.forEach(t => {
-      if (t) types.push(t);
-    });
-    if (this.config) {
-      if (types.length > 0) {
-        context += `import { ${types.join(", ")} } from '${
-          this.config.types
-        }';\n`;
-      }
-    }
-    context += res;
+    // if (this.config) {
+    //   context += `import { ${this.config.runner.name} } from '${
+    //     this.config.runner.path
+    //   }';\n`;
+    // }
+    // const res = node.definitions
+    //   .filter(def => !(def instanceof ast.ScalarTypeDefinitionAst) && !!def)
+    //   .map(def => def.visit(this, ``))
+    //   .filter(it => !!it)
+    //   .join(`\n`);
+    // const types: string[] = [];
+    // this.types.forEach(t => {
+    //   if (t) types.push(t);
+    // });
+    // if (this.config) {
+    //   if (types.length > 0) {
+    //     context += `import { ${types.join(", ")} } from '${
+    //       this.config.types
+    //     }';\n`;
+    //   }
+    // }
+    // context += res;
     return context;
   }
 
@@ -430,18 +430,18 @@ export class GraphqlToTs implements ast.Visitor {
     context += `interface ${upperFirst(clientAst.name as string)}Result {
     ${selection}
 }\n`;
-    context += `export async function ${
-      clientAst.name
-    }(${parameters}): Promise<${upperFirst(clientAst.name as string)}Result> {
-    const names = ${JSON.stringify(names)};
-    const args: any = {};
-    for (let i = 0; i < arguments.length; i++) {
-        args[names[i]] = arguments[i]
-    }
-    return ${this.config.runner.name}<${upperFirst(
-      clientAst.name as string
-    )}Result>(\`${graphql}\`, args)
-}\n`;
+//     context += `export async function ${
+//       clientAst.name
+//     }(${parameters}): Promise<${upperFirst(clientAst.name as string)}Result> {
+//     const names = ${JSON.stringify(names)};
+//     const args: any = {};
+//     for (let i = 0; i < arguments.length; i++) {
+//         args[names[i]] = arguments[i]
+//     }
+//     return ${this.config.runner.name}<${upperFirst(
+//       clientAst.name as string
+//     )}Result>(\`${graphql}\`, args)
+// }\n`;
     return context;
   }
 }

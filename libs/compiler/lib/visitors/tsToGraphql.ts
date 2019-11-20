@@ -30,6 +30,17 @@ export const WhereMap: { [key: string]: string } = {
 
 export class Handler {
     constructor(public visitor: TsToGraphqlVisitor) { }
+    AsyncIterator(
+        node: ast.TypeReferenceNode | ast.TypeAliasDeclaration,
+        context: any
+    ) {
+        if (node instanceof ast.TypeReferenceNode) {
+            if (node.typeArguments.length === 1) {
+                const typeNode = node.typeArguments[0];
+                return this.visitor.visitTypeNode(typeNode, context);
+            }
+        }
+    }
     Promise(
         node: ast.TypeReferenceNode | ast.TypeAliasDeclaration,
         context: any

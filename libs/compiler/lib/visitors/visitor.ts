@@ -2292,8 +2292,8 @@ export class TsVisitor implements Visitor {
                 context
             );
         } else {
+            console.log(`visitStatement Error! ${context.kind}`)
             return this.visitOtherStatement(new OtherStatement(), context);
-            // console.log(`visitStatement Error! ${context.kind}`)
         }
     }
     visitOtherStatement(node: OtherStatement, context: any) {
@@ -3601,7 +3601,7 @@ export class TsVisitor implements Visitor {
                 context.parameterName
             );
         }
-        node.type = this.visitTypeNode(undefined, context.type);
+        if(context.type) node.type = this.visitTypeNode(undefined, context.type);
         return node;
     }
     visitLiteralTypeNode(node: LiteralTypeNode, context: ts.LiteralTypeNode) {

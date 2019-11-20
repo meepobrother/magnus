@@ -6,11 +6,11 @@ export interface MagnusConfig {
     /**
      * 资源目录
      */
-    assets: string;
+    assets?: string;
     /**
      * 输出目录
      */
-    output: string;
+    output?: string;
     /**
      * 输入文件
      */
@@ -18,11 +18,11 @@ export interface MagnusConfig {
     /**
      * 调试
      */
-    debug: boolean;
+    debug?: boolean;
     /**
      * 主机
      */
-    host: string;
+    host?: string;
     /**
      * 端口号
      */
@@ -30,25 +30,25 @@ export interface MagnusConfig {
     /**
      * 服务名
      */
-    name: string;
+    name?: string;
     /**
      * 是否有grpc
      */
-    hasGrpc: boolean;
+    hasGrpc?: boolean;
     /**
      * 环境变量
      */
-    hostEnv: string;
+    hostEnv?: string;
     /**
      * 环境变量
      */
-    portEnv: string;
+    portEnv?: string;
     /**
      * hosts
      */
-    hosts: string[];
+    hosts?: string[];
     /**
      * 版本号
      */
-    version: string;
+    version?: string;
 }

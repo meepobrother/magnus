@@ -1,6 +1,6 @@
 {
 	"name": "@notadd/magnus",
-	"version": "3.7.1",
+	"version": "3.7.8",
 	"description": "> TODO: description",
 	"author": "imeepos <1037483576@qq.com>",
 	"homepage": "https://github.com/notadd/magnus/tree/master/libs/compiler#readme",
@@ -16,7 +16,9 @@
 		"lib": "lib",
 		"test": "__tests__"
 	},
-	"files": [ "lib" ],
+	"files": [
+		"lib"
+	],
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/notadd/magnus.git"
@@ -31,7 +33,6 @@
 	"dependencies": {
 		"@nodeutils/defaults-deep": "^1.1.0",
 		"@notadd/codegen-nest-client": "^3.6.1",
-		"@notadd/magnus-core": "^3.6.1",
 		"@notadd/magnus-graphql": "^3.6.2",
 		"@notadd/magnus-grpc": "^3.6.1",
 		"chokidar": "^3.0.2",
@@ -40,11 +41,9 @@
 		"graphql": "^14.4.2",
 		"graphql-tools": "^4.0.5",
 		"lodash": "^4.17.11",
-		"peer-id": "^0.13.1",
-		"peer-info": "^0.16.0",
 		"ts-morph": "^3.1.0",
 		"tslib": "^1.10.0",
 		"tstypes": "^2.0.0",
-		"typescript": "~3.5.3"
+		"typescript": "^3.7.2"
 	}
 }

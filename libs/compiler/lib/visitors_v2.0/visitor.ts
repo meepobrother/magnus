@@ -3093,7 +3093,7 @@ export class TsVisitor implements Visitor {
         } else {
             node.parameterName = this.visitThisTypeNode(new ThisTypeNode(), context.parameterName)
         }
-        node.type = this.visitTypeNode(undefined, context.type)
+        if(context.type) node.type = this.visitTypeNode(undefined, context.type)
         return node;
     }
     visitLiteralTypeNode(node: LiteralTypeNode, context: ts.LiteralTypeNode) {

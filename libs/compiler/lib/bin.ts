@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { bootstrap } from "./bootstrap";
-import { MagnusConfig } from "@notadd/magnus-core";
+import { MagnusConfig } from "./config";
 import program = require("commander");
 const packages = require("../package.json");
 const root = process.cwd();
@@ -18,11 +18,7 @@ if (program.config) {
 }
 config.root = root;
 config.debug = !!program.watch;
-bootstrap(config).then(res => {
-    console.log({
-        res
-    });
-}).catch(err => {
+bootstrap(config).catch(err => {
     console.log({
         err
     });
