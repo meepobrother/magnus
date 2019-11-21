@@ -1,14 +1,35 @@
-import { GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
-import { BaseScalar } from './util';
-import { Timestamp as TypeormTimestamp } from 'typeorm';
-class TimestampScalar extends BaseScalar implements GraphQLScalarTypeConfig<any, object>{
-    name: string = `Timestamp`;
-    description: string = `Timestamp`;
-    serialize(value: string): TypeormTimestamp {
-        return TypeormTimestamp.fromString(value);
+import { Kind, GraphQLScalarType } from "graphql";
+
+function parseValue(value: string | null) {
+    if (value === null) {
+        return null;
     }
-    parseValue(value: TypeormTimestamp): string {
-        return value.toString();
+    try {
+        return new Date(value);
+    } catch (err) {
+        return null;
     }
 }
-export const Timestamp = new GraphQLScalarType(new TimestampScalar())
+
+export const Timestamp = new GraphQLScalarType({
+    name: "Timestamp",
+    description:
+        "The javascript `Date` as integer. " +
+        "Type represents date and time as number of milliseconds from start of UNIX epoch.",
+    serialize(value: Date) {
+        if (value instanceof Date) {
+            return value.getTime();
+        }
+        return null;
+    },
+    parseValue,
+    parseLiteral(ast) {
+        if (ast.kind === Kind.INT) {
+            const num = parseInt(ast.value, 10);
+            return new Date(num);
+        } else if (ast.kind === Kind.STRING) {
+            return parseValue(ast.value);
+        }
+        return null;
+    },
+});

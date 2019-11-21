@@ -7,8 +7,9 @@ import { AstToGraphqlVisitor } from './visitors/astToGraphql';
 import { toJson } from "@notadd/magnus-graphql";
 import { print } from "graphql";
 import { writeFileSync, ensureDirSync } from 'fs-extra';
-
-export function compile(inputs: string[], assets: string, isServer: boolean = true) {
+import { AstToProtoVisitor } from './visitors/astToProto';
+import { ast as grpcAst } from '@notadd/magnus-grpc';
+export function compile(inputs: string[], assets: string, name: string, isServer: boolean = true) {
     ensureDirSync(assets);
     const project = new morph.Project();
     project.addSourceFilesFromTsConfig(join(process.cwd(), "tsconfig.json"));
@@ -37,9 +38,16 @@ export function compile(inputs: string[], assets: string, isServer: boolean = tr
         manager,
         collectionContext
     );
+    const astToProto = new AstToProtoVisitor()
+    astToProto.config = {} as any;
+    astToProto.config.name = name;
+    const protoRoot = astToProto.visitDocumentAst(documentAst, collectionContext);
+    const protoStr = new grpcAst.ParseVisitor().visitRoot(protoRoot, ``);
     const documentAstJson = toJson(documentAst);
-    const content = print(documentAstJson);
-    // 搜集metadata entity数据库 类名 依赖名
-    writeFileSync(join(assets, `magnus.server.graphql`), content);
-    return content;
+    if (!documentAstJson.isEmpty) {
+        const content = print(documentAstJson);
+        // 搜集metadata entity数据库 类名 依赖名
+        writeFileSync(join(assets, `magnus.graphql`), content);
+    }
+    writeFileSync(join(assets, `magnus.proto`), protoStr);
 }

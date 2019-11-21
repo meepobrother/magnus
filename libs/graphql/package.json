@@ -1,11 +1,12 @@
 {
   "name": "@notadd/magnus-graphql",
-  "version": "3.6.2",
+  "version": "3.8.0",
   "description": "> TODO: description",
   "author": "imeepos <1037483576@qq.com>",
   "homepage": "https://github.com/notadd/magnus/tree/master/libs/graphql#readme",
   "license": "ISC",
   "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "publishConfig": {
     "access": "public"
   },
