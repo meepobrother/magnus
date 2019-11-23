@@ -262,6 +262,9 @@ export class MagnusVisitor implements ast.Visitor {
         const grpcMethod = node.getDecorator<MagnusOptions>("GrpcMethod")(
             expressionVisitor
         );
+        const grpcStreamMethod = node.getDecorator<MagnusOptions>('GrpcStreamMethod')(
+            expressionVisitor
+        )
         if (node instanceof ast.MethodDeclaration) {
             /**
              * 可以多个
@@ -286,6 +289,9 @@ export class MagnusVisitor implements ast.Visitor {
             }
             if (!this.isNull(grpcMethod)) {
                 this.registe(node, context, grpcMethod, "proto");
+            }
+            if (!this.isNull(grpcStreamMethod)) {
+                this.registe(node, context, grpcStreamMethod, "proto");
             }
         }
     }
