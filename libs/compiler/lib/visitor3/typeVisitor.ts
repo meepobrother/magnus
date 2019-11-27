@@ -109,7 +109,6 @@ export class TypeVisitor implements ast.Visitor {
         throw new Error(`can not support TupleTypeNode`);
     }
     visitUnionTypeNode(node: ast.UnionTypeNode, context: TypeContext): any {
-        console.log(node.types)
         if (node.types.length === 2) {
             const hasUndefined = !!node.types.find(type => {
                 if (type instanceof ast.KeywordTypeNode) {

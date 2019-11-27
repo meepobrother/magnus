@@ -202,6 +202,12 @@ export class MagnusVisitor implements ast.Visitor {
         const entity = node.getDecorator<MagnusOptions>("Entity")(
             expressionVisitor
         );
+        console.log({
+            resolver,
+            controller,
+            magnus,
+            entity
+        })
         if (resolver !== null || controller !== null || entity !== null) {
             const ctx = new MagnusTopContext();
             ctx.entities = [];
@@ -264,7 +270,7 @@ export class MagnusVisitor implements ast.Visitor {
         );
         const grpcStreamMethod = node.getDecorator<MagnusOptions>('GrpcStreamMethod')(
             expressionVisitor
-        )
+        );
         if (node instanceof ast.MethodDeclaration) {
             /**
              * 可以多个

@@ -1,0 +1,7 @@
+package demo;
+syntax = "proto3";
+message Empty{
+}
+service Demo3 {
+	rpc Add(int32) returns(int32) {}
+}

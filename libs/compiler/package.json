@@ -1,6 +1,6 @@
 {
 	"name": "@notadd/magnus",
-	"version": "3.8.1",
+	"version": "3.8.4",
 	"description": "> TODO: description",
 	"author": "imeepos <1037483576@qq.com>",
 	"homepage": "https://github.com/notadd/magnus/tree/master/libs/compiler#readme",
@@ -10,15 +10,14 @@
 	},
 	"main": "lib/index.js",
 	"bin": {
-		"magnus": "./lib/bin.js"
+		"magnus": "./lib/bin.js",
+		"magnus2": "./lib/bin_proto.js"
 	},
 	"directories": {
 		"lib": "lib",
 		"test": "__tests__"
 	},
-	"files": [
-		"lib"
-	],
+	"files": [ "lib" ],
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/notadd/magnus.git"

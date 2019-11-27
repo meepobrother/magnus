@@ -42,6 +42,10 @@ type Member {
   id: Int
 }
 
+type Demo3 {
+  add(a: Int!, b: Int!): Int
+}
+
 type Query {
   query: Empty
   memberGet: Member
