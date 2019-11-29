@@ -107,7 +107,7 @@ export class ParseVisitor implements Visitor {
         return node.name;
     }
     visitPackage(node: Package, context: any): string {
-        return `package ${node.name};\nsyntax = "${node.syntax}";\n${node.children.map(pack => pack.visit(this, context)).join(`\n`)}`
+        return `syntax = "${node.syntax}";\npackage ${node.name};\n${node.children.map(pack => pack.visit(this, context)).join(`\n`)}`
     }
     visitRoot(node: Root, context: any): string {
         return `${node.packages.map(pack => pack.visit(this, context)).join(`\n`)}`
@@ -128,7 +128,7 @@ export class ParseVisitor implements Visitor {
         return `message ${node.name}{\n${node.fields.map(field => field.visit(this, context)).join(``)}${node.children.map(child => child.visit(this, context)).join(`\n`)}}`;
     }
     visitField(node: Field, context: any): string {
-        return `\t${this.createDecorator(node.decorator)}${node.type} ${node.name} = ${node.index};\n`
+        return `\t${this.createDecorator(node.decorator)}${node.type} ${node.name} = ${node.index + 1};\n`
     }
     visitOneOf(node: OneOf, context: any): string {
         return `oneof ${node.name} {\n\t${node.items.map(item => item.visit(this, context)).join(`\n`)}}`

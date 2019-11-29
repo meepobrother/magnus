@@ -1,0 +1,46 @@
+{
+  "name": "@notadd/magnus.types",
+  "version": "3.8.5",
+  "description": "> TODO: description",
+  "author": "imeepos <1037483576@qq.com>",
+  "homepage": "https://github.com/notadd/magnus/tree/master/libs/compiler#readme",
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bin": {
+    "magnus": "./lib/bin.js",
+    "magnus2": "./lib/bin_proto.js"
+  },
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/notadd/magnus.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "bugs": {
+    "url": "https://github.com/notadd/magnus/issues"
+  },
+  "gitHead": "03d7b8873b54eb32d02ec1b814a56873e11f7c1a",
+  "dependencies": {
+    "@notadd/magnus-graphql": "^3.8.0",
+    "@notadd/magnus-grpc": "^3.6.2",
+    "chokidar": "^3.0.2",
+    "commander": "^2.20.0",
+    "fs-extra": "^8.0.1",
+    "graphql": "^14.4.2",
+    "graphql-tools": "^4.0.5",
+    "lodash": "^4.17.11",
+    "ts-morph": "^3.1.0",
+    "tslib": "^1.10.0",
+    "typescript": "^3.7.2"
+  }
+}
