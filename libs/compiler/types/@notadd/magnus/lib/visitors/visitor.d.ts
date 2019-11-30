@@ -177,6 +177,7 @@ export declare class MethodDeclaration extends Node<ts.MethodDeclaration> {
     parameters: ParameterDeclaration[];
     typeParameters: TypeParameterDeclaration[];
     questionToken: QuestionToken;
+    isStream: boolean;
     visit(visitor: Visitor, context: any): any;
     getDecorators(): (visitor: Visitor) => string[];
     getDecorator<T>(name: string): (visitor: Visitor) => T | undefined | null;
@@ -273,6 +274,7 @@ export declare class InterfaceDeclaration extends Node<ts.InterfaceDeclaration> 
     typeParameters: TypeParameterDeclaration[];
     name: Identifier;
     heritageClauses: HeritageClause[];
+    isStream: boolean;
     visit(visitor: Visitor, context: any): any;
 }
 export declare class HeritageClause extends Node<ts.HeritageClause> {

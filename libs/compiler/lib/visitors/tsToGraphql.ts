@@ -376,6 +376,7 @@ export class TsToGraphqlVisitor implements ast.Visitor {
         context: MagnusContext
     ): graphql.FieldDefinitionAst | undefined {
         context.isProperty = false;
+        
         if (context.isInput) {
             return undefined;
         }
@@ -386,6 +387,7 @@ export class TsToGraphqlVisitor implements ast.Visitor {
         node.type && node.type.visit(this, context);
         // 完善信息
         const res = new graphql.FieldDefinitionAst();
+        res.isStream = context.decorator === 'GrpcStreamMethod';
         // 是否需要改名字
         const description = this.createStringValue(
             node.docs.map(doc => this.visitJSDoc(doc, context))
@@ -499,6 +501,7 @@ export class TsToGraphqlVisitor implements ast.Visitor {
             if (!proto) {
                 proto = new ast.InterfaceDeclaration();
                 proto.name = this.createIdentifier(context.params);
+                proto.isStream = node.isStream;
                 this.protos.push(proto);
             }
             proto.members.push(this.createMethodSignature(node));

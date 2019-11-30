@@ -8,6 +8,7 @@
   "publishConfig": {
     "access": "public"
   },
+  "types": "lib/index.d.ts",
   "bin": {
     "magnus": "./lib/bin.js",
     "magnus2": "./lib/bin_proto.js"
@@ -32,7 +33,7 @@
   "gitHead": "03d7b8873b54eb32d02ec1b814a56873e11f7c1a",
   "dependencies": {
     "@notadd/magnus-graphql": "^3.8.0",
-    "@notadd/magnus-grpc": "^3.6.2",
+    "@notadd/magnus-grpc": "^3.6.3",
     "chokidar": "^3.0.2",
     "commander": "^2.20.0",
     "fs-extra": "^8.0.1",

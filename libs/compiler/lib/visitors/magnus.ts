@@ -74,6 +74,8 @@ export class MagnusContext {
     // 参数
     params: any;
 
+    decorator?: string;
+
     class: ClassDef = {
         name: ``,
         relations: []
@@ -291,10 +293,10 @@ export class MagnusVisitor implements ast.Visitor {
                 this.registe(node, context, proto, "proto");
             }
             if (!this.isNull(grpcMethod)) {
-                this.registe(node, context, grpcMethod, "proto");
+                this.registe(node, context, grpcMethod, "proto", 'GrpcMethod');
             }
             if (!this.isNull(grpcStreamMethod)) {
-                this.registe(node, context, grpcStreamMethod, "proto");
+                this.registe(node, context, grpcStreamMethod, "proto", 'GrpcStreamMethod');
             }
         }
     }
@@ -306,12 +308,14 @@ export class MagnusVisitor implements ast.Visitor {
             | ast.PropertyDeclaration,
         context: MagnusTopContext,
         query: MagnusOptions | undefined,
-        type: "query" | "mutation" | "subscription" | "proto" | "entity"
+        type: "query" | "mutation" | "subscription" | "proto" | "entity",
+        decorator?: string
     ) {
         const name = node.name.visit(expressionVisitor, ``)
         const ctx = context.addChild(name, type);
         ctx.name = name;
         ctx.params = query;
+        ctx.decorator = decorator;
         if (query) {
             ctx.entities = query.entities || [];
         }

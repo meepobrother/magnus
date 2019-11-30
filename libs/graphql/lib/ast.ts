@@ -552,6 +552,7 @@ export class FieldDefinitionAst<C = any, O = any> extends Ast<C, O> {
     type: TypeAst<C, O>;
     directives: Array<DirectiveAst<C, O>> = [];
     index: number;
+    isStream: boolean;
     visit(visitor: Visitor<C, O>, context: C): O {
         if (visitor.visitFieldDefinitionAst) {
             return visitor.visitFieldDefinitionAst(this, context)
@@ -884,6 +885,7 @@ export class ObjectTypeDefinitionAst<C = any, O = any> extends Ast<C, O> {
     fields: Array<FieldDefinitionAst<C, O>> = [];
     isGrpc: boolean;
     isProto: boolean;
+    isStream: boolean;
     visit(visitor: Visitor, context: C): O {
         if (visitor.visitObjectTypeDefinitionAst) {
             return visitor.visitObjectTypeDefinitionAst(this, context)

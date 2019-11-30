@@ -33,6 +33,7 @@ export declare class MagnusContext {
     isInput: boolean;
     isNonNull: boolean;
     params: any;
+    decorator?: string;
     class: ClassDef;
     _currentEntity: string;
     oldName: string;
@@ -72,7 +73,7 @@ export declare class MagnusVisitor implements ast.Visitor {
     visitClassDeclaration(node: ast.ClassDeclaration, context: CollectionContext): MagnusTopContext | undefined;
     isNull(val: any): val is null;
     setMagnus(node: ast.GetAccessorDeclaration | ast.SetAccessorDeclaration | ast.MethodDeclaration | ast.PropertyDeclaration, context: MagnusTopContext): void;
-    registe(node: ast.GetAccessorDeclaration | ast.SetAccessorDeclaration | ast.MethodDeclaration | ast.PropertyDeclaration, context: MagnusTopContext, query: MagnusOptions | undefined, type: "query" | "mutation" | "subscription" | "proto" | "entity"): MagnusContext;
+    registe(node: ast.GetAccessorDeclaration | ast.SetAccessorDeclaration | ast.MethodDeclaration | ast.PropertyDeclaration, context: MagnusTopContext, query: MagnusOptions | undefined, type: "query" | "mutation" | "subscription" | "proto" | "entity", decorator?: string): MagnusContext;
     visitGetAccessorDeclaration(node: ast.GetAccessorDeclaration, context: MagnusTopContext): void;
     visitSetAccessorDeclaration(node: ast.SetAccessorDeclaration, context: MagnusTopContext): void;
     visitTypeParameterDeclaration(node: ast.TypeParameterDeclaration, context: MagnusContext): void;

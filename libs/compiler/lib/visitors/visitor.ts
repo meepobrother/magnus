@@ -487,6 +487,7 @@ export class MethodDeclaration extends Node<ts.MethodDeclaration> {
     parameters: ParameterDeclaration[] = [];
     typeParameters: TypeParameterDeclaration[] = [];
     questionToken: QuestionToken;
+    isStream: boolean;
     visit(visitor: Visitor, context: any) {
         if (visitor.visitMethodDeclaration) {
             return visitor.visitMethodDeclaration(this, context);
@@ -755,6 +756,7 @@ export class InterfaceDeclaration extends Node<ts.InterfaceDeclaration> {
     typeParameters: TypeParameterDeclaration[] = [];
     name: Identifier;
     heritageClauses: HeritageClause[] = [];
+    isStream: boolean;
     visit(visitor: Visitor, context: any) {
         if (visitor.visitInterfaceDeclaration) {
             return visitor.visitInterfaceDeclaration(this, context);

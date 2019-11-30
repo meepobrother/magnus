@@ -40,18 +40,18 @@
     "@nodelib/fs.scandir" "2.1.3"
     fastq "^1.6.0"
 
-"@notadd/magnus-graphql@^3.6.3":
-  version "3.6.3"
-  resolved "https://registry.yarnpkg.com/@notadd/magnus-graphql/-/magnus-graphql-3.6.3.tgz#1b40cdc72972cb7f406cf15e204e9038b35b52d0"
-  integrity sha512-eidKYQ8bC/KHGnHvPbTDKMihMvhXVHtIXszakI1EeLgilPh3l6uwY6bmoA5duF69Qxd7JzDht1uqOPwGS4i+Hg==
+"@notadd/magnus-graphql@^3.8.0":
+  version "3.8.0"
+  resolved "https://registry.yarnpkg.com/@notadd/magnus-graphql/-/magnus-graphql-3.8.0.tgz#14558e4f40278ad8eded31bfe81e300886b8a986"
+  integrity sha512-KhedJgwhM8iFDyzPOM+nG2Zmk7/PpYsS3Phqdoe8HjMIpnBJWs2NFG7NsH2q6emEfQyD0ZRz967CrBmYhlDwKA==
   dependencies:
     graphql "^14.4.2"
     tslib "^1.10.0"
 
-"@notadd/magnus-grpc@^3.6.1":
-  version "3.6.1"
-  resolved "https://registry.yarnpkg.com/@notadd/magnus-grpc/-/magnus-grpc-3.6.1.tgz#45e7121e2d24d1037ba5427176d9044a208444c1"
-  integrity sha512-A4c6kILBVioaCKy45HwgzxCEq0OPjC+2eCQCDImdoUP19WrJ/ktAZStqnLqs8VpzmCyZEZaT/b8BU7XQUNZruA==
+"@notadd/magnus-grpc@^3.6.3":
+  version "3.6.3"
+  resolved "https://registry.yarnpkg.com/@notadd/magnus-grpc/-/magnus-grpc-3.6.3.tgz#5317f499c51bc86e9f727d27a236d5418a093136"
+  integrity sha512-4PyajCQ2Rbtc00F/Ce8safRWT+tM6C70Vi8e4SEYZFSlFGFV5xw4K7fpVjHaPGcxR8msmRJNf5jfR3sH2w4FFA==
   dependencies:
     "@nestjs/common" "^6.4.1"
     "@types/multimatch" "^2.1.3"

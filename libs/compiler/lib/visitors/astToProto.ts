@@ -121,6 +121,7 @@ export class AstToProtoVisitor implements graphql.Visitor {
       method.name = upperFirst(node.name.visit(this, ``));
       method.decorator = [`rpc`];
       method.type = this.createType(node.type, method);
+      method.isStream = node.isStream;
       this.checkType(method.type, context);
       if (node.arguments.length > 0) {
         method.parameter = this.createArguments(node.arguments[0], method);

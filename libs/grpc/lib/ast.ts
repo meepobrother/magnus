@@ -57,6 +57,7 @@ export class Method extends Ast {
     decorator: string[] = [];
     parameter: string = ``;
     type: string = ``;
+    isStream: boolean;
     visit(visitor: Visitor, context: any) {
         return visitor.visitMethod(this, context)
     }
@@ -122,7 +123,7 @@ export class ParseVisitor implements Visitor {
         return `service ${node.name} {\n${node.methods.map(method => method.visit(this, context)).join(``)}}`
     }
     visitMethod(node: Method, context: any): string {
-        return `\t${this.createDecorator(node.decorator)}${node.name}(${node.parameter}) returns(${node.type}) {}\n`
+        return `\t${this.createDecorator(node.decorator)}${node.name}(${node.parameter}) returns(${node.isStream ? 'stream ' : ''}${node.type}) {}\n`
     }
     visitMessage(node: Message, context: any): string {
         return `message ${node.name}{\n${node.fields.map(field => field.visit(this, context)).join(``)}${node.children.map(child => child.visit(this, context)).join(`\n`)}}`;

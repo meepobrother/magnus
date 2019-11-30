@@ -37,6 +37,7 @@ export declare class Method extends Ast {
     decorator: string[];
     parameter: string;
     type: string;
+    isStream: boolean;
     visit(visitor: Visitor, context: any): any;
 }
 export declare class Message extends Ast {

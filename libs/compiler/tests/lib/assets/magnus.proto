@@ -1,7 +1,16 @@
-package demo;
 syntax = "proto3";
+package demo;
 message Empty{
 }
 service Demo3 {
 	rpc Add(int32) returns(int32) {}
+}
+message GetStreamResult{
+	string title = 1;
+}
+message GetStreamInput{
+	string title = 1;
+}
+service StreamController {
+	rpc GetStream(GetStreamInput) returns(stream GetStreamResult) {}
 }
