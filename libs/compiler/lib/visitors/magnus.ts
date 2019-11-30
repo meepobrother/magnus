@@ -196,19 +196,16 @@ export class MagnusVisitor implements ast.Visitor {
         const controller = node.getDecorator<string>("Controller")(
             expressionVisitor
         );
+        const injectable = node.getDecorator<string>("Injectable")(
+            expressionVisitor
+        );
         const magnus = node.getDecorator<MagnusOptions>("Magnus")(
             expressionVisitor
         );
         const entity = node.getDecorator<MagnusOptions>("Entity")(
             expressionVisitor
         );
-        console.log({
-            resolver,
-            controller,
-            magnus,
-            entity
-        })
-        if (resolver !== null || controller !== null || entity !== null) {
+        if (resolver !== null || injectable !== null || controller !== null || entity !== null) {
             const ctx = new MagnusTopContext();
             ctx.entities = [];
             ctx.node = node;

@@ -42,7 +42,7 @@ type Member {
   id: Int
 }
 
-type Demo3 {
+type Demo3 implements Member {
   add(a: Int!, b: Int!): Int
 }
 

@@ -1,7 +1,10 @@
 import { Entity, Magnus, Query } from '@notadd/magnus-core';
 import { Column } from '@notadd/magnus-typeorm';
+export class Common { 
+    username: number;
+}
 @Entity()
-export class Member {
+export class Member extends Common {
 
     @Column()
     id: number;
