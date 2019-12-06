@@ -1,6 +1,6 @@
 {
   "name": "@notadd/magnus.types",
-  "version": "3.8.6",
+  "version": "3.8.8",
   "description": "> TODO: description",
   "author": "imeepos <1037483576@qq.com>",
   "homepage": "https://github.com/notadd/magnus/tree/master/libs/compiler#readme",
@@ -11,7 +11,8 @@
   "types": "lib/index.d.ts",
   "bin": {
     "magnus": "./lib/bin.js",
-    "magnus2": "./lib/bin_proto.js"
+    "magnus2": "./lib/bin_proto.js",
+    "magnus3": "./lib/binv2.js"
   },
   "directories": {
     "lib": "lib",
@@ -32,6 +33,7 @@
   },
   "gitHead": "03d7b8873b54eb32d02ec1b814a56873e11f7c1a",
   "dependencies": {
+    "@nger/ast.ts-graphql": "^1.0.2",
     "@notadd/magnus-graphql": "^3.8.0",
     "@notadd/magnus-grpc": "^3.6.3",
     "chokidar": "^3.0.2",
