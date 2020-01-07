@@ -1,11 +1,10 @@
 {
-  "name": "@notadd/magnus-core",
+  "name": "@notadd/magnus-core.types",
   "version": "3.6.4",
   "description": "> TODO: description",
   "author": "imeepos <1037483576@qq.com>",
   "homepage": "https://github.com/notadd/magnus/tree/master/libs/core#readme",
   "license": "ISC",
-  "main": "lib/index.js",
   "publishConfig": {
     "access": "public"
   },

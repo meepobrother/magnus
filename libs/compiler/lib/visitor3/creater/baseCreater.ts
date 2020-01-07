@@ -47,7 +47,6 @@ export abstract class BaseCreater {
       }
       if (current) {
         const name = createTypeName(type, current);
-
         if (this.hasUsed.has(name))
           return { name, namedType: createNamedType(name) };
         this.hasUsed.add(name);

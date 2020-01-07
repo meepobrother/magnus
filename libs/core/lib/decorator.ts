@@ -1,13 +1,17 @@
 import { AnyDecorator } from "./util";
 import { Type } from "./type";
 import { Provider } from "./provider";
+import { Resolver } from '@nestjs/graphql'
+
 /**
  * magnus相关
  */
 export interface MagnusOptions {
   entities?: Type<any>[];
 }
-export const Magnus = (options?: MagnusOptions) => AnyDecorator;
+export const Magnus = (options?: MagnusOptions) => (target: any) => {
+  return Resolver(target.name)(target)
+};
 /**
  * module 相关参数
  * 暂时无用
@@ -32,13 +36,9 @@ export const Proto = (options?: MagnusOptions) => AnyDecorator;
  * graphql相关
  */
 
-/**
- * Scalar 相关
- */
-export interface ScalarOptions {
-  name?: string;
-}
-export const Scalar = (options?: ScalarOptions) => AnyDecorator;
+export { Scalar } from '@nestjs/graphql'
+export { Query, Mutation, Subscription, Resolver, ResolveProperty, Parent, Context } from '@nestjs/graphql'
+
 /**
  * directive相关
  */
@@ -46,20 +46,6 @@ export interface DirectiveOptions {
   name?: string;
 }
 export const Directive = (options?: DirectiveOptions) => AnyDecorator;
-/**
- * query相关
- * @param options
- */
-export const Query = (options?: MagnusOptions) => AnyDecorator;
-/**
- * mutation相关
- * @param options
- */
-export const Mutation = (options?: MagnusOptions) => AnyDecorator;
-/**
- * subscription相关
- */
-export const Subscription = (options?: MagnusOptions) => AnyDecorator;
 /**
  * inject
  * @param type 依赖注入
@@ -77,25 +63,9 @@ export interface InjectableOptions {
 }
 export const Injectable = (options?: InjectableOptions) => AnyDecorator;
 /**
- * Resolver
- */
-export const Resolver = (name?: string) => AnyDecorator;
-/**
- * 属性
- */
-export const ResolveProperty = (name?: string) => AnyDecorator;
-/**
- * 参数
- */
-export const Parent = () => AnyDecorator;
-/**
  * 选择
  */
 export const Selection = () => AnyDecorator;
-/**
- * 选择
- */
-export const Context = () => AnyDecorator;
 /**
  * 关系
  */
